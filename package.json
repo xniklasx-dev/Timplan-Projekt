@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "BASE_PATH=\"\" next dev --turbopack",
     "build": "next build",
-    "build:gh-pages": "BASE_PATH=/Template_Next next build",
+    "build:gh-pages": "BASE_PATH=/Timplan-Projekt next build",
     "start": "next start",
     "lint": "next lint"
   },
