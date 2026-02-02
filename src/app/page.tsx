@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1> Hello TIMPLAN!</h1>
+        <h1> Hello TIMPLAN Test!</h1>
         <br/>
         <br/>
         <Image
