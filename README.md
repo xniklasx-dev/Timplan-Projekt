@@ -1,5 +1,5 @@
-[![Build Frontend](https://github.com/DHBW-KA-Webengineering/Template_Next/actions/workflows/build-frontend.yml/badge.svg)](https://github.com/DHBW-KA-Webengineering/Template_Next/actions/workflows/build-frontend.yml)
-[![Publish Frontend](https://github.com/DHBW-KA-Webengineering/Template_Next/actions/workflows/publish-frontend.yml/badge.svg)](https://github.com/DHBW-KA-Webengineering/Template_Next/actions/workflows/publish-frontend.yml)
+[![Build Frontend](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/build-frontend.yml/badge.svg)](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/build-frontend.yml)
+[![Publish Frontend](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/publish-frontend.yml/badge.svg)](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/publish-frontend.yml)
 
 # Template_Next
 
@@ -8,10 +8,6 @@ This repository is a template with a working GitHub action for the build and Git
 ## How to use this template
 
 After creating a repo with this template, deploy works automatically with each push to github pages. The template is deployed to [xniklasx-dev.github.io/Timplan-Projekt/](https://xniklasx-dev.github.io/Timplan-Projekt/)
-
-### Todo:
-
-- Because of the `Template_Next` path in the URL, `Template_Next` is required in line 8 of the [package.json file](package.json) file￼. If you deploy the repository to a different URL (e.g., if you choose a different name for your repo), you will need to adapt or remove this part.
 
 # Next
 
