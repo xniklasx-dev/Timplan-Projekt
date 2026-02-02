@@ -3,7 +3,7 @@ name: Publish Frontend
 on:
   push:
     branches:
-      - "main"
+      - "test"
   workflow_dispatch:
 
 permissions:
