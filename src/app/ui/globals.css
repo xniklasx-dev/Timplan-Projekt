@@ -1,13 +1,16 @@
 :root {
-  --background: #E6E8Eb;
-  --foreground: #171717;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #171717;
-    --foreground: #E6E8Eb;
-  }
+  --color-background: #0A0A0A;
+  --color-surface: #171717;
+  --color-text: #E6E8EB;
+  --color-accent: #420420;
+  --color-hover: #5A0F2E;
+
+  --color-border: #2A2A2A;
+  --color-text-muted: #A6ABB3;
+  --color-focus: #7A1A45;
+
+  --font-sans: Arial, Helvetica, sans-serif;
 }
 
 html,
@@ -16,18 +19,24 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  color-scheme: dark;
+}
+
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 a {
@@ -35,8 +44,16 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-text);
 }
