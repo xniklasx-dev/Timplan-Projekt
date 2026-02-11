@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env BASE_PATH=\"\" next dev --turbopack",
+    "dev": "next dev --turbopack",
     "build": "next build",
-    "build:gh-pages": "cross-env BASE_PATH=/Timplan-Projekt next build",
+    "build:gh-pages": "BASE_PATH=/Timplan-Projekt next build",
     "start": "next start",
     "lint": "next lint"
   },

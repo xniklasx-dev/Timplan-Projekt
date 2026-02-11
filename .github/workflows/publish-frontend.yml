@@ -3,8 +3,13 @@ name: Publish Frontend
 on:
   push:
     branches:
-      - "test"
+      - "main"
   workflow_dispatch:
+    inputs:
+        ref:
+          description: "Which branch"
+          required: true
+          default: "main"
 
 permissions:
   contents: read
@@ -24,6 +29,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref_name }}
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
