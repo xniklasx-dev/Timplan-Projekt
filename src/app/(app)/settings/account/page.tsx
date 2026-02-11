@@ -5,13 +5,12 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1> Learning Mode Page</h1>
+        <h1> Statistic Page</h1>
         <br/>
         <br/>
         <p>
-
+          
         </p>
-
         
       </main>
       <footer className={styles.footer}>
