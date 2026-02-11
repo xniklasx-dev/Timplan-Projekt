@@ -5,12 +5,20 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <div className={styles.page}>
+      <header className={styles.header}>
+        <Link href="/login-page">Login</Link>
+        <Link href="/library-page">Library</Link>
+        <Link href="/learning-mode-page">Learning Mode</Link>
+        <Link href="/statistic-page">Statistic</Link>
+      </header>
+      
       <main className={styles.main}>
-        <h1>
-          <Link href="/login-page">Login-Page</Link>
-        </h1>
-        <br/>
-        <br/>
+        <h1>TIMPLAN</h1>
+        <p>
+          
+        </p>
+        <br />
+        <br />
         <Image
           className={styles.logo}
           src={`${process.env.BASE_PATH}/next.svg`}

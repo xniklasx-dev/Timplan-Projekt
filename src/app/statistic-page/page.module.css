@@ -22,8 +22,8 @@
     --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
     --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
 
-    --button-primary-hover: #5A0F2E;
-    --button-secondary-hover: #420420;
+    --button-primary-hover: #ccc;
+    --button-secondary-hover: #1a1a1a;
   }
 }
 
@@ -105,22 +105,6 @@ a.secondary {
 }
 
 .footer img {
-  flex-shrink: 0;
-}
-
-.header {
-  /* grid-row-start: 3; */
-  display: flex;
-  gap: 24px;
-}
-
-.header a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.header img {
   flex-shrink: 0;
 }
 
