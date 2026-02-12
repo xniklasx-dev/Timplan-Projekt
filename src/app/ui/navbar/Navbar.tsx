@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './navbar.module.css';
-import AccountMenu from './AccountMenu';
+import AccountMenu from '../accountMenu/AccountMenu';
 import type { User } from '../../lib/definitions';
 
 function isActive(pathname: string, href: string) {
