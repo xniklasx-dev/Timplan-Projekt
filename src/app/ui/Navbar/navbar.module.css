@@ -1,0 +1,150 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.inner {
+  height: 68px;
+  padding: 20px 32px;
+
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.brand {
+  position: relative;
+  grid-column: 1;
+  justify-self: start;
+
+  margin-left: 8px;
+
+  color: var(--color-text);
+  text-decoration: none;
+
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: 0.7px;
+  line-height: 1;
+
+  text-shadow: 0 0 18px var(--color-glow);
+
+  transition: transform 0.12s ease, text-shadow 0.12s ease, opacity 0.12s ease;
+}
+
+.brand::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -9px;
+
+  height: 3px;
+  width: 44%;
+
+  border-radius: 999px;
+
+  background: var(--color-accent);
+
+  transition: width 0.18s ease, opacity 0.12s ease;
+  opacity: 0.9;
+}
+
+.brand:hover {
+  transform: translateY(-1px);
+  text-shadow: 0 0 22px var(--color-glow);
+}
+
+.brand:hover::after {
+  background: var(--color-accent-hover);
+  width: 96%;
+  opacity: 1;
+}
+
+.brand:active {
+  transform: translateY(0px);
+}
+
+.nav {
+  grid-column: 2;
+  justify-self: center;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 14px 22px;
+  border-radius: 999px;
+
+  min-width: 720px;
+  justify-content: center;
+
+  background: var(--color-surface);
+  box-shadow:
+    0 10px 20px var(--color-surface-shadow),
+    inset 0 0 0 1px var(--color-subtle-overlay);
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 20px;
+  border-radius: 999px;
+
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 17.5px;
+  letter-spacing: 0.2px;
+
+  background: transparent;
+  opacity: 0.93;
+
+  transition: transform 0.12s ease, background 0.12s ease, opacity 0.12s ease;
+}
+
+.navLink:hover {
+  opacity: 1;
+  background: var(--color-surface-hover);
+  transform: translateY(-1px);
+}
+
+.navLink:active {
+  transform: translateY(0px);
+}
+
+.navLinkActive {
+  opacity: 1;
+  box-shadow: inset 0 0 0 1px var(--color-subtle-overlay);
+}
+
+.navLinkActive::after {
+  content: '';
+  position: absolute;
+
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+
+  height: 3px;
+  width: 70%;
+
+  border-radius: 999px;
+
+  background: var(--color-accent);
+  box-shadow: var(--color-glow);
+
+  transition: width 0.18s ease, opacity 0.12s ease;
+}
+
+
+.right {
+  grid-column: 3;
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

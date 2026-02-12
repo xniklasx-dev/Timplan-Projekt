@@ -1,23 +1,13 @@
-import Link from 'next/link';
+import Navbar from '@/app/ui/Navbar/Navbar';
 import styles from './layout.module.css';
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <header className={styles.header}>
-        <Link href="/login">Login</Link>
-        <Link href="/register">Register</Link>
-        <Link href="/settings/account">Account Settings</Link>
-        <Link href="/decks">Library</Link>
-        <Link href="/learning">Learning Mode</Link>
-        <Link href="/statistic">Statistic</Link>
-      </header>
+export default function Layout({ children }: { children: React.ReactNode }) {
+  let user = { id: 1, name: 'Test User', email: 'test@example.com', password: 'password', createdAt: new Date(), updatedAt: new Date() };
 
-      <main>{children}</main>
+  return (
+    <div className={styles.shell}>
+        <Navbar user={user}/>
+      <main className={styles.main}>{children}</main>
     </div>
   );
 }
