@@ -1,15 +1,8 @@
-.header {
-  /* grid-row-start: 3; */
-  display: flex;
-  gap: 24px;
+.shell {
+  min-height: 100svh;
+  background: var(--color-background);
 }
 
-.header a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.header img {
-  flex-shrink: 0;
+.main {
+  padding: 24px;
 }
