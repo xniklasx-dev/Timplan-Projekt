@@ -54,12 +54,12 @@ export default function AccountMenu({ user }: { user: User | null }) {
 
               <div className={styles.menuDivider} />
 
-              <Link className={styles.menuItem} href="/settings/account">
-                Account settings
+              <Link className={styles.menuItem} href="/settings">
+                Settings
               </Link>
-              <Link className={styles.menuItem} href="/decks">
-                My library
-              </Link>
+              {/*<Link className={styles.menuItem} href="/test">
+                Put New Links here
+              </Link>*/}
 
               <div className={styles.menuDivider} />
 
