@@ -1,15 +1,39 @@
 :root {
 
+  /* surfaces */
   --color-background: #0A0A0A;
   --color-surface: #171717;
-  --color-text: #E6E8EB;
-  --color-accent: #420420;
-  --color-hover: #5A0F2E;
+  --color-surface-hover: #1F1F1F;
 
-  --color-border: #2A2A2A;
+  /* text */
+  --color-text: #E6E8EB;
   --color-text-muted: #A6ABB3;
+
+  /* accent */
+  --color-accent: #420420;
+  --color-accent-hover: #5A0F2E;
   --color-focus: #7A1A45;
 
+  /* borders */
+  --color-border: #2A2A2A;
+
+  /* shadows / glows */
+  --color-surface-shadow: rgba(0, 0, 0, 0.78);
+  --color-subtle-overlay: rgba(230, 232, 235, 0.06);
+  --color-divider: rgba(230, 232, 235, 0.08);
+  --color-glow: rgba(230, 232, 235, 0.14);
+
+  /* disabled */
+  --color-disabled: #3A3A3A;
+  --color-text-disabled: #6E6E6E;
+
+  /* status */
+  --color-success: #1DB954;
+  --color-error: #E5484D;
+  --color-warning: #F5A524;
+  --color-info: #3B82F6;
+
+  /* fonts */
   --font-sans: Arial, Helvetica, sans-serif;
 }
 
@@ -26,7 +50,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background: var(--color-bg);
+  background: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;

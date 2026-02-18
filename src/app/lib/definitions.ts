@@ -7,7 +7,7 @@ export type User = {
   password: string;
   createdAt: Date;
   updatedAt: Date;
-};
+} | null;
 
 export type Card = {
   id: number;
