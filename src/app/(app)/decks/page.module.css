@@ -1,12 +1,15 @@
 .page {
+  height: 100%;              /* fill layout's .main */
+  display: flex;
+  flex-direction: column;
+  min-height: 0;             /* also critical */
   padding: 32px 40px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* header */
-
 .header {
+  flex-shrink: 0;
   margin-bottom: 28px;
 }
 
@@ -22,17 +25,28 @@
   font-size: 14px;
 }
 
-/* responsive library grid */
-
 .deckGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
 }
 
-/* deck card */
+.deckLine {
+  display: flex;
+  flex-direction: column;
+}
+
+.deckGrid,
+.deckLine {
+  gap: 20px;
+  flex: 1;               
+  overflow-y: auto;      
+  padding-right: 6px;
+  scroll-behavior: smooth;
+}
 
 .deckCard {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -43,13 +57,19 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
 
-  box-shadow: 0 10px 30px var(--color-surface-shadow);
-
   transition:
     background 0.18s ease,
     transform 0.12s ease,
     box-shadow 0.18s ease,
     border-color 0.18s ease;
+}
+
+.deckCardGrid {
+  margin: 0px;
+}
+
+.deckCardLine {
+  margin-bottom: 0px;
 }
 
 .deckCard:hover {
@@ -58,8 +78,6 @@
   transform: translateY(-2px);
   box-shadow: 0 14px 36px var(--color-surface-shadow);
 }
-
-/* top */
 
 .deckTop {
   margin-bottom: 14px;
@@ -76,12 +94,26 @@
   color: var(--color-text-muted);
 }
 
-/* stats */
-
 .deckStats {
   display: flex;
   gap: 16px;
   margin-bottom: 16px;
+}
+
+.deckGrid::-webkit-scrollbar,
+.deckLine::-webkit-scrollbar {
+  width: 8px;
+}
+
+.deckGrid::-webkit-scrollbar-thumb,
+.deckLine::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+.deckGrid::-webkit-scrollbar-thumb:hover,
+.deckLine::-webkit-scrollbar-thumb:hover {
+  background: var(--color-divider);
 }
 
 .stat {
@@ -97,4 +129,94 @@
 .statLabel {
   font-size: 12px;
   color: var(--color-text-muted);
+}
+
+.header {
+  margin-bottom: 28px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.subtitle {
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.startButtonWrapper {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+ 
+.viewToggle {
+  position: relative;
+  display: inline-block;
+}
+
+.toggleInput {
+  display: none;
+}
+
+.toggleTrack {
+  position: relative;
+  width: 92px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.toggleTrack:hover {
+  background: var(--color-surface-hover);
+}
+
+.toggleIndicator {
+  position: absolute;
+  width: 42px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  box-shadow: 0 4px 14px var(--color-surface-shadow);
+  transition: transform 0.28s cubic-bezier(.4, 0, .2, 1), background 0.2s ease;
+}
+
+.toggleTrack:hover .toggleIndicator {
+  background: var(--color-accent-hover) !important;
+}
+
+.toggleInput:checked+.toggleTrack .toggleIndicator {
+  transform: translateX(41px);
+  background: var(--color-accent);
+}
+
+.toggleOption {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: var(--color-text-muted);
+  transition: fill 0.2s ease, opacity 0.2s ease;
+  opacity: 0.7;
+}
+
+.toggleInput:not(:checked)+.toggleTrack .toggleOption:first-child .icon,
+.toggleInput:checked+.toggleTrack .toggleOption:last-child .icon {
+  fill: var(--color-text-muted);
+  opacity: 0.7;
 }

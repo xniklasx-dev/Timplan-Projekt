@@ -1,145 +1,192 @@
-import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
+"use client";
+
+import { useLayoutEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from "./page.module.css";
+import placeholderDecks from "@/app/lib/placeholder-decks.json";
+import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
 
 type DeckPreview = {
   id: string;
   name: string;
   description?: string;
-
   tags?: string[];
   cardIds?: string[];
-
   color?: string;
   icon?: string;
   parentDeckId?: string;
-
+  childDeckIds?: string[];
   totalCards: number;
   newCards: number;
   learningCards?: number;
   reviewCards?: number;
   dueToday: number;
-
   studiedToday?: number;
   lastStudied?: Date;
-
   createdAt?: Date;
   updatedAt?: Date;
   deleted?: boolean;
-
   revision?: number;
 };
 
-const mockDecksCount : number = 16;
-
-function generateMockDecks(count: number): DeckPreview[] {
-  const generatedMockDecks: DeckPreview[] = [];
-
-  for (let i = 1; i <= count; i++) {
-    generatedMockDecks.push({
-      id: i.toString(), 
-      name: `Deck ${i}`,
-      description: `Description for Deck ${i}`,
-      totalCards: Math.floor(Math.random() * 500) + 50,
-      dueToday: Math.floor(Math.random() * 50),
-      newCards: Math.floor(Math.random() * 20),
-    });
-  }
-  return generatedMockDecks;
-}
-
-/*  // Example of static mock data
-const mockDecks: DeckPreview[] = [
-  {
-    id: "1",
-    name: "German Vocabulary",
-    description: "Daily learning words",
-    totalCards: 320,
-    dueToday: 24,
-    newCards: 10,
-  },
-  {
-    id: "2",
-    name: "Biology",
-    description: "Cells & systems",
-    totalCards: 120,
-    dueToday: 5,
-    newCards: 3,
-  },
-  {
-    id: "3",
-    name: "History 20th Century",
-    totalCards: 210,
-    dueToday: 0,
-    newCards: 0,
-  },
-  {
-    id: "4",
-    name: "Physics Formulas",
-    description: "Exam preparation",
-    totalCards: 75,
-    dueToday: 12,
-    newCards: 5,
-  },
-  {
-    id: "5",
-    name: "German Vocabulary",
-    description: "Daily learning words",
-    totalCards: 320,
-    dueToday: 24,
-    newCards: 10,
-  },
-  {
-    id: "6",
-    name: "Biology",
-    description: "Cells & systems",
-    totalCards: 120,
-    dueToday: 5,
-    newCards: 3,
-  },
-];
-*/
+const initialDecks: DeckPreview[] =
+  placeholderDecks as unknown as DeckPreview[];
 
 export default function Decks() {
-  
+  const [isGridView, setIsGridView] = useState(false);
+  const [decks] = useState<DeckPreview[] | null>(initialDecks);
+
+  const router = useRouter();
+
+  const cardRefs = useRef(new Map<string, HTMLElement>());
+
+  const hasMounted = useRef(false);
+  useLayoutEffect(() => {
+    hasMounted.current = true;
+  }, []);
+
+  const measure = () => {
+    const rects = new Map<string, DOMRect>();
+    cardRefs.current.forEach((el, id) => {
+      rects.set(id, el.getBoundingClientRect());
+    });
+    return rects;
+  };
+
+  const handleToggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!hasMounted.current) {
+      setIsGridView(event.target.checked);
+      return;
+    }
+
+    const next = event.target.checked;
+
+    const first = measure();
+
+    setIsGridView(next);
+
+    requestAnimationFrame(() => {
+      const last = measure();
+
+      cardRefs.current.forEach((el, id) => {
+        const a = first.get(id);
+        const b = last.get(id);
+        if (!a || !b) return;
+
+        const dx = a.left - b.left;
+        const dy = a.top - b.top;
+        const sx = a.width / b.width;
+        const sy = a.height / b.height;
+
+        if (dx === 0 && dy === 0 && sx === 1 && sy === 1) return;
+
+        el.animate(
+          [
+            { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
+            { transform: "translate(0px, 0px) scale(1, 1)" },
+          ],
+          {
+            duration: 380,
+            easing: "cubic-bezier(.2, .8, .2, 1)",
+          },
+        );
+      });
+    });
+  };
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Library</h1>
-        {/* <p className={styles.subtitle}>
-          Select a deck to start studying
-        </p> */}
+        <div className={styles.titleRow}>
+          <h1 className={styles.title}>Deck Library</h1>
+
+          <label className={styles.viewToggle}>
+            <input
+              type="checkbox"
+              className={styles.toggleInput}
+              checked={isGridView}
+              onChange={handleToggleView}
+            />
+
+            <div className={styles.toggleTrack}>
+              <div className={styles.toggleIndicator}></div>
+
+              <span className={styles.toggleOption}>
+                <svg viewBox="0 0 24 24" className={styles.icon}>
+                  <rect x="4" y="5" width="16" height="3" rx="1" />
+                  <rect x="4" y="10.5" width="16" height="3" rx="1" />
+                  <rect x="4" y="16" width="16" height="3" rx="1" />
+                </svg>
+              </span>
+
+              <span className={styles.toggleOption}>
+                <svg viewBox="0 0 24 24" className={styles.icon}>
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+              </span>
+            </div>
+          </label>
+        </div>
+
+        <p className={styles.subtitle}>Select a deck to start studying</p>
       </header>
 
-      <section className={styles.deckGrid}>
-        {generateMockDecks(mockDecksCount).map((deck) => (
-          <div key={deck.id} className={styles.deckCard}>
-            <div className={styles.deckTop}>
-              <h2 className={styles.deckName}>{deck.name}</h2>
-              {deck.description && (
-                <p className={styles.deckDescription}>{deck.description}</p>
-              )}
-            </div>
-
-            <div className={styles.deckStats}>
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{deck.totalCards}</span>
-                <span className={styles.statLabel}>Cards</span>
+      <section className={isGridView ? styles.deckGrid : styles.deckLine}>
+        {!decks ? (
+          <p className={styles.subtitle}>Loading decks...</p>
+        ) : (
+          decks.map((deck) => (
+            <Link
+              key={deck.id}
+              href={`/decks/${deck.id}/cards`}
+              ref={(el) => {
+                if (!el) return;
+                cardRefs.current.set(deck.id, el);
+              }}
+              className={`${styles.deckCard} ${
+                isGridView ? styles.deckCardGrid : styles.deckCardLine
+              }`}
+            >
+              <div className={styles.startButtonWrapper}>
+                <StartLessonButton
+                  onClick={(e: React.MouseEvent) => {
+                    e.preventDefault(); // don’t trigger the card link
+                    e.stopPropagation();
+                    router.push("/learning"); // button-specific route
+                  }}
+                />
               </div>
 
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{deck.dueToday}</span>
-                <span className={styles.statLabel}>Due</span>
+              <div className={styles.deckTop}>
+                <h2 className={styles.deckName}>{deck.name}</h2>
+                {deck.description && (
+                  <p className={styles.deckDescription}>{deck.description}</p>
+                )}
               </div>
 
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{deck.newCards}</span>
-                <span className={styles.statLabel}>New</span>
-              </div>
-            </div>
+              <div className={styles.deckStats}>
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.totalCards}</span>
+                  <span className={styles.statLabel}>Cards</span>
+                </div>
 
-            <AccentButton>Study</AccentButton>
-          </div>
-        ))}
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.dueToday}</span>
+                  <span className={styles.statLabel}>Due</span>
+                </div>
+
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.newCards}</span>
+                  <span className={styles.statLabel}>New</span>
+                </div>
+              </div>
+            </Link>
+          ))
+        )}
       </section>
     </main>
   );

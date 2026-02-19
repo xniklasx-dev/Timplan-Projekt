@@ -1,8 +1,14 @@
 .shell {
-  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   background: var(--color-background);
 }
 
+.navbar{
+  height: 10svh; 
+}
 .main {
+  height: 90svh;
   padding: 24px;
 }
