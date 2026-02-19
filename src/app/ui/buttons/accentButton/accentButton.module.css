@@ -20,19 +20,16 @@
     border-color 0.15s ease;
 }
 
-/* hover */
 .button:hover {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
   box-shadow: 0 0 0 1px var(--color-glow);
 }
 
-/* press */
 .button:active {
   transform: translateY(1px) scale(0.99);
 }
 
-/* disabled */
 .button:disabled {
   background: var(--color-disabled);
   border-color: var(--color-disabled);
@@ -41,7 +38,6 @@
   box-shadow: none;
 }
 
-/* optional layout helper */
 .fullWidth {
   width: 100%;
 }

@@ -1,11 +1,11 @@
 "use client";
 
 import React, { JSX } from "react";
-import Image from "next/image"; // ✅ import Next.js Image
+import Image from "next/image";
 import styles from "./startLessonButton.module.css";
 
 type StartLessonButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  children?: React.ReactNode; // optional, you might only show the icon
+  children?: React.ReactNode;
   fullWidth?: boolean;
 };
 
@@ -20,7 +20,6 @@ export default function StartLessonButton({
       className={`${styles.button} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
       {...props}
     >
-      {/* Icon */}
       <Image
         src="/play_lesson_icon.svg"
         alt="Start Lesson"
@@ -28,7 +27,6 @@ export default function StartLessonButton({
         height={20}
       />
 
-      {/* Optional text / children */}
       {children && <span className={styles.buttonText}>{children}</span>}
     </button>
   );
