@@ -137,9 +137,7 @@ export default function Decks() {
               </div>
             </div>
 
-            <AccentButton>
-              Study
-            </AccentButton>
+            <AccentButton>Study</AccentButton>
           </div>
         ))}
       </section>
