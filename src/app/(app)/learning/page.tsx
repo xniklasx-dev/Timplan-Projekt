@@ -6,7 +6,7 @@ export default function Learning() {
     <div className={styles.page}>
       <main className={styles.main}>
         <h1>Deck Name ?/?</h1>
-        <InfoCard title="Welcome to Learning Mode" text="Here you can review your cards and track your progress!" />
+        <InfoCard question="What color does the sky have?" answer="Green" />
       </main>
     </div>
   );
