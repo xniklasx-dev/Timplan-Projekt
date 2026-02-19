@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
+import { useState } from "react";
 import styles from "./page.module.css";
+import placeholderDecks from "@/app/lib/placeholder-decks.json";
+import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
 
 
 type DeckPreview = {
@@ -16,6 +17,7 @@ type DeckPreview = {
   color?: string;
   icon?: string;
   parentDeckId?: string;
+  childDeckIds?: string[];
 
   totalCards: number;
   newCards: number;
@@ -33,23 +35,7 @@ type DeckPreview = {
   revision?: number;
 };
 
-const mockDecksCount: number = 16;
-
-function generateMockDecks(count: number): DeckPreview[] {
-  const generatedMockDecks: DeckPreview[] = [];
-
-  for (let i = 1; i <= count; i++) {
-    generatedMockDecks.push({
-      id: i.toString(),
-      name: `Deck ${i}`,
-      description: `Description for Deck ${i}`,
-      totalCards: Math.floor(Math.random() * 500) + 50,
-      dueToday: Math.floor(Math.random() * 50),
-      newCards: Math.floor(Math.random() * 20),
-    });
-  }
-  return generatedMockDecks;
-}
+const initialDecks: DeckPreview[] = placeholderDecks as unknown as DeckPreview[];
 
 /*  // Example of static mock data
 const mockDecks: DeckPreview[] = [
@@ -107,13 +93,7 @@ export default function Decks() {
 
   const [isGridView, setIsGridView] = useState(false);
 
-  const [decks, setDecks] = useState<DeckPreview[] | null>(null);
-
-  useEffect(() => {
-    const data = generateMockDecks(mockDecksCount);
-    setDecks(data);
-  }, []);
-
+  const [decks] = useState<DeckPreview[] | null>(initialDecks);
 
   const handleToggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsGridView(event.target.checked);
@@ -188,7 +168,8 @@ export default function Decks() {
                 </div>
               </div>
 
-              <AccentButton>Open</AccentButton>
+              <StartLessonButton />
+
             </div>
           ))
         )}

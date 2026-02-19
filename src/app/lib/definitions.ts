@@ -53,6 +53,7 @@ export type Deck = {
   color?: string;
   icon?: string;
   parentDeckId?: string;
+  childDeckIds?: string[];
 
   totalCards: number;
   newCards: number;
