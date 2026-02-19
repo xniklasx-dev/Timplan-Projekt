@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from "./page.module.css";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
 import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
@@ -28,16 +30,17 @@ type DeckPreview = {
   revision?: number;
 };
 
-const initialDecks: DeckPreview[] = placeholderDecks as unknown as DeckPreview[];
+const initialDecks: DeckPreview[] =
+  placeholderDecks as unknown as DeckPreview[];
 
 export default function Decks() {
   const [isGridView, setIsGridView] = useState(false);
   const [decks] = useState<DeckPreview[] | null>(initialDecks);
 
-  // Keep a ref to each deck card DOM node
-  const cardRefs = useRef(new Map<string, HTMLDivElement>());
+  const router = useRouter();
 
-  // Helps avoid animation on first mount
+  const cardRefs = useRef(new Map<string, HTMLElement>());
+
   const hasMounted = useRef(false);
   useLayoutEffect(() => {
     hasMounted.current = true;
@@ -59,17 +62,13 @@ export default function Decks() {
 
     const next = event.target.checked;
 
-    // FIRST
     const first = measure();
 
-    // Change layout
     setIsGridView(next);
 
-    // LAST (after React applies the new layout)
     requestAnimationFrame(() => {
       const last = measure();
 
-      // INVERT + PLAY
       cardRefs.current.forEach((el, id) => {
         const a = first.get(id);
         const b = last.get(id);
@@ -80,7 +79,6 @@ export default function Decks() {
         const sx = a.width / b.width;
         const sy = a.height / b.height;
 
-        // If nothing changed, skip
         if (dx === 0 && dy === 0 && sx === 1 && sy === 1) return;
 
         el.animate(
@@ -91,7 +89,7 @@ export default function Decks() {
           {
             duration: 380,
             easing: "cubic-bezier(.2, .8, .2, 1)",
-          }
+          },
         );
       });
     });
@@ -142,8 +140,9 @@ export default function Decks() {
           <p className={styles.subtitle}>Loading decks...</p>
         ) : (
           decks.map((deck) => (
-            <div
+            <Link
               key={deck.id}
+              href={`/decks/${deck.id}/cards`}
               ref={(el) => {
                 if (!el) return;
                 cardRefs.current.set(deck.id, el);
@@ -153,7 +152,13 @@ export default function Decks() {
               }`}
             >
               <div className={styles.startButtonWrapper}>
-                <StartLessonButton />
+                <StartLessonButton
+                  onClick={(e: React.MouseEvent) => {
+                    e.preventDefault(); // don’t trigger the card link
+                    e.stopPropagation();
+                    router.push("/learning"); // button-specific route
+                  }}
+                />
               </div>
 
               <div className={styles.deckTop}>
@@ -179,7 +184,7 @@ export default function Decks() {
                   <span className={styles.statLabel}>New</span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))
         )}
       </section>
