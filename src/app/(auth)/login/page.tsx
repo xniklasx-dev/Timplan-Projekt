@@ -1,44 +1,75 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./page.module.css";
+// import { login } from "@/lib/auth";
+import Link from "next/link";
+
+export default function LoginPage() {
+  const router = useRouter();
+
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+//    await login(email, password);
+
+      router.push("/dashboard");
+
+    } catch (err: any) {
+      setError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <h1> Login Page</h1>
-        <br/>
-        <br/>
-        <p>
+      <div className={styles.cards}>
+        <h1 className={styles.title}>Login</h1>
 
-        </p>
-      </main>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <input
+            className={styles.input}
+            type="email"
+            placeholder="E-Mail"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            className={styles.input}
+            type="password"
+            placeholder="Passwort"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button 
+            type="submit"
+            className={styles.button}
+            disabled={loading}>
+              
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
       
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src={`${process.env.BASE_PATH}/file.svg`} alt="File icon" width={16} height={16} />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src={`${process.env.BASE_PATH}/window.svg`} alt="Window icon" width={16} height={16} />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src={`${process.env.BASE_PATH}/globe.svg`} alt="Globe icon" width={16} height={16} />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        {error && <p className={styles.error}>{error}</p>}
+        <p className={styles.linkText}>
+          Noch keinen Account? <Link href="/register">Registrieren</Link>
+        </p>
+      </div>
     </div>
   );
 }
