@@ -1,5 +1,9 @@
+'use client';
+
+import { useState, useEffect } from "react";
 import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 import styles from "./page.module.css";
+
 
 type DeckPreview = {
   id: string;
@@ -29,14 +33,14 @@ type DeckPreview = {
   revision?: number;
 };
 
-const mockDecksCount : number = 16;
+const mockDecksCount: number = 16;
 
 function generateMockDecks(count: number): DeckPreview[] {
   const generatedMockDecks: DeckPreview[] = [];
 
   for (let i = 1; i <= count; i++) {
     generatedMockDecks.push({
-      id: i.toString(), 
+      id: i.toString(),
       name: `Deck ${i}`,
       description: `Description for Deck ${i}`,
       totalCards: Math.floor(Math.random() * 500) + 50,
@@ -100,47 +104,96 @@ const mockDecks: DeckPreview[] = [
 */
 
 export default function Decks() {
-  
+
+  const [isGridView, setIsGridView] = useState(false);
+
+  const [decks, setDecks] = useState<DeckPreview[] | null>(null);
+
+  useEffect(() => {
+    const data = generateMockDecks(mockDecksCount);
+    setDecks(data);
+  }, []);
+
+
+  const handleToggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsGridView(event.target.checked);
+  };
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Library</h1>
-        {/* <p className={styles.subtitle}>
-          Select a deck to start studying
-        </p> */}
+        <div className={styles.titleRow}>
+          <h1 className={styles.title}>Deck Library</h1>
+
+          <label className={styles.viewToggle}>
+            <input type="checkbox" className={styles.toggleInput} checked={isGridView} onChange={handleToggleView} />
+
+            <div className={styles.toggleTrack}>
+              <div className={styles.toggleIndicator}></div>
+
+              <span className={styles.toggleOption}>
+                <svg viewBox="0 0 24 24" className={styles.icon}>
+                  <rect x="4" y="5" width="16" height="3" rx="1" />
+                  <rect x="4" y="10.5" width="16" height="3" rx="1" />
+                  <rect x="4" y="16" width="16" height="3" rx="1" />
+                </svg>
+              </span>
+
+              <span className={styles.toggleOption}>
+                <svg viewBox="0 0 24 24" className={styles.icon}>
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+              </span>
+            </div>
+          </label>
+        </div>
+
+        <p className={styles.subtitle}>Select a deck to start studying</p>
       </header>
 
-      <section className={styles.deckGrid}>
-        {generateMockDecks(mockDecksCount).map((deck) => (
-          <div key={deck.id} className={styles.deckCard}>
-            <div className={styles.deckTop}>
-              <h2 className={styles.deckName}>{deck.name}</h2>
-              {deck.description && (
-                <p className={styles.deckDescription}>{deck.description}</p>
-              )}
+      <section className={isGridView ? styles.deckGrid : styles.deckLine}>
+        {!decks ? (
+          <p className={styles.subtitle}>Loading decks...</p>
+        ) : (
+          decks.map((deck) => (
+            <div
+              key={deck.id}
+              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
+                }`}
+            >
+              <div className={styles.deckTop}>
+                <h2 className={styles.deckName}>{deck.name}</h2>
+                {deck.description && (
+                  <p className={styles.deckDescription}>{deck.description}</p>
+                )}
+              </div>
+
+              <div className={styles.deckStats}>
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.totalCards}</span>
+                  <span className={styles.statLabel}>Cards</span>
+                </div>
+
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.dueToday}</span>
+                  <span className={styles.statLabel}>Due</span>
+                </div>
+
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.newCards}</span>
+                  <span className={styles.statLabel}>New</span>
+                </div>
+              </div>
+
+              <AccentButton>Open</AccentButton>
             </div>
-
-            <div className={styles.deckStats}>
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{deck.totalCards}</span>
-                <span className={styles.statLabel}>Cards</span>
-              </div>
-
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{deck.dueToday}</span>
-                <span className={styles.statLabel}>Due</span>
-              </div>
-
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{deck.newCards}</span>
-                <span className={styles.statLabel}>New</span>
-              </div>
-            </div>
-
-            <AccentButton>Study</AccentButton>
-          </div>
-        ))}
+          ))
+        )}
       </section>
+
     </main>
   );
 }

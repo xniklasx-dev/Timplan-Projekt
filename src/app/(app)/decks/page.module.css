@@ -4,8 +4,6 @@
   margin: 0 auto;
 }
 
-/* header */
-
 .header {
   margin-bottom: 28px;
 }
@@ -22,15 +20,15 @@
   font-size: 14px;
 }
 
-/* responsive library grid */
-
 .deckGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
+  gap: 20px;
 }
 
-/* deck card */
+.deckLine {
+  display: inline;
+}
 
 .deckCard {
   display: flex;
@@ -52,14 +50,20 @@
     border-color 0.18s ease;
 }
 
+.deckCardGrid {
+  margin: 0px;
+}
+
+.deckCardLine {
+  margin-bottom: 20px;
+}
+
 .deckCard:hover {
   background: var(--color-surface-hover);
   border-color: var(--color-divider);
   transform: translateY(-2px);
   box-shadow: 0 14px 36px var(--color-surface-shadow);
 }
-
-/* top */
 
 .deckTop {
   margin-bottom: 14px;
@@ -75,8 +79,6 @@
   font-size: 13px;
   color: var(--color-text-muted);
 }
-
-/* stats */
 
 .deckStats {
   display: flex;
@@ -97,4 +99,88 @@
 .statLabel {
   font-size: 12px;
   color: var(--color-text-muted);
+}
+
+.header {
+  margin-bottom: 28px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.subtitle {
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.viewToggle {
+  position: relative;
+  display: inline-block;
+}
+
+.toggleInput {
+  display: none;
+}
+
+.toggleTrack {
+  position: relative;
+  width: 92px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.toggleTrack:hover {
+  background: var(--color-surface-hover);
+}
+
+.toggleIndicator {
+  position: absolute;
+  width: 42px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  box-shadow: 0 4px 14px var(--color-surface-shadow);
+  transition: transform 0.28s cubic-bezier(.4, 0, .2, 1), background 0.2s ease;
+}
+
+.toggleTrack:hover .toggleIndicator {
+  background: var(--color-accent-hover) !important;
+}
+
+.toggleInput:checked+.toggleTrack .toggleIndicator {
+  transform: translateX(41px);
+  background: var(--color-accent);
+}
+
+.toggleOption {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: var(--color-text-muted);
+  transition: fill 0.2s ease, opacity 0.2s ease;
+  opacity: 0.7;
+}
+
+.toggleInput:not(:checked)+.toggleTrack .toggleOption:first-child .icon,
+.toggleInput:checked+.toggleTrack .toggleOption:last-child .icon {
+  fill: var(--color-text-muted);
+  opacity: 0.7;
 }
