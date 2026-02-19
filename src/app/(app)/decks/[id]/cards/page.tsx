@@ -6,10 +6,11 @@ type PageProps = {
 
 export default async function Cards({ params }: PageProps) {
   const { id } = await params;
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>Deck ID: {id} ...</h1>
+        <h1>Cards Page for Deck ID: {id}</h1>
       </main>
     </div>
   );
