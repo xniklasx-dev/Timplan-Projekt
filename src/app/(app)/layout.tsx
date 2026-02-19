@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className={styles.shell}>
-        <Navbar user={user}/>
+        <div className={styles.navbar}><Navbar user={user}/></div>
       <main className={styles.main}>{children}</main>
     </div>
   );

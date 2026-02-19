@@ -1,102 +1,100 @@
 'use client';
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
 import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
-
 
 type DeckPreview = {
   id: string;
   name: string;
   description?: string;
-
   tags?: string[];
   cardIds?: string[];
-
   color?: string;
   icon?: string;
   parentDeckId?: string;
   childDeckIds?: string[];
-
   totalCards: number;
   newCards: number;
   learningCards?: number;
   reviewCards?: number;
   dueToday: number;
-
   studiedToday?: number;
   lastStudied?: Date;
-
   createdAt?: Date;
   updatedAt?: Date;
   deleted?: boolean;
-
   revision?: number;
 };
 
 const initialDecks: DeckPreview[] = placeholderDecks as unknown as DeckPreview[];
 
-/*  // Example of static mock data
-const mockDecks: DeckPreview[] = [
-  {
-    id: "1",
-    name: "German Vocabulary",
-    description: "Daily learning words",
-    totalCards: 320,
-    dueToday: 24,
-    newCards: 10,
-  },
-  {
-    id: "2",
-    name: "Biology",
-    description: "Cells & systems",
-    totalCards: 120,
-    dueToday: 5,
-    newCards: 3,
-  },
-  {
-    id: "3",
-    name: "History 20th Century",
-    totalCards: 210,
-    dueToday: 0,
-    newCards: 0,
-  },
-  {
-    id: "4",
-    name: "Physics Formulas",
-    description: "Exam preparation",
-    totalCards: 75,
-    dueToday: 12,
-    newCards: 5,
-  },
-  {
-    id: "5",
-    name: "German Vocabulary",
-    description: "Daily learning words",
-    totalCards: 320,
-    dueToday: 24,
-    newCards: 10,
-  },
-  {
-    id: "6",
-    name: "Biology",
-    description: "Cells & systems",
-    totalCards: 120,
-    dueToday: 5,
-    newCards: 3,
-  },
-];
-*/
-
 export default function Decks() {
-
   const [isGridView, setIsGridView] = useState(false);
-
   const [decks] = useState<DeckPreview[] | null>(initialDecks);
 
+  // Keep a ref to each deck card DOM node
+  const cardRefs = useRef(new Map<string, HTMLDivElement>());
+
+  // Helps avoid animation on first mount
+  const hasMounted = useRef(false);
+  useLayoutEffect(() => {
+    hasMounted.current = true;
+  }, []);
+
+  const measure = () => {
+    const rects = new Map<string, DOMRect>();
+    cardRefs.current.forEach((el, id) => {
+      rects.set(id, el.getBoundingClientRect());
+    });
+    return rects;
+  };
+
   const handleToggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsGridView(event.target.checked);
+    if (!hasMounted.current) {
+      setIsGridView(event.target.checked);
+      return;
+    }
+
+    const next = event.target.checked;
+
+    // FIRST
+    const first = measure();
+
+    // Change layout
+    setIsGridView(next);
+
+    // LAST (after React applies the new layout)
+    requestAnimationFrame(() => {
+      const last = measure();
+
+      // INVERT + PLAY
+      cardRefs.current.forEach((el, id) => {
+        const a = first.get(id);
+        const b = last.get(id);
+        if (!a || !b) return;
+
+        const dx = a.left - b.left;
+        const dy = a.top - b.top;
+        const sx = a.width / b.width;
+        const sy = a.height / b.height;
+
+        // If nothing changed, skip
+        if (dx === 0 && dy === 0 && sx === 1 && sy === 1) return;
+
+        el.animate(
+          [
+            { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
+            { transform: "translate(0px, 0px) scale(1, 1)" },
+          ],
+          {
+            duration: 380,
+            easing: "cubic-bezier(.2, .8, .2, 1)",
+          }
+        );
+      });
+    });
   };
 
   return (
@@ -106,7 +104,12 @@ export default function Decks() {
           <h1 className={styles.title}>Deck Library</h1>
 
           <label className={styles.viewToggle}>
-            <input type="checkbox" className={styles.toggleInput} checked={isGridView} onChange={handleToggleView} />
+            <input
+              type="checkbox"
+              className={styles.toggleInput}
+              checked={isGridView}
+              onChange={handleToggleView}
+            />
 
             <div className={styles.toggleTrack}>
               <div className={styles.toggleIndicator}></div>
@@ -141,9 +144,18 @@ export default function Decks() {
           decks.map((deck) => (
             <div
               key={deck.id}
-              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
-                }`}
+              ref={(el) => {
+                if (!el) return;
+                cardRefs.current.set(deck.id, el);
+              }}
+              className={`${styles.deckCard} ${
+                isGridView ? styles.deckCardGrid : styles.deckCardLine
+              }`}
             >
+              <div className={styles.startButtonWrapper}>
+                <StartLessonButton />
+              </div>
+
               <div className={styles.deckTop}>
                 <h2 className={styles.deckName}>{deck.name}</h2>
                 {deck.description && (
@@ -167,14 +179,10 @@ export default function Decks() {
                   <span className={styles.statLabel}>New</span>
                 </div>
               </div>
-
-              <StartLessonButton />
-
             </div>
           ))
         )}
       </section>
-
     </main>
   );
 }
