@@ -1,3 +1,4 @@
+import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 import styles from "./page.module.css";
 
 type DeckPreview = {
@@ -103,10 +104,10 @@ export default function Decks() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Deck Library</h1>
-        <p className={styles.subtitle}>
+        <h1 className={styles.title}>Library</h1>
+        {/* <p className={styles.subtitle}>
           Select a deck to start studying
-        </p>
+        </p> */}
       </header>
 
       <section className={styles.deckGrid}>
@@ -136,9 +137,9 @@ export default function Decks() {
               </div>
             </div>
 
-            <button className={styles.studyButton}>
+            <AccentButton>
               Study
-            </button>
+            </AccentButton>
           </div>
         ))}
       </section>

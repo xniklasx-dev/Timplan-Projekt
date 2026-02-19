@@ -99,9 +99,9 @@
   color: var(--color-text-muted);
 }
 
-/* button */
+/* button 
 
-.studyButton {
+.button {
   width: 100%;
   padding: 10px 0;
 
@@ -122,11 +122,11 @@
     box-shadow 0.15s ease;
 }
 
-.studyButton:hover {
+.button:hover {
   background: var(--color-accent-hover);
   box-shadow: 0 0 0 1px var(--color-glow);
 }
 
-.studyButton:active {
+.button:active {
   transform: translateY(1px) scale(0.99);
 }
