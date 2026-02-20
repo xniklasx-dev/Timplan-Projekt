@@ -2,40 +2,18 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { Deck } from '../../lib/definitions';
 import Link from "next/link";
 import styles from "./page.module.css";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
 import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
 
-type DeckPreview = {
-  id: string;
-  name: string;
-  description?: string;
-  tags?: string[];
-  cardIds?: string[];
-  color?: string;
-  icon?: string;
-  parentDeckId?: string;
-  childDeckIds?: string[];
-  totalCards: number;
-  newCards: number;
-  learningCards?: number;
-  reviewCards?: number;
-  dueToday: number;
-  studiedToday?: number;
-  lastStudied?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deleted?: boolean;
-  revision?: number;
-};
-
-const initialDecks: DeckPreview[] =
-  placeholderDecks as unknown as DeckPreview[];
+const initialDecks: Deck[] = placeholderDecks as unknown as Deck[];
 
 export default function Decks() {
   const [isGridView, setIsGridView] = useState(false);
-  const [decks] = useState<DeckPreview[] | null>(initialDecks);
+
+  const [decks] = useState<Deck[] | null>(initialDecks);
 
   const router = useRouter();
 
@@ -154,9 +132,9 @@ export default function Decks() {
               <div className={styles.startButtonWrapper}>
                 <StartLessonButton
                   onClick={(e: React.MouseEvent) => {
-                    e.preventDefault(); // don’t trigger the card link
+                    e.preventDefault();
                     e.stopPropagation();
-                    router.push("/learning"); // button-specific route
+                    router.push("/learning");
                   }}
                 />
               </div>
