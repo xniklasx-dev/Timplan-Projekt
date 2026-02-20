@@ -1,0 +1,50 @@
+[
+    { 
+        "id": 1,
+        "name": "Test User",
+        "email": "test@example.com",
+        "password": "password",
+        "createdAt": "2026-02-20T12:00:00Z",
+        "updatedAt": "2026-02-20T12:00:00Z"
+    },
+    { 
+        "id": 2,
+        "name": "Nik test",
+        "email": "nik@example.com",
+        "password": "password",
+        "createdAt": "2026-02-20T12:00:00Z",
+        "updatedAt": "2026-02-20T12:00:00Z"
+    },
+    { 
+        "id": 3,
+        "name": "Max test",
+        "email": "max@example.com",
+        "password": "password",
+        "createdAt": "2026-02-20T12:00:00Z",
+        "updatedAt": "2026-02-20T12:00:00Z"
+    },
+    { 
+        "id": 4,
+        "name": "Tony test",
+        "email": "tony@example.com",
+        "password": "password",
+        "createdAt": "new Date()",
+        "updatedAt": "new Date()"
+    },
+    { 
+        "id": 5,
+        "name": "Leonie test",
+        "email": "leonie@example.com",
+        "password": "password",
+        "createdAt": "new Date()",
+        "updatedAt": "new Date()"
+    },
+    { 
+        "id": 6,
+        "name": "Pascal test",
+        "email": "pascal@example.com",
+        "password": "password",
+        "createdAt": "new Date()",
+        "updatedAt": "new Date()"
+    }
+]
