@@ -1,6 +1,6 @@
 import { Deck } from "./definitions";
 
-const decks: Deck[] = [
+export const decks: Deck[] = [
   {
     id: "d1",
     name: "Allgemeinwissen",
