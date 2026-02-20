@@ -2,7 +2,8 @@
 import { useState } from "react";
 import styles from "./page.module.css";
 import LearnCard from "@/app/ui/learning_cards/learning_cards";
-import { cards, decks } from "@/app/lib/placeholder-data";
+import {decks} from "@/app/lib/placeholder-decks";
+import {cards} from "@/app/lib/placeholder-cards";
 import { getCardsForDeck, rateCard } from "@/app/lib/learning-service";
 
 
