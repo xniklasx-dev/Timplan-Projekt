@@ -1,5 +1,5 @@
-[![Build Frontend](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/build-frontend.yml/badge.svg)](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/build-frontend.yml)
-[![Publish Frontend](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/publish-frontend.yml/badge.svg)](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/publish-frontend.yml)
+[![Build And Publish Frontend](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/main_timplan.yml/badge.svg)](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/main_timplan.yml)
+[![Azure Website Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=Azure%20Live&style=for-the-badge&url=https%3A%2F%2Ftimplan-bjhvhmdcgncdgxc2.francecentral-01.azurewebsites.net)](https://timplan-bjhvhmdcgncdgxc2.francecentral-01.azurewebsites.net)
 
 # Template_Next
 
