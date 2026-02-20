@@ -1,0 +1,196 @@
+.outer {
+    position: relative;
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+
+    padding: 20px;
+
+    text-align: center;
+    font-size: 20px;
+
+    border: 2px solid var(--color-border);
+    border-radius: 15px;
+
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.hint{
+    position: absolute;
+    top: 5%;
+    right: 3%;
+}
+
+.hintButton{
+    padding: 5px 10px;
+
+    background-color: var(--color-accent);
+
+    border: 2px solid var(--color-glow);
+    border-radius:5px;
+
+    color: var(--color-text-muted);
+    font-weight: bold;
+    font: 18px var(--font-sans);
+}
+.hintButton:hover {
+    background-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+}
+.hintPopup {
+    position: absolute;
+    top: 45px; /* Direkt unter den Button */
+    right: 3%;
+    padding: 15px;
+    background: var(--color-sublte-overlay);
+    border: 2px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: 0 10px 25px var(--color-accent);
+    color: var(--color-text);
+    font: 16px var(--font-sans);
+    animation: fadeIn 0.2s ease-out;
+    margin: auto;
+    width: max-content;
+    max-width: 200px;
+    height: max-content;
+    white-space: normal;
+    z-index: 9999;
+}
+
+.prevButton{
+    position: absolute;
+    bottom: 5%;
+    left: 3%;
+    padding: 5px 10px;
+
+    background-color: var(--color-glow);
+
+    border: 2px solid var(--color-glow);
+    border-radius:5px;
+
+    color: var(--color-text-muted);
+    font-weight: bold;
+    font: 18px var(--font-sans);
+}
+
+.skipButton{
+    position: absolute;
+    bottom: 5%;
+    right: 3%;
+    padding: 5px 10px;
+
+    background-color: var(--color-glow);
+
+    border: 2px solid var(--color-glow);
+    border-radius:5px;
+
+    color: var(--color-text-muted);
+    font-weight: bold;
+    font: 18px var(--font-sans);
+}
+
+.prevButton:hover, .skipButton:hover {
+    background-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+}
+
+.topSection{
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+}
+.bottomSection{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.line{
+    width: 80%;
+    height: 3px;
+    background: var(--color-border);
+    margin-top: 0px;
+}
+
+.revButton{
+    justify-content: center;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 5px solid var(--color-glow);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 20px;
+}
+.revButton:hover {
+    border: 5px solid var(--color-accent-hover);
+    transform: translateY(-1px);
+}
+
+.ansText{
+    display: flex;
+    justify-content: center;
+    font-size: 22px;
+}
+.ansButtons{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+.ansButton{
+    padding: 10px;
+    font: 20px var(--font-sans);
+    color: var(--color-text);
+    border-radius: 6px;
+}
+.again{
+    background-color: var(--color-glow);
+    border: 2px solid #60A5FA;
+}  
+.again:hover{
+    background-color: var(--color-glow);
+    border: 2px solid #60A5FA;
+    box-shadow: 0 3px 25px #3B82F6;
+    transform: translateY(-1px);
+}
+
+.easy{
+    background-color: var(--color-glow);
+    border: 2px solid #4ADE80;
+}
+.easy:hover{
+    background-color: var(--color-glow);
+    box-shadow: 0 3px 25px #22C55E;
+    transform: translateY(-1px);
+}
+
+.medium{
+    background-color: var(--color-glow);
+    border: 2px solid #FDBA74;
+}
+.medium:hover{
+    background-color: var(--color-glow);
+    box-shadow: 0 3px 25px #FB923C;
+    transform: translateY(-1px);
+}
+
+.hard{
+    background-color: var(--color-glow);
+    border: 2px solid #F87171;
+}
+.hard:hover{
+    background-color: var(--color-glow);
+    box-shadow: 0 3px 25px #EF4444;
+    transform: translateY(-1px);
+}
