@@ -1,41 +1,103 @@
-[![Build And Publish Frontend](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/main_timplan.yml/badge.svg)](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/main_timplan.yml)
-[![Azure Website Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=Azure%20Live&style=for-the-badge&url=https%3A%2F%2Ftimplan-bjhvhmdcgncdgxc2.francecentral-01.azurewebsites.net)](https://timplan-bjhvhmdcgncdgxc2.francecentral-01.azurewebsites.net)
+# Timplan -- Web Engineering Project
 
-# Template_Next
+------------------------------------------------------------------------
 
-This repository is a template with a working GitHub action for the build and GitHub pages.
+# 🌐 Website Status
 
-## How to use this template
+## Here you can see the current Website and API status
 
-After creating a repo with this template, deploy works automatically with each push to github pages. The template is deployed to [xniklasx-dev.github.io/Timplan-Projekt/](https://xniklasx-dev.github.io/Timplan-Projekt/)
+[![Timplan Website Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=Website&style=for-the-badge&url=https%3A%2F%2Ftimplan.app)](https://timplan.app)
 
-# Next
+[![Timplan API Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=API&style=for-the-badge&url=https%3A%2F%2Fapi.timplan.app)](https://api.timplan.app)
+# 🚀 Live Deployment
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Here you can see if the newest changes got deployed successfully:
 
-## Getting Started
+[![Build And Publish Frontend](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/deploy-frontend.yml/badge.svg)](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/deploy-frontend.yml)
 
-First, run the development server:
+[![Build And Publish Backend](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/deploy-backend.yml/badge.svg)](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/deploy-backend.yml)
 
-```bash
-npm install
+The badge above shows the current status of the Azure deployment.
+
+# 🖥 Tech Stack
+
+### Frontend
+
+-   Next.js
+-   TypeScript
+
+### Backend
+
+-   TypeScript
+-   Fastify
+
+### Infrastructure
+
+-   Azure App Service
+-   Azure PostgreSQL
+
+------------------------------------------------------------------------
+
+# 💻 Local Development
+
+## 1️⃣ Clone the repository
+
+``` bash
+git clone https://github.com/xniklasx-dev/Timplan-Projekt.git
+cd Timplan-Projekt
 ```
 
-```bash
+------------------------------------------------------------------------
+
+# ▶ Start Frontend locally
+
+``` bash
+cd frontend
+npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Frontend will run on:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+------------------------------------------------------------------------
 
-## Learn More
+# ▶ Start Backend locally
 
-To learn more about Next.js, take a look at the following resources:
+``` bash
+cd backend
+npm install
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Backend will run on:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+http://localhost:3001
+
+Health check endpoint:
+
+http://localhost:3001/health
+
+------------------------------------------------------------------------
+
+# 🛠 Production Deployment
+
+Deployment is fully automated via GitHub Actions.
+
+-   Changes in `/frontend` → trigger frontend deployment
+-   Changes in `/backend` → trigger backend deployment
+
+Azure handles the build process (Oryx) during deployment.
+
+------------------------------------------------------------------------
+
+# 📚 Architecture Overview
+
+User\
+↓\
+www.timplan.app → Frontend (Next.js)\
+↓\
+api.timplan.app → Backend (Fastify API)\
+↓\
+Azure PostgreSQL → Database
