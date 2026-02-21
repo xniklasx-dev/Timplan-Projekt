@@ -1,0 +1,37 @@
+# Deploys the Next.js frontend (located in /frontend) to Azure App Service.
+# Azure will build via Oryx during deployment.
+
+name: Deploy Frontend (Azure App Service)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/deploy-frontend.yml"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Branch to deploy"
+        required: true
+        default: "main"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+
+      - name: Deploy to Azure Web App (timplan)
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: "timplan"
+          slot-name: "Production"
+          package: "./frontend"
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE_FRONTEND }}
