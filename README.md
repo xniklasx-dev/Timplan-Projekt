@@ -17,8 +17,6 @@
 
 [![Build And Publish Backend](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/deploy-backend.yml/badge.svg)](https://github.com/xniklasx-dev/Timplan-Projekt/actions/workflows/deploy-backend.yml)
 
-The badge above shows the current status of the Azure deployment.
-
 # 🖥 Tech Stack
 
 ### Frontend
@@ -29,7 +27,7 @@ The badge above shows the current status of the Azure deployment.
 ### Backend
 
 -   TypeScript
--   Fastify
+-   Express
 
 ### Infrastructure
 
@@ -75,9 +73,9 @@ Backend will run on:
 
 http://localhost:3001
 
-Health check endpoint:
+Swagger API documentation:
 
-http://localhost:3001/health
+http://localhost:3001/docs
 
 ------------------------------------------------------------------------
 
