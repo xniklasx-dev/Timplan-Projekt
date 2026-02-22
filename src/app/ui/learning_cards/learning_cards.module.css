@@ -79,6 +79,26 @@
     font: 18px var(--font-sans);
 }
 
+.revButton{
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 5px solid var(--color-glow);
+    
+    border-radius: 10px;
+    font-size: 20px;
+}
+.revButton:hover {
+    border: 5px solid var(--color-accent-hover);
+    transform: translateX(-50%) translateY(-1px);
+    box-shadow: 0 3px 25px var(--color-accent-hover);
+}
+
 .skipButton{
     position: absolute;
     bottom: 5%;
@@ -121,20 +141,6 @@
     height: 3px;
     background: var(--color-border);
     margin-top: 0px;
-}
-
-.revButton{
-    justify-content: center;
-    background-color: var(--color-surface);
-    color: var(--color-text);
-    border: 5px solid var(--color-glow);
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 20px;
-}
-.revButton:hover {
-    border: 5px solid var(--color-accent-hover);
-    transform: translateY(-1px);
 }
 
 .ansText{

@@ -16,7 +16,12 @@ export default function Learning() {
 
   const currentCard = deckCards[currentIndex];
 
-   const handleRate = (rating: 0 | 1 | 2 | 3) => {
+  const changeIndex = (index: number) => {
+    if (index >= 0 && index < deckCards.length) {
+      setCurrentIndex(index);
+    }};
+
+  const handleRate = (rating: 0 | 1 | 2 | 3) => {
     const updatedCard = rateCard(currentCard, rating);
 
     // Karte im Array ersetzen
@@ -32,7 +37,7 @@ export default function Learning() {
     <div className={styles.page}>
       <main className={styles.main}>
         <h1>{selectedDeck.name} {currentIndex + 1}/{selectedDeck.totalCards}</h1>
-        <LearnCard card={currentCard} onRate={handleRate} />
+        <LearnCard card={currentCard} currentIndex={currentIndex} onRate={handleRate} changeIndex={changeIndex} />
       </main>
     </div>
   );
