@@ -1,13 +1,13 @@
 "use client";
 import { useState } from "react";
 import styles from "./page.module.css";
-import LearnCard from "@/app/ui/learning_cards/learning_cards";
+import LearnCard from "../../ui/learning_cards/learning_cards";
 
 import decksData from "@/app/lib/placeholder-decks.json";
 import cardsData from "@/app/lib/placeholder-cards.json";
 
-import { Deck, Card } from "@/app/lib/definitions";
-import { getCardsForDeck, rateCard } from "@/app/lib/learning-service";
+import { Deck, Card } from "../../lib/definitions";
+import { getCardsForDeck, rateCard } from "../../lib/learning-service";
 
 function hydrateCard(raw: any): Card {
   return {

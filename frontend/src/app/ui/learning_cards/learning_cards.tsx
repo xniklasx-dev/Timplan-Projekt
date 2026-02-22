@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import styles from "./learning_cards.module.css";
-import { Card } from "@/app/lib/definitions";
+import { Card } from "../../lib/definitions";
 
 export default function LearnCard({ card, currentIndex, onRate, changeIndex }: { card: Card; currentIndex: number; onRate: (rating: 0 | 1 | 2 | 3) => void; changeIndex: (index: number) => void }) {
     const [isRevealed, setIsRevealed] = useState(false);

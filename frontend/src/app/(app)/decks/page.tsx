@@ -6,7 +6,7 @@ import type { Deck } from '../../lib/definitions';
 import Link from "next/link";
 import styles from "./page.module.css";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
-import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
+import StartLessonButton from "../../ui/buttons/startLessonButton/StartLessonButton";
 
 const initialDecks: Deck[] = placeholderDecks as unknown as Deck[];
 
