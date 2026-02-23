@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import styles from './Navbar.module.css';
+import styles from './navbar.module.css';
 import NavSearch from './search/NavSearch';
 import AccountMenu from './accountMenu/AccountMenu';
 import type { User } from '../../lib/definitions';
