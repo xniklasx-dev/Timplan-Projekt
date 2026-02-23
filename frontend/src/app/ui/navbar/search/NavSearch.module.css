@@ -1,0 +1,120 @@
+.searchButton {
+  position: absolute;
+  right: clamp(12px, 10.29px + 0.223vw, 18px);
+
+  width: clamp(38px, 35.43px + 0.335vw, 50px);
+  height: clamp(38px, 35.43px + 0.335vw, 50px);
+  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.12s ease;
+}
+
+.searchButton:hover {
+  background: var(--color-surface-hover);
+  transform: translateY(-1px);
+}
+
+.searchOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 8.29px + 0.223vw, 16px);
+
+  padding: clamp(8px, 6.86px + 0.149vw, 12px)
+           clamp(16px, 12.57px + 0.446vw, 28px);
+
+  background: var(--color-surface);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+
+  position: absolute;
+}
+
+.searchOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.searchInput {
+  width: 100%;
+  height: clamp(38px, 35.43px + 0.335vw, 50px);
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: clamp(14px, 13.14px + 0.111vw, 18px);
+}
+
+.searchClose {
+  width: clamp(34px, 32.29px + 0.223vw, 46px);
+  height: clamp(34px, 32.29px + 0.223vw, 46px);
+  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.searchClose:hover {
+  background: var(--color-surface-hover);
+}
+
+.resultBoxWrap {
+  position: absolute;
+  top: clamp(62px, 48.57px + 0.546vw, 82px);
+  left: 0;
+  right: 0;
+
+  margin-inline: auto;
+  width: 100%;
+
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: clamp(10px, 8px + 0.2vw, 18px);
+  box-shadow:
+    0 10px 20px var(--color-accent),
+    inset 0 0 0 1px var(--color-accent-hover);
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  opacity: 0;
+  transform: translateY(-6px);
+  max-height: 0;
+  pointer-events: none;
+
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    max-height 220ms ease;
+}
+
+.resultBoxOpen {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: clamp(240px, 30vh, 560px);
+  pointer-events: auto;
+}
