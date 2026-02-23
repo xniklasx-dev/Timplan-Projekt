@@ -1,0 +1,111 @@
+.accountWrap {
+  position: relative;
+}
+
+.accountButton {
+  width: clamp(42px, 38.57px + 0.446vw, 58px);
+  height: clamp(42px, 38.57px + 0.446vw, 58px);
+  border-radius: 999px;
+
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.accountButton:hover {
+  background: var(--color-surface-hover);
+  box-shadow: 0 12px 30px var(--color-surface-shadow);
+  transform: translateY(-1px);
+}
+
+.accountButton:active {
+  transform: translateY(0px);
+  box-shadow: none;
+}
+
+.accountMenu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + clamp(10px, 8px + 0.25vw, 18px));
+
+  width: clamp(280px, 260px + 2vw, 340px);
+
+  background: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: clamp(14px, 12px + 0.25vw, 18px);
+
+  padding: clamp(12px, 10px + 0.25vw, 18px);
+
+  box-shadow:
+    0 14px 30px var(--color-accent),
+    inset 0 0 0 1px var(--color-accent-hover);
+
+  z-index: 50;
+}
+
+.menuHeader {
+  padding: clamp(10px, 8px + 0.25vw, 14px)
+           clamp(12px, 10px + 0.3vw, 16px)
+           clamp(12px, 10px + 0.3vw, 16px)
+           clamp(12px, 10px + 0.3vw, 16px);
+}
+
+.menuTitle {
+  font-weight: 800;
+  color: var(--color-text);
+  font-size: clamp(14px, 13px + 0.2vw, 17px);
+}
+
+.menuSub {
+  margin-top: clamp(4px, 3px + 0.15vw, 6px);
+  color: var(--color-text-muted);
+  font-size: clamp(12.5px, 12px + 0.15vw, 14px);
+}
+
+.menuDivider {
+  height: 1px;
+  background: var(--color-divider);
+  margin: clamp(8px, 6px + 0.25vw, 12px) 0;
+}
+
+.menuItem {
+  display: flex;
+  padding: clamp(10px, 8px + 0.25vw, 14px)
+           clamp(12px, 10px + 0.3vw, 16px);
+  border-radius: clamp(12px, 10px + 0.2vw, 16px);
+  color: var(--color-text);
+
+  transition: background 0.12s ease, transform 0.12s ease;
+}
+
+.menuItem:hover {
+  background: var(--color-surface-hover);
+  transform: translateY(-1px);
+}
+
+.menuItemButton {
+  width: 100%;
+  text-align: left;
+  padding: clamp(10px, 8px + 0.25vw, 14px)
+           clamp(12px, 10px + 0.3vw, 16px);
+  border-radius: clamp(12px, 10px + 0.2vw, 16px);
+
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+
+  transition: background 0.12s ease, transform 0.12s ease;
+}
+
+.menuItemButton:hover {
+  background: var(--color-surface-hover);
+  transform: translateY(-1px);
+}

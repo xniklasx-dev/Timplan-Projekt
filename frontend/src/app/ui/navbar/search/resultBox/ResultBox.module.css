@@ -1,0 +1,132 @@
+.resultBox {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+
+  padding: clamp(10px, 8.29px + 0.223vw, 16px);
+  color: var(--color-text);
+}
+
+.status {
+  margin: 0;
+  padding: 0 0 clamp(8px, 6.86px + 0.149vw, 12px) 0;
+
+  font-size: clamp(12px, 11.43px + 0.075vw, 14px);
+  font-weight: 700;
+  color: var(--color-text-muted);
+
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.scrollArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  padding-top: clamp(10px, 8.29px + 0.223vw, 14px);
+}
+
+.loading {
+  opacity: 0.98;
+}
+
+.skeletonWrap {
+  padding-top: clamp(10px, 8.29px + 0.223vw, 14px);
+}
+.empty {
+  padding: clamp(12px, 10.29px + 0.223vw, 16px) 0;
+  font-size: clamp(13px, 12.43px + 0.075vw, 15px);
+  color: var(--color-text-muted);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  gap: clamp(6px, 5.14px + 0.112vw, 10px);
+}
+
+.link {
+  display: flex;
+  align-items: center;
+
+  height: clamp(40px, 37.71px + 0.298vw, 52px);
+  padding: 0 clamp(10px, 8.29px + 0.223vw, 14px);
+
+  border-radius: 12px;
+
+  text-decoration: none;
+  color: var(--color-text);
+
+  background: transparent;
+  border: 1px solid transparent;
+
+  transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+
+.link:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+  transform: translateY(-1px);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.scrollArea::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollArea::-webkit-scrollbar-thumb {
+  background: rgba(230, 232, 235, 0.14);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.scrollArea::-webkit-scrollbar-thumb:hover {
+  background: rgba(230, 232, 235, 0.22);
+}
+
+.skeletonWrap {
+  padding-top: clamp(10px, 8.29px + 0.223vw, 14px);
+  display: grid;
+  gap: clamp(8px, 6.86px + 0.149vw, 12px);
+}
+
+.skeletonRow {
+  position: relative;
+  height: clamp(40px, 37.71px + 0.298vw, 52px);
+  border-radius: 12px;
+
+  background: #1f1f1f;
+  overflow: hidden;
+}
+
+.skeletonRow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.03) 0%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.03) 100%
+  );
+
+  transform: translateX(-100%);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import styles from './navbar.module.css';
-import AccountMenu from '../accountMenu/AccountMenu';
+import { useState } from 'react';
+import styles from './Navbar.module.css';
+import NavSearch from './search/NavSearch';
+import AccountMenu from './accountMenu/AccountMenu';
 import type { User } from '../../lib/definitions';
 
 function isActive(pathname: string, href: string) {
@@ -12,8 +14,9 @@ function isActive(pathname: string, href: string) {
   return false;
 }
 
-export default function Navbar({ user }: { user?: User | null}) {
+export default function Navbar({ user }: { user?: User | null }) {
   const pathname = usePathname() || '/';
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const links = [
     { href: '/decks', label: 'Decks' },
@@ -25,28 +28,40 @@ export default function Navbar({ user }: { user?: User | null}) {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        {/* Timplan Name */}
         <Link href="/" className={styles.brand}>
           Timplan
         </Link>
 
-        {/* Tabs */}
-        <nav className={styles.nav}>
-          {links.map((link) => {
-            const active = isActive(pathname, link.href);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`${styles.navLink} ${active ? styles.navLinkActive : ''}`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
+        <nav
+          className={`${styles.nav} ${
+            searchOpen ? styles.navSearchOpen : ''
+          }`}
+        >
+          <div className={styles.navLinks}>
+            {links.map((link) => {
+              const active = isActive(pathname, link.href);
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`${styles.navLink} ${
+                    active ? styles.navLinkActive : ''
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
+
+          <NavSearch
+            open={searchOpen}
+            onOpen={() => setSearchOpen(true)}
+            onClose={() => setSearchOpen(false)}
+          />
         </nav>
 
-        {/* Account Dropdown */}
         <div className={styles.right}>
           <AccountMenu user={user ?? null} />
         </div>
