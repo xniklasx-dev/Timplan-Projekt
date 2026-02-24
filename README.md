@@ -6,7 +6,7 @@
 
 ## Here you can see the current Website and API status
 
-[![Timplan Website Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=Website&style=for-the-badge&url=https%3A%2F%2Ftimplan.app)](https://timplan.app)
+[![Timplan Website Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=Website&style=for-the-badge&url=https%3A%2F%2Fwww.timplan.app)](https://www.timplan.app)
 
 [![Timplan API Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=API&style=for-the-badge&url=https%3A%2F%2Fapi.timplan.app)](https://api.timplan.app)
 # 🚀 Live Deployment
