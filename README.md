@@ -1,6 +1,6 @@
 # Timplan -- Web Engineering Project
 
-------------------------------------------------------------------------
+---
 
 # 🌐 Website Status
 
@@ -8,7 +8,8 @@
 
 [![Timplan Website Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=Website&style=for-the-badge&url=https%3A%2F%2Fwww.timplan.app)](https://www.timplan.app)
 
-[![Timplan API Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=API&style=for-the-badge&url=https%3A%2F%2Fapi.timplan.app)](https://api.timplan.app)
+[![Timplan API Status](https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&label=API&style=for-the-badge&url=https%3A%2F%2Fapi.timplan.app/health)](https://api.timplan.app/health)
+
 # 🚀 Live Deployment
 
 ## Here you can see if the newest changes got deployed successfully:
@@ -21,35 +22,35 @@
 
 ### Frontend
 
--   Next.js
--   TypeScript
+- Next.js
+- TypeScript
 
 ### Backend
 
--   TypeScript
--   Express
+- TypeScript
+- Express
 
 ### Infrastructure
 
--   Azure App Service
--   Azure PostgreSQL
+- Azure App Service
+- Azure PostgreSQL
 
-------------------------------------------------------------------------
+---
 
 # 💻 Local Development
 
 ## 1️⃣ Clone the repository
 
-``` bash
+```bash
 git clone https://github.com/xniklasx-dev/Timplan-Projekt.git
 cd Timplan-Projekt
 ```
 
-------------------------------------------------------------------------
+---
 
 # ▶ Start Frontend locally
 
-``` bash
+```bash
 cd frontend
 npm install
 npm run dev
@@ -59,11 +60,11 @@ Frontend will run on:
 
 http://localhost:3000
 
-------------------------------------------------------------------------
+---
 
 # ▶ Start Backend locally
 
-``` bash
+```bash
 cd backend
 npm install
 npm run dev
@@ -77,18 +78,18 @@ Swagger API documentation:
 
 http://localhost:3001/docs
 
-------------------------------------------------------------------------
+---
 
 # 🛠 Production Deployment
 
 Deployment is fully automated via GitHub Actions.
 
--   Changes in `/frontend` → trigger frontend deployment
--   Changes in `/backend` → trigger backend deployment
+- Changes in `/frontend` → trigger frontend deployment
+- Changes in `/backend` → trigger backend deployment
 
 Azure handles the build process (Oryx) during deployment.
 
-------------------------------------------------------------------------
+---
 
 # 📚 Architecture Overview
 
