@@ -96,6 +96,6 @@ User\
 ↓\
 www.timplan.app → Frontend (Next.js)\
 ↓\
-api.timplan.app → Backend (Fastify API)\
+api.timplan.app → Backend (Express API)\
 ↓\
 Azure PostgreSQL → Database
