@@ -120,14 +120,13 @@ export default function Decks() {
           decks.map((deck) => (
             <Link
               key={deck.id}
-              href={`/decks/${deck.id}/cards`}
+              href={`/decks/${deck.id}`}
               ref={(el) => {
                 if (!el) return;
                 cardRefs.current.set(deck.id, el);
               }}
-              className={`${styles.deckCard} ${
-                isGridView ? styles.deckCardGrid : styles.deckCardLine
-              }`}
+              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
+                }`}
             >
               <div className={styles.startButtonWrapper}>
                 <StartLessonButton
@@ -161,6 +160,17 @@ export default function Decks() {
                   <span className={styles.statValue}>{deck.newCards}</span>
                   <span className={styles.statLabel}>New</span>
                 </div>
+
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.learningCards}</span>
+                  <span className={styles.statLabel}>Learning</span>
+                </div>
+
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.reviewCards}</span>
+                  <span className={styles.statLabel}>Review</span>
+                </div>
+
               </div>
             </Link>
           ))
