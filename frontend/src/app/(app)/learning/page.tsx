@@ -65,7 +65,7 @@ export default function Learning() {
     <div className={styles.page}>
       <main className={styles.main}>
         <h1>{selectedDeck.name} {currentIndex + 1}/{selectedDeck.totalCards}</h1>
-        <LearnCard card={currentCard} currentIndex={currentIndex} onRate={handleRate} changeIndex={changeIndex} />
+        <LearnCard key={currentCard.id} card={currentCard} currentIndex={currentIndex} onRate={handleRate} changeIndex={changeIndex} />
       </main>
     </div>
   );

@@ -200,3 +200,8 @@
     box-shadow: 0 3px 25px #EF4444;
     transform: translateY(-1px);
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
