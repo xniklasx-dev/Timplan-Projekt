@@ -1,7 +1,7 @@
 [
   {
     "id": "c1",
-    "deckId": ["1"],
+    "deckId": "1",
     "front": "Was ist die Hauptstadt von Frankreich?",
     "back": "Paris",
     "hint": "Es ist auch die Stadt der Liebe",
@@ -20,7 +20,7 @@
   },
   {
     "id": "c2",
-    "deckId": ["1"],
+    "deckId": "1",
     "front": "Nenne das chemische Symbol von Wasserstoff",
     "back": "H",
     "tags": ["chemie", "elemente"],
@@ -38,7 +38,7 @@
   },
   {
     "id": "c3",
-    "deckId": ["2"],
+    "deckId": "2",
     "front": "Zeige das Bild eines Apfels",
     "back": "Das ist ein Apfel",
     "tags": ["lebensmittel", "bilder"],
@@ -62,7 +62,7 @@
   },
   {
     "id": "c4",
-    "deckId": ["2", "3"],
+    "deckId": "2",
     "front": "Wie viele Planeten hat unser Sonnensystem?",
     "back": "8",
     "hint": "Früher galt Pluto als 9.",

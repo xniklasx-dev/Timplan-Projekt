@@ -3,7 +3,7 @@ import { Card } from "./definitions";
 export const cards: Card[] = [
   {
     id: "c1",
-    deckId: ["d1"],
+    deckId: "d1",
     front: "Was ist die Hauptstadt von Frankreich?",
     back: "Paris",
     hint: "Es ist auch die Stadt der Liebe",
@@ -22,7 +22,7 @@ export const cards: Card[] = [
   },
   {
     id: "c2",
-    deckId: ["d1"],
+    deckId: "d1",
     front: "Nenne das chemische Symbol von Wasserstoff",
     back: "H",
     tags: ["chemie", "elemente"],
@@ -40,7 +40,7 @@ export const cards: Card[] = [
   },
   {
     id: "c3",
-    deckId: ["d2"],
+    deckId: "d2",
     front: "Zeige das Bild eines Apfels",
     back: "Das ist ein Apfel",
     tags: ["lebensmittel", "bilder"],
@@ -60,7 +60,7 @@ export const cards: Card[] = [
   },
   {
     id: "c4",
-    deckId: ["d2", "d3"],
+    deckId: "d2",
     front: "Wie viele Planeten hat unser Sonnensystem?",
     back: "8",
     hint: "Früher galt Pluto als 9.",
