@@ -11,7 +11,7 @@ export type User = {
 
 export type Card = {
   id: string;
-  deckId: string[];
+  deckId: string;
 
   front: string;
   back: string;
