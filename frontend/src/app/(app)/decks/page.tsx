@@ -133,7 +133,7 @@ export default function Decks() {
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    router.push("/learning");
+                    router.push("/learning/" + deck.id);
                   }}
                 />
               </div>
