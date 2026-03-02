@@ -130,9 +130,14 @@ export default function Decks() {
             >
               <div className={styles.startButtonWrapper}>
                 <StartLessonButton
+                  title={deck.cardIds.length === 0 ? "No cards in this deck yet" : "Start studying"}
+                  disabled={deck.cardIds.length === 0}
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     e.stopPropagation();
+
+                    if (deck.cardIds.length === 0) return;
+
                     router.push("/learning/" + deck.id);
                   }}
                 />
@@ -147,7 +152,7 @@ export default function Decks() {
 
               <div className={styles.deckStats}>
                 <div className={styles.stat}>
-                  <span className={styles.statValue}>{deck.totalCards}</span>
+                  <span className={styles.statValue}>{deck.cardIds.length}</span>
                   <span className={styles.statLabel}>Cards</span>
                 </div>
 
