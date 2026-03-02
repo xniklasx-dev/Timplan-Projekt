@@ -1,8 +1,9 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 import LearnCard from "../../../ui/learning_cards/learning_cards";
+import DashboardLearning from "@/app/ui/learning_cards/dashboard_learning";
 
 import decksData from "@/app/lib/placeholder-decks.json";
 import cardsData from "@/app/lib/placeholder-cards.json";
@@ -39,6 +40,7 @@ const cards: Card[] = cardsData.map(hydrateCard);
 export default function Learning() {
   const params = useParams();
   const deckId = String(params.deckId);
+
   const selectedDeck = getDeckById(decks, deckId);
   if (!selectedDeck) {
     return <div>Deck nicht gefunden</div>;
