@@ -734,5 +734,25 @@
     "updatedAt": "2026-02-24T13:05:00.000Z",
     "deleted": false,
     "revision": 2
+  },
+  {
+    "id": "21",
+    "name": "New Deck",
+    "description": "I just created this deck and haven't added any cards yet.",
+    "tags": ["general"],
+    "cardIds": [],
+    "color": "#264653",
+    "icon": "📝",
+    "totalCards": 0,
+    "newCards": 0,
+    "learningCards": 0,
+    "reviewCards": 0,
+    "dueToday": 0,
+    "studiedToday": 0,
+    "lastStudied": "2026-02-24T13:05:00.000Z",
+    "createdAt": "2026-01-20T08:00:00.000Z",
+    "updatedAt": "2026-02-24T13:05:00.000Z",
+    "deleted": false,
+    "revision": 1
   }
 ]
