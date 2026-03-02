@@ -1,5 +1,8 @@
 import { Card, Deck } from "./definitions";
 
+export function getDeckById(decks: Deck[], id: string): Deck | undefined {
+  return decks.find((deck) => String(deck.id) === id);
+}
 
 export function getCardsForDeck(deck: Deck, allCards: Card[]): Card[] {
   return allCards.filter((card) => deck.cardIds.includes(card.id));

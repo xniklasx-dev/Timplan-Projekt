@@ -1,0 +1,114 @@
+.outer{
+    height: 100%;
+    width: 100%;
+}
+
+.recentlyStudied{
+    display: grid;
+    grid-template-columns: repeat(5, minmax(250px, 1fr));
+    gap: 1rem;
+    width: 100%;
+}
+
+.deck{
+    position: relative;
+    overflow: hidden;
+    padding: 1rem;
+    margin: 0.5rem;
+    border: 3px solid var(--color-border);
+    border-radius: 12px;
+    width: auto;
+    background-color: var(--color-surface);
+}
+
+.deck h2 {
+  text-align: left;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: auto;
+  height: 3.1rem;
+}
+
+.line{
+    width: 80%;
+    height: 3px;
+    background: var(--color-border);
+    margin-top: 0px;
+}
+
+.status{
+    font-size: 0.9rem;
+    color: var(--color-text-disabled);
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+
+.difficultyWrapper{
+  position: relative;
+  width: 100%;
+}
+
+.difficultyBar {
+  display: flex;
+  height: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border: 3px solid var(--color-border);
+}
+
+.new { background-color: var(--color-again); }
+.easy { background-color: var(--color-easy); }
+.medium { background-color: var(--color-medium); }
+.hard { background-color: var(--color-hard); }
+
+.tooltip {
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.difficultyWrapper:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.lastLearned {
+  display: flex;
+  font-size: 0.9rem;
+  color: var(--color-text-disabled);
+  margin-top: 0;
+  justify-content: left;
+}
+
+.learn_button {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  border: 3px solid var(--color-border);
+  background-clip: padding-box;
+    
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 5px 10px;
+}
+.learn_button:hover {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 25px var(--color-accent-hover);
+}
