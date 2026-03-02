@@ -30,6 +30,10 @@
   --color-again:  #60A5FA;
   --color-again-hover: #3B82F6;
 
+  /*difficulty*/
+  --color-again:  #60A5FA;
+  --color-again-hover: #3B82F6;
+
   --color-easy: #4ADE80;
   --color-easy-hover: #22C55E;
 
@@ -39,6 +43,7 @@
   --color-hard: #F87171;
   --color-hard-hover: #EF4444;
   
+
   /* status */
   --color-success: #1DB954;
   --color-error: #E5484D;
