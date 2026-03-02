@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import styles from "../page.module.css";
+import styles from "./page.module.css";
 import LearnCard from "../../../ui/learning_cards/learning_cards";
 import DashboardLearning from "@/app/ui/learning_cards/dashboard_learning";
 

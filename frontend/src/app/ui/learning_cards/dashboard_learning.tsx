@@ -49,25 +49,41 @@ export default function DashboardLearning() {
                 const deckCards = cards.filter(c => c.deckId === deck.id);
                 const cardCounts = deckCards.reduce(
                   (acc, card) => {
-                    if (card.rating === 1) acc.easy += 1;
+                    if (card.rating === 0) acc.new += 1;
+                    else if(card.rating === 1) acc.easy += 1;
                     else if (card.rating === 2) acc.medium += 1;
                     else if (card.rating === 3) acc.hard += 1;
                     return acc;
                   },
-                  { easy: 0, medium: 0, hard: 0 }
+                  { new: 0, easy: 0, medium: 0, hard: 0 }
                 );
                 const totalCards = cardCounts.easy + cardCounts.medium + cardCounts.hard;
 
                 return (
                   <div key={deck.id} className={styles.deck}>
                     <h2>{deck.name}</h2>
-                    <div className={styles.difficultyBar}>
+                    <div className={styles.line}></div>
+                    <div className={styles.difficultyWrapper}>
+                      <div className={styles.difficultyBar}>
+                        <div className={styles.new} style={{ width: `${(cardCounts.new / totalCards) * 100}%` }}/>
                         <div className={styles.easy} style={{ width: `${(cardCounts.easy / totalCards) * 100}%` }}/>
                         <div className={styles.medium} style={{ width: `${(cardCounts.medium / totalCards) * 100}%` }}/>
                         <div className={styles.hard} style={{ width: `${(cardCounts.hard / totalCards) * 100}%` }}/>
+                      </div>
+                      <div className={styles.tooltip}>
+                        New: {cardCounts.new} <br />
+                        Easy: {cardCounts.easy} <br />
+                        Medium: {cardCounts.medium} <br />
+                        Hard: {cardCounts.hard} <br />
+                        Total: {totalCards}
+                      </div>
                     </div>
-                    <p>Last learned: {deck.lastStudied?.toLocaleDateString()}</p>
-                </div>
+                    <p className={styles.lastLearned}>Last learned: {deck.lastStudied?.toLocaleDateString()}</p>
+                    <p className={styles.cardsDueToday}>Cards due today: {deckCards.filter(c => c.due <= new Date()).length}</p> 
+                    {deckCards.filter(c => c.due <= new Date()).length > 0 && (
+                      <button className={styles.learn_button}>Learn</button>
+                    )}
+                  </div>
                 );
             })}
             </div>
