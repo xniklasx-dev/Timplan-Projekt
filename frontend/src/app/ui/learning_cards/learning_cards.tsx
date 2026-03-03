@@ -7,11 +7,11 @@ export default function LearnCard({ card, currentIndex, onRate, changeIndex }: {
     const [isRevealed, setIsRevealed] = useState(false);
     const [isHintRevealed, setIsHintRevealed] = useState(false);
 
-    useEffect(() => {
+    /*useEffect(() => {
         setIsRevealed(false);
         setIsHintRevealed(false);}, [card]);
 
-    /*const handleFeedback = (type: string) => {
+    const handleFeedback = (type: string) => {
         let rating: 0 | 1 | 2 | 3;
         switch (type) {
             case 'again': rating = 0; break;

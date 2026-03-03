@@ -120,21 +120,25 @@ export default function Decks() {
           decks.map((deck) => (
             <Link
               key={deck.id}
-              href={`/decks/${deck.id}/cards`}
+              href={`/decks/${deck.id}`}
               ref={(el) => {
                 if (!el) return;
                 cardRefs.current.set(deck.id, el);
               }}
-              className={`${styles.deckCard} ${
-                isGridView ? styles.deckCardGrid : styles.deckCardLine
-              }`}
+              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
+                }`}
             >
               <div className={styles.startButtonWrapper}>
                 <StartLessonButton
+                  title={deck.cardIds.length === 0 ? "No cards in this deck yet" : "Start studying"}
+                  disabled={deck.cardIds.length === 0}
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    router.push("/learning");
+
+                    if (deck.cardIds.length === 0) return;
+
+                    router.push("/learning/" + deck.id);
                   }}
                 />
               </div>
@@ -148,7 +152,7 @@ export default function Decks() {
 
               <div className={styles.deckStats}>
                 <div className={styles.stat}>
-                  <span className={styles.statValue}>{deck.totalCards}</span>
+                  <span className={styles.statValue}>{deck.cardIds.length}</span>
                   <span className={styles.statLabel}>Cards</span>
                 </div>
 
@@ -161,6 +165,17 @@ export default function Decks() {
                   <span className={styles.statValue}>{deck.newCards}</span>
                   <span className={styles.statLabel}>New</span>
                 </div>
+
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.learningCards}</span>
+                  <span className={styles.statLabel}>Learning</span>
+                </div>
+
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck.reviewCards}</span>
+                  <span className={styles.statLabel}>Review</span>
+                </div>
+
               </div>
             </Link>
           ))

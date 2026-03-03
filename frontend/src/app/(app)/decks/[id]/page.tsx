@@ -1,10 +1,10 @@
 import styles from "./page.module.css";
 
-export default function Sharing() {
+export default function Deck() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1> Sharing Page</h1>
+        <h1> Deck Page</h1>
       </main>
     </div>
   );

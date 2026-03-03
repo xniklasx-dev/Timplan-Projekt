@@ -1,15 +1,13 @@
 import { Card, Deck } from "./definitions";
 
-/**
- * Gibt alle Karten zurück, die zu einem Deck gehören
- */
+export function getDeckById(decks: Deck[], id: string): Deck | undefined {
+  return decks.find((deck) => String(deck.id) === id);
+}
+
 export function getCardsForDeck(deck: Deck, allCards: Card[]): Card[] {
   return allCards.filter((card) => deck.cardIds.includes(card.id));
 }
 
-/**
- * Gibt die nächste Karte im Array zurück
- */
 export function getNextCard(cards: Card[], currentIndex: number): Card | null {
   if (currentIndex + 1 >= cards.length) return null;
   return cards[currentIndex + 1];
