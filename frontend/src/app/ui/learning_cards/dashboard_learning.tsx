@@ -1,9 +1,11 @@
+"use client";
 import styles from './dashboard_learning.module.css';
 
 import decksData from "@/app/lib/placeholder-decks.json";
 import cardsData from "@/app/lib/placeholder-cards.json";
 
 import { Deck, Card } from "../../lib/definitions";
+import { useRouter } from "next/navigation";
 
 function hydrateDeck(raw: any): Deck {
   return {
@@ -32,6 +34,7 @@ const cards: Card[] = cardsData.map(hydrateCard);
 
 
 export default function DashboardLearning() {
+  const router = useRouter();
     const recentlyStudiedDecks = decks
     .filter(deck => deck.lastStudied)
     .sort(
@@ -80,9 +83,14 @@ export default function DashboardLearning() {
                     </div>
                     <p className={styles.lastLearned}>Last learned: {deck.lastStudied?.toLocaleDateString()}</p>
                     <p className={styles.cardsDueToday}>Cards due today: {deckCards.filter(c => c.due <= new Date()).length}</p> 
-                    {deckCards.filter(c => c.due <= new Date()).length > 0 && (
-                      <button className={styles.learn_button}>Learn</button>
-                    )}
+                    {(() => {
+                      const learn = deckCards.filter(c => c.due <= new Date()).length > 0;
+                      if(learn) {
+                      return <button className={styles.learn_button_active} onClick={() => router.push("/learning/" + deck.id)}>Learn</button>;}
+                      else {
+                        return <button className={styles.learn_button_inactive} >Learn</button>;
+                      }
+                    })()}
                   </div>
                 );
             })}

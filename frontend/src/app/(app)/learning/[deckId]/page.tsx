@@ -45,10 +45,11 @@ export default function Learning() {
   if (!selectedDeck) {
     return <div>Deck nicht gefunden</div>;
   }
-  const initialDeckCards = getCardsForDeck(selectedDeck, cards);
+  const initialDeckCards = getCardsForDeck(selectedDeck, cards) .filter(card => card.due <= new Date());
 
   const [deckCards, setDeckCards] = useState(initialDeckCards);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [learnedCount, setLearnedCount] = useState(0);
 
   const currentCard = deckCards[currentIndex];
 
@@ -61,10 +62,20 @@ export default function Learning() {
     const updatedCard = rateCard(currentCard, rating);
 
     // Karte im Array ersetzen
+    if (rating === 0){
+      const updatedCards = [...deckCards, updatedCard];
+      updatedCards[currentIndex] = updatedCard;
+
+      setDeckCards(updatedCards);
+    }
+    else{
     const updatedCards = [...deckCards];
     updatedCards[currentIndex] = updatedCard;
+    setLearnedCount((prev) => prev + 1);
 
     setDeckCards(updatedCards);
+    }
+
     setCurrentIndex((prev) => prev + 1);}
   
   if (!currentCard) {
@@ -72,10 +83,9 @@ export default function Learning() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>{selectedDeck.name} {currentIndex + 1}/{selectedDeck.totalCards}</h1>
-        <LearnCard key={currentCard.id} card={currentCard} currentIndex={currentIndex} onRate={handleRate} changeIndex={changeIndex} />
+        <h1>{selectedDeck.name} {learnedCount}/{initialDeckCards.length}</h1>
+        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} onRate={handleRate} changeIndex={changeIndex} />
       </main>
     </div>
   );
 }
-
