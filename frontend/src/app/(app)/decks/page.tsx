@@ -132,8 +132,8 @@ export default function Decks() {
               >
                 <div className={styles.startButtonWrapper}>
                   <StartLessonButton
-                    title={deck.cardIds.length === 0 ? "No cards in this deck yet" : "Start studying"}
-                    disabled={deck.cardIds.length === 0}
+                    title={deck.cardIds?.length === 0 ? "No cards in this deck yet" : "Start studying"}
+                    disabled={deck.cardIds?.length === 0}
                     onClick={(e: React.MouseEvent) => {
                       e.preventDefault();
                       e.stopPropagation();

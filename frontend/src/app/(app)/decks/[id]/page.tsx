@@ -28,9 +28,15 @@ export default function Deck() {
 
   const currentDeck = decksData.find((d) => d.id === deckId);
 
-  const childDecks = decksData.filter((d) => d.parentDeckId === deckId);
+  const childDecks =
+    currentDeck?.childDeckIds
+      ?.map((id) => decksData.find((d) => d.id === id))
+      .filter(Boolean) ?? [];
 
-  const cards = cardsData.filter((c) => c.deckId === deckId);
+  const cards =
+    currentDeck?.cardIds
+      .map((id) => cardsData.find((c) => c.id === id))
+      .filter(Boolean) ?? [];
 
   const measure = () => {
     const rects = new Map<string, DOMRect>();
@@ -126,58 +132,64 @@ export default function Deck() {
 
       <section className={isGridView ? styles.deckGrid : styles.deckLine}>
 
-        {childDecks.map((deck) => (
-          <Link
-            key={deck.id}
-            href={`/decks/${deck.id}`}
-            ref={(el) => {
-              if (!el) return;
-              cardRefs.current.set(deck.id, el);
-            }}
-            className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
-              }`}
-          >
-            <div className={styles.deckTop}>
-              <h2 className={styles.deckName}>{deck.name}</h2>
+        {childDecks.map((deck) => {
+          if (!deck) return null;
+          return (
+            <Link
+              key={deck.id}
+              href={`/decks/${deck.id}`}
+              ref={(el) => {
+                if (!el) return;
+                cardRefs.current.set(deck.id, el);
+              }}
+              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
+                }`}
+            >
+              <div className={styles.deckTop}>
+                <h2 className={styles.deckName}>{deck?.name}</h2>
 
-              {deck.description && (
-                <p className={styles.deckDescription}>{deck.description}</p>
-              )}
-            </div>
-
-            <div className={styles.deckStats}>
-              <div className={styles.stat}>
-                <span className={styles.statValue}>
-                  {deck.cardIds.length}
-                </span>
-                <span className={styles.statLabel}>Cards</span>
+                {deck?.description && (
+                  <p className={styles.deckDescription}>{deck?.description}</p>
+                )}
               </div>
 
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{deck.dueToday}</span>
-                <span className={styles.statLabel}>Due</span>
+              <div className={styles.deckStats}>
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>
+                    {deck?.cardIds.length}
+                  </span>
+                  <span className={styles.statLabel}>Cards</span>
+                </div>
+
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{deck?.dueToday}</span>
+                  <span className={styles.statLabel}>Due</span>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
+
+        {cards.map((card) => {
+          if (!card) return null;
+          return (
+            <div
+              key={card.id}
+              ref={(el) => {
+                if (!el) return;
+                cardRefs.current.set(card.id, el);
+              }}
+              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
+                }`}
+            >
+              <div className={styles.deckTop}>
+                <h2 className={styles.deckName}>{card?.front}</h2>
+
+                <p className={styles.deckDescription}>{card?.back}</p>
               </div>
             </div>
-          </Link>
-        ))}
-
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            ref={(el) => {
-              if (!el) return;
-              cardRefs.current.set(card.id, el);
-            }}
-            className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
-              }`}
-          >
-            <div className={styles.deckTop}>
-              <h2 className={styles.deckName}>{card.front}</h2>
-
-              <p className={styles.deckDescription}>{card.back}</p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </section>
     </main>
   );
