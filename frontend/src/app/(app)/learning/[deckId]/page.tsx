@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import styles from "./page.module.css";
 import LearnCard from "../../../ui/learning_cards/learning_cards";
-import DashboardLearning from "@/app/ui/learning_cards/dashboard_learning";
+import LearningEndPage from "@/app/ui/learning_cards/learning_end_page";
 
 import decksData from "@/app/lib/placeholder-decks.json";
 import cardsData from "@/app/lib/placeholder-cards.json";
@@ -83,7 +83,13 @@ export default function Learning() {
     setCurrentIndex((prev) => prev + 1);}
   
   if (!currentCard) {
-    return <div>Session beendet 🎉</div>;}
+    return (
+      <div className={styles.page}>
+        <main className={styles.main}>
+          <h1>Congratulations! You've completed the deck {selectedDeck.name}!</h1>
+          <LearningEndPage deckCards={deckCards}/>
+        </main>
+      </div>);}
   return (
     <div className={styles.page}>
       <main className={styles.main}>
