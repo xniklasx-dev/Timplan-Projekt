@@ -2,28 +2,26 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import styles from './NavSearch.module.css';
 import Image from 'next/image';
+
+import styles from './NavSearch.module.css';
 import ResultBox from './resultBox/ResultBox';
 
-interface Props {
+import type { Card, Deck } from '@/app/lib/definitions';
+import { search, type SearchResult } from '@/app/lib/search-function';
+
+import decksData from '@/app/lib/placeholder-decks.json';
+import cardsData from '@/app/lib/placeholder-cards.json';
+
+export default function NavSearch({
+  open,
+  onOpen,
+  onClose,
+}: {
   open: boolean;
   onOpen: () => void;
   onClose: () => void;
-}
-
-const testItems = [
-  { id: '1', title: 'React Basics – Components & Props', link: '/decks/react-basics' },
-  { id: '2', title: 'Understanding useEffect and Dependencies', link: '/decks/useeffect-guide' },
-  { id: '3', title: 'TypeScript Generics Explained', link: '/decks/typescript-generics' },
-  { id: '4', title: 'Next.js App Router Deep Dive', link: '/decks/nextjs-app-router' },
-  { id: '5', title: 'JavaScript Closures & Scope', link: '/decks/js-closures' },
-  { id: '6', title: 'Async/Await vs Promises', link: '/decks/async-await' },
-  { id: '7', title: 'CSS Flexbox & Grid Layout', link: '/decks/css-layout' },
-  { id: '8', title: 'Clean Architecture in Frontend Apps', link: '/decks/clean-architecture' },
-];
-
-export default function NavSearch({ open, onOpen, onClose }: Props) {
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -35,18 +33,31 @@ export default function NavSearch({ open, onOpen, onClose }: Props) {
   const urlQuery = useMemo(() => searchParams.get('q') ?? '', [searchParams]);
   const [query, setQuery] = useState(urlQuery);
 
-  const [loading, setLoading] = useState(false);
-  const showResults = open && query.trim().length > 0;
+  function hydrateCard(raw: any): Card {
+    return {
+      ...raw,
+      due: new Date(raw.due),
+      createdAt: new Date(raw.createdAt),
+      updatedAt: new Date(raw.updatedAt),
+      lastReview: raw.lastReview ? new Date(raw.lastReview) : undefined,
+    };
+  }
 
-  useEffect(() => {
-    if (open) {
-      setQuery(urlQuery);
-      requestAnimationFrame(() => inputRef.current?.focus());
-    } else {
-      setQuery('');
-      inputRef.current?.blur();
-    }
-  }, [open, urlQuery]);
+  function hydrateDeck(raw: any): Deck {
+    return {
+      ...raw,
+      createdAt: new Date(raw.createdAt),
+      updatedAt: new Date(raw.updatedAt),
+      lastStudied: raw.lastStudied
+        ? new Date(raw.lastStudied)
+        : undefined,
+    };
+  }
+
+  const decks = useMemo(() => decksData.map(hydrateDeck), []);
+  const cards = useMemo(() => cardsData.map(hydrateCard), []);
+
+  const showResults = open && query.trim().length > 0;
 
   const writeQueryToUrl = (nextQuery: string, mode: 'push' | 'replace' = 'replace') => {
     const params = new URLSearchParams(searchParams.toString());
@@ -63,35 +74,37 @@ export default function NavSearch({ open, onOpen, onClose }: Props) {
   };
 
   useEffect(() => {
+    if (open) {
+      setQuery(urlQuery);
+      requestAnimationFrame(() => inputRef.current?.focus());
+    } else {
+      setQuery('');
+      inputRef.current?.blur();
+    }
+  }, [open, urlQuery]);
+
+  useEffect(() => {
     if (!open) return;
 
-    function onPointerDown(evt: PointerEvent) {
+    const onPointerDown = (evt: PointerEvent) => {
       const target = evt.target as Node | null;
       if (!target) return;
+
       if (buttonRef.current?.contains(target)) return;
       if (overlayRef.current?.contains(target)) return;
 
       writeQueryToUrl('', 'replace');
       onClose();
-    }
+    };
 
     document.addEventListener('pointerdown', onPointerDown, true);
     return () => document.removeEventListener('pointerdown', onPointerDown, true);
-  }, [open, onClose]);
+  }, [open, onClose, pathname, router, searchParams]);
 
-  useEffect(() => {
-    if (!showResults) {
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    const t = window.setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    return () => window.clearTimeout(t);
-  }, [showResults, query]);
+  const items: SearchResult[] = useMemo(() => {
+    if (!showResults) return [];
+    return search(query, cards, decks);
+  }, [showResults, query, cards, decks]);
 
   return (
     <>
@@ -119,10 +132,11 @@ export default function NavSearch({ open, onOpen, onClose }: Props) {
           onChange={(evt) => {
             const next = evt.target.value;
             setQuery(next);
-
             writeQueryToUrl(next, 'replace');
           }}
           placeholder="Search..."
+          autoComplete="off"
+          spellCheck={false}
         />
 
         <button
@@ -141,7 +155,7 @@ export default function NavSearch({ open, onOpen, onClose }: Props) {
           className={`${styles.resultBoxWrap} ${showResults ? styles.resultBoxOpen : ''}`}
           aria-hidden={!showResults}
         >
-          <ResultBox query={query} loading={loading} items={testItems} />
+          <ResultBox query={query} loading={false} items={items} />
         </div>
       </div>
     </>
