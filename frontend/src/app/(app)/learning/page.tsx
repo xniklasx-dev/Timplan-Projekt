@@ -5,7 +5,7 @@ export default function LearningDashboard() {
   return (
     <div className={styles.page}>
       <div className={styles.main}>
-        <h1>Dashboard Learning</h1>
+        <h1>Last Learned</h1>
         <DashboardLearning />
       </div>
     </div>

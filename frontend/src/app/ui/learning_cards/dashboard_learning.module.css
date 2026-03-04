@@ -5,7 +5,7 @@
 
 .recentlyStudied{
     display: grid;
-    grid-template-columns: repeat(5, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     width: 100%;
 }
@@ -97,7 +97,7 @@
   justify-content: left;
 }
 
-.learn_button {
+.learn_button_active {
   background-color: var(--color-accent);
   color: var(--color-text);
   border: 3px solid var(--color-border);
@@ -107,8 +107,19 @@
   font-size: 20px;
   padding: 5px 10px;
 }
-.learn_button:hover {
+.learn_button_active:hover {
   background-color: var(--color-accent-hover);
   transform: translateY(-1px);
   box-shadow: 0 2px 25px var(--color-accent-hover);
+}
+
+.learn_button_inactive {
+  background-color: var(--color-surface);
+  color: var(--color-text-disabled);
+  border: 3px solid var(--color-border);
+  background-clip: padding-box;
+    
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 5px 10px;
 }
