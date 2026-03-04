@@ -1,22 +1,32 @@
-export default function AuthLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    return (        
-        <div className="a">
-            {/* Linke Seite (Branding / Info) */}
-            <div className="b">
-                <h1 className="b1">Timplan</h1>
-                <p className="b2">Your intelligent learning and Anki-system for your studies</p>
-            </div>
+import "./auth.css";
 
-            {/* Rechte Seite (Formularbereich) */}
-            <div className="c">
-                <div className="d">
-                    <main>{children}</main>
-                </div>
-            </div>
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="authPage">
+      <div className="authContainer">
+
+        {/* Left Side - Branding */}
+        <div className="authLeft">
+          <div className="brandWrapper">
+            <h1 className="brandTitle">Timplan</h1>
+            <p className="brandText">
+              Your intelligent learning and spaced repetition system.
+            </p>
+          </div>
         </div>
-    );
+
+        {/* Right Side - Form */}
+        <div className="authRight">
+          <div className="authCardWrapper">
+            {children}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
 }

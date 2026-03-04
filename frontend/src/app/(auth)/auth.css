@@ -1,0 +1,83 @@
+.authPage {
+  min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(2rem, 4vw, 6rem);
+  background: var(--color-background);
+}
+
+.authContainer {
+  width: 100%;
+  max-width: 1600px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vw, 6rem);
+}
+
+/* LEFT */
+.authLeft {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brandWrapper {
+  text-align: center;
+  max-width: 600px;
+}
+
+.brandTitle {
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  font-weight: 700;
+}
+
+.brandText {
+  margin-top: 1.5rem;
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  color: var(--color-text-muted);
+}
+
+/* RIGHT */
+.authRight {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.authCardWrapper {
+  width: 100%;
+  max-width: 520px;
+}
+
+/* ============================= */
+/* TABLET (ab 786px) */
+/* ============================= */
+@media (min-width: 786px) {
+  .authContainer {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .brandWrapper {
+    text-align: left;
+  }
+}
+
+/* ============================= */
+/* ULTRA WIDE (ab 1800px) */
+/* ============================= */
+@media (min-width: 1800px) {
+  .authContainer {
+    max-width: 1800px;
+  }
+
+  .authCardWrapper {
+    max-width: 600px;
+  }
+
+  .brandTitle {
+    font-size: 4rem;
+  }
+}
