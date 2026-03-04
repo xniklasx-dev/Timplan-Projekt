@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./page.module.css";
-// import { login } from "@/lib/auth";
 import Link from "next/link";
+import styles from "./page.module.css";
+import { login } from "../../lib/auth/auth.service";
+
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,18 +16,22 @@ export default function LoginPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-//    await login(email, password);
+      await login({ email, password });
 
       router.push("/dashboard");
 
-    } catch (err: any) {
-      setError(err.message || "Login failed");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Login failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -41,7 +46,7 @@ export default function LoginPage() {
           <input
             className={styles.input}
             type="email"
-            placeholder="E-Mail"
+            placeholder="E-Mail or Username"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -50,7 +55,7 @@ export default function LoginPage() {
           <input
             className={styles.input}
             type="password"
-            placeholder="Passwort"
+            placeholder="Password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -66,8 +71,10 @@ export default function LoginPage() {
         </form>
       
         {error && <p className={styles.error}>{error}</p>}
+        
         <p className={styles.linkText}>
-          Noch keinen Account? <Link href="/register">Registrieren</Link>
+          Don&apos;t have an account?{" "} 
+          <Link href="/register">Registrieren</Link>
         </p>
       </div>
     </div>
