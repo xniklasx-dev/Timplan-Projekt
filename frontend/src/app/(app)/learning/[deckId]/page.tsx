@@ -7,8 +7,9 @@ import DashboardLearning from "@/app/ui/learning_cards/dashboard_learning";
 
 import decksData from "@/app/lib/placeholder-decks.json";
 import cardsData from "@/app/lib/placeholder-cards.json";
+import dateData from "@/app/lib/placeholder-dateData.json";
 
-import { Deck, Card } from "../../../lib/definitions";
+import { Deck, Card, StatsMap } from "../../../lib/definitions";
 import { getDeckById, getCardsForDeck, rateCard } from "../../../lib/learning-service";
 
 function hydrateCard(raw: any): Card {
@@ -50,6 +51,7 @@ export default function Learning() {
   const [deckCards, setDeckCards] = useState(initialDeckCards);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [learnedCount, setLearnedCount] = useState(0);
+  const [stats, setStats]= useState<StatsMap>(dateData);
 
   const currentCard = deckCards[currentIndex];
 
@@ -59,7 +61,9 @@ export default function Learning() {
     }};
 
   const handleRate = (rating: 0 | 1 | 2 | 3) => {
-    const updatedCard = rateCard(currentCard, rating);
+    const { updatedCard, updatedStats } = rateCard(currentCard, rating, stats);
+
+    setStats(updatedStats);
 
     // Karte im Array ersetzen
     if (rating === 0){
@@ -84,7 +88,7 @@ export default function Learning() {
     <div className={styles.page}>
       <main className={styles.main}>
         <h1>{selectedDeck.name} {learnedCount}/{initialDeckCards.length}</h1>
-        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} onRate={handleRate} changeIndex={changeIndex} />
+        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} onRate={handleRate} changeIndex={changeIndex} deckLength={initialDeckCards.length} />
       </main>
     </div>
   );

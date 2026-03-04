@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./learning_cards.module.css";
 import { Card } from "../../lib/definitions";
 
-export default function LearnCard({ card, currentIndex, onRate, changeIndex }: { card: Card; currentIndex: number; onRate: (rating: 0 | 1 | 2 | 3) => void; changeIndex: (index: number) => void }) {
+export default function LearnCard({ card, currentIndex, onRate, changeIndex, deckLength }: { card: Card; currentIndex: number; onRate: (rating: 0 | 1 | 2 | 3) => void; changeIndex: (index: number) => void; deckLength: number }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [isHintRevealed, setIsHintRevealed] = useState(false);
 
@@ -42,8 +42,10 @@ export default function LearnCard({ card, currentIndex, onRate, changeIndex }: {
             }            
             {!isRevealed&& (
                 <div>
-                <button className={styles.skipButton} onClick={() => changeIndex(currentIndex+1)}>Skip</button>
-                <button className={styles.revButton} onClick={() => setIsRevealed(true)}>Reveal Answer</button>
+                    {currentIndex < deckLength - 1 && (
+                        <button className={styles.skipButton} onClick={() => changeIndex(currentIndex+1)}>Skip</button>)
+                    }
+                    <button className={styles.revButton} onClick={() => setIsRevealed(true)}>Reveal Answer</button>
                 </div>
             )}
             <div className={styles.topSection}>
