@@ -70,3 +70,13 @@ export type Deck = {
 
   revision: number;
 };
+
+export type DateData = {
+  date: string; // "YYYY-MM-DD"
+  cardIds: string[];
+  easy: number;
+  medium: number;
+  hard: number;
+}
+
+export type StatsMap = Record<string, DateData>;
