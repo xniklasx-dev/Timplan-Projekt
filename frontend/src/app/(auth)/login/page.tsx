@@ -24,7 +24,7 @@ export default function LoginPage() {
     try {
       await login({ email, password });
 
-      router.push("/dashboard");
+      router.push("/");
 
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -74,7 +74,7 @@ export default function LoginPage() {
         
         <p className={styles.linkText}>
           Don&apos;t have an account?{" "} 
-          <Link href="/register">Registrieren</Link>
+          <Link href="/register">Sign up</Link>
         </p>
       </div>
     </div>
