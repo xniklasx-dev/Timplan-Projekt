@@ -5,7 +5,7 @@ export default function Statistic() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1> Statistic Page</h1>
+        <h1 className={styles.title}>Statistics</h1>
         <ChartComponent />
       </main>
     </div>
