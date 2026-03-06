@@ -3,8 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Chart from "chart.js/auto";
 import type { Chart as ChartJS, Plugin } from "chart.js";
-import "./globals.css"
-import styles from "./page.module.css";
+import styles from "../../(app)/statistic/page.module.css";
 
 interface CardCounts {
     easy: number;
@@ -90,7 +89,7 @@ const dataLabelsPlugin: Plugin<"bar"> = {
     }
 };
 
-const App: React.FC = () => {
+const ChartComponent: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const chartRef = useRef<ChartJS | null>(null);
     //current view
@@ -204,16 +203,21 @@ const App: React.FC = () => {
                 padding: "20px",
             }}
             >
-            <h1>Statistics</h1>
             {/*switch between views*/}
-            <div className="controls">
-                <button onClick={() => setView("week")}>Week</button>
-                <button onClick={() => setView("month")}>Month</button>
-                <button onClick={() => setView("year")}>Year</button>
+            <div className={styles.controls}>
+                <button className={styles.button} onClick={() => setView("week")}>
+                    Week
+                </button>
+                <button className={styles.button} onClick={() => setView("month")}>
+                    Month
+                </button>
+                <button className={styles.button} onClick={() => setView("year")}>
+                    Year
+                </button>
             </div>
 
-            <div className="chart-frame">
-                <div className="chart-container">
+            <div className={styles.chartFrame}>
+                <div className={styles.chartContainer}>
                     <canvas ref={canvasRef} />
                 </div>
             </div>
@@ -222,4 +226,4 @@ const App: React.FC = () => {
 };
 
 
-export default Chart;
+export default ChartComponent;
