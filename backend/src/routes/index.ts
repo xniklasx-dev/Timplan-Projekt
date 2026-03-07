@@ -1,6 +1,7 @@
 import { Router } from "express";
 import healthRouter from "./health.js";
 import decksRouter from "./decks.js";
+import authRouter from "./auth.js";
 import docsRouter from "./docs.js";
 
 const router = Router();
@@ -8,6 +9,7 @@ const router = Router();
 // API routes
 router.use(healthRouter);
 router.use(decksRouter);
+router.use(authRouter);
 
 // docs
 router.use("/docs", docsRouter);

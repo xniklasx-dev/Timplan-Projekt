@@ -6,7 +6,6 @@ import { useState } from 'react';
 import styles from './navbar.module.css';
 import NavSearch from './search/NavSearch';
 import AccountMenu from './accountMenu/AccountMenu';
-import type { User } from '../../lib/definitions';
 
 function isActive(pathname: string, href: string) {
   if (pathname === href) return true;
@@ -14,7 +13,7 @@ function isActive(pathname: string, href: string) {
   return false;
 }
 
-export default function Navbar({ user }: { user?: User | null }) {
+export default function Navbar() {
   const pathname = usePathname() || '/';
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -63,7 +62,8 @@ export default function Navbar({ user }: { user?: User | null }) {
         </nav>
 
         <div className={styles.right}>
-          <AccountMenu user={user ?? null} />
+          {/* AccountMenu takes User from AuthContext */}
+          <AccountMenu user={null} />
         </div>
       </div>
     </header>
