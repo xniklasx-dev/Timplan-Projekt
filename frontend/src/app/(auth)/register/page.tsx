@@ -11,11 +11,6 @@ export default function RegisterPage() {
   const router = useRouter();
   const { user, login } = useAuth();
 
-  if (user) {
-    router.push("/");
-    return null;
-  }
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +20,11 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState("");
 
   const [message, setMessage] = useState("");
+  
+  if (user) {
+    router.push("/");
+    return null;
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -109,7 +109,7 @@ export default function RegisterPage() {
 
         <p className={styles.linkText}>
           Already have an account?{" "} 
-          <Link href="/login">Login</Link>
+          <Link href="/login">Sign in</Link>
         </p>
       
 

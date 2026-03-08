@@ -115,6 +115,13 @@
   transform: translateY(-1px);
 }
 
+.avatarImageWrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+}
 .avatarSection {
   display: flex;
   flex-direction: column;

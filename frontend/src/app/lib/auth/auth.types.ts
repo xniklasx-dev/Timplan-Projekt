@@ -17,4 +17,6 @@ export interface User {
     avatarUrl?: string;
     email: string;
     token: string;
+    createdAt?: string;
+    updatedAt?: string;
 }

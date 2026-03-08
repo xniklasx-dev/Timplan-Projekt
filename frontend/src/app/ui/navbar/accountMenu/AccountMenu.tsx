@@ -44,22 +44,31 @@ export default function AccountMenu(/*{ user }: { user: User | null }*/) {
 
   return (
     <div className={styles.accountWrap}>
+      {/* axe-disable aria-valid-attr-value */}
       <button
         ref={btnRef}
         type="button"
         className={styles.accountButton}
         onClick={() => setOpen((value) => !value)}
         title="Account"
-        aria-expanded={open ? 'true' : 'false'}
+        aria-expanded={(open)}
         aria-haspopup="menu"
         aria-label='Open Account Menu'
       >
 
         {user ? (
+          user.avatarUrl ? (
+           // eslint-disable-next-line @next/next/no-img-element 
+            <img 
+              src={user.avatarUrl} 
+              alt="Avatar" 
+              className={styles.avatarImage} />
+          ) : (
             <span className={styles.avatarInitial}>
               {(user.displayname ?? user.username).charAt(0).toUpperCase()}
             </span>
-          ) : (
+          )
+        ) : (
           <span className={styles.avatarIcon}/>
           )}
       </button>

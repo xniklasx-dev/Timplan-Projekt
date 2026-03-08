@@ -63,7 +63,7 @@ export default function Navbar() {
 
         <div className={styles.right}>
           {/* AccountMenu takes User from AuthContext */}
-          <AccountMenu user={null} />
+          <AccountMenu />
         </div>
       </div>
     </header>

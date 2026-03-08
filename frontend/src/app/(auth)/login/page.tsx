@@ -6,18 +6,20 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import { login } from "../../lib/auth/auth.service";
 import { useAuth } from "../../lib/auth/AuthContext";
+import ForgotPasswordModal from "./ForgotPasswordModal";
 
 
 export default function LoginPage() {
   console.log("USE_MOCK:", process.env.NEXT_PUBLIC_USE_MOCK);
   const router = useRouter();
-  const { user, login: loginContext } = useAuth();
+  const { login: loginContext } = useAuth();
 
   const [emailOrUsername, setEmailOrUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -66,7 +68,13 @@ export default function LoginPage() {
           />
 
           <p className={styles.forgotPassword}>
-            <Link href="/forgot-password">Forgot password?</Link>
+            <button
+              type="button"
+              className={styles.forgotPasswordButton}
+              onClickCapture={() => setShowForgotPassword(true)}
+            >
+              Forgot password?
+            </button>
           </p>
 
           <button 
@@ -85,6 +93,9 @@ export default function LoginPage() {
           <Link href="/register">Sign up</Link>
         </p>
       </div>
+      {showForgotPassword && (
+        <ForgotPasswordModal onClose={() => setShowForgotPassword(false)} />
+      )}
     </div>
   );
 }

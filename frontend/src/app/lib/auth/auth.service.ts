@@ -22,8 +22,11 @@ export async function login(data: LoginDTO): Promise<User> {
             id: user.id,
             username: user.username,
             displayname: user.displayname,
+            avatarUrl: user.avatarUrl,
             email: user.email,
-            token: user.token ?? "mock-token-fallback" 
+            token: user.token ?? "mock-token-fallback",
+            createdAt: user.createdAt, 
+            updatedAt: user.updatedAt
         };       
     }
 
@@ -47,7 +50,8 @@ export async function register(data: RegisterDTO): Promise<User> {
         id: crypto.randomUUID(),
         ...data,
         token: "mock-token-" + Date.now(),
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
     };
     
     mockUsers.push(newUser);
@@ -55,8 +59,12 @@ export async function register(data: RegisterDTO): Promise<User> {
     return {
         id: newUser.id,
         username: newUser.username,
+        displayname: newUser.displayname,
+        avatarUrl: newUser.avatarUrl,
         email: newUser.email,
-        token: newUser.token
+        token: newUser.token,
+        createdAt: newUser.createdAt,
+        updatedAt: newUser.updatedAt
     };
 }
 

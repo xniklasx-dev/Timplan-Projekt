@@ -3,10 +3,12 @@ export interface MockUser {
     id: string;
     username: string;
     displayname?: string;
+    avatarUrl?: string;
     email: string;
     password: string;
     token: string;
     createdAt: string;
+    updatedAt: string;
 }
 
 export const mockUsers: MockUser[] = [
@@ -18,6 +20,7 @@ export const mockUsers: MockUser[] = [
         password: "password",
         token: "mock-token-1",
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
     },
     { 
         id: "2",
@@ -27,6 +30,7 @@ export const mockUsers: MockUser[] = [
         password: "password",
         token: "mock-token-2",
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
     },
     { 
         id: "3",
@@ -36,6 +40,7 @@ export const mockUsers: MockUser[] = [
         password: "password",
         token: "mock-token-3",
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
     },
     { 
         id: "4",
@@ -45,6 +50,7 @@ export const mockUsers: MockUser[] = [
         password: "password",
         token: "mock-token-4",
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
     },
     { 
         id: "5",
@@ -54,6 +60,7 @@ export const mockUsers: MockUser[] = [
         password: "password",
         token: "mock-token-5",
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
     },
     { 
         id: "6",
@@ -63,5 +70,6 @@ export const mockUsers: MockUser[] = [
         password: "password",
         token: "mock-token-6",
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
     }
 ];

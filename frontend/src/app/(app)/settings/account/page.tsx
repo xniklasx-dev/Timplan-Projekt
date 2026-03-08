@@ -30,13 +30,19 @@ export default function AccountSettingsPage() {
       setProfileError("Image size must be less than 2MB.");
       return;
     }
+    //const objectURL = URL.createObjectURL(file);
+    //setAvatarUrl(objectURL);
+    //updateUser({ avatarUrl: objectURL });
+
     const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      setAvatarUrl(base64);
-      updateUser({ avatarUrl: base64 });
-    };
-    reader.readAsDataURL(file);
+  reader.onload = () => {
+    const base64 = reader.result as string;
+    console.log("base64 length:", base64.length);
+    setAvatarUrl(base64);
+    updateUser({ avatarUrl: base64 });
+    console.log("user after update:", localStorage.getItem("timplan_user"));
+  };
+  reader.readAsDataURL(file);
   }
 
   function handleProfileSave(e: React.FormEvent) {
@@ -95,7 +101,13 @@ export default function AccountSettingsPage() {
                 <div className={styles.avatarPreview}
                     onClick={() => fileInputRef.current?.click()}>
                     {avatarUrl ? (
-                    <img src={avatarUrl} alt="Avatar" className={styles.avatarImage} />
+                      <div className={styles.avatarImageWrapper}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                          src={avatarUrl} 
+                          alt="Avatar" 
+                          className={styles.avatarImage} />
+                      </div>
                   ) : (
                     <span className={styles.avatarInitial}>
                       {(user?.displayname ?? user?.username ?? "?").charAt(0).toUpperCase()}
@@ -107,6 +119,7 @@ export default function AccountSettingsPage() {
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
+                  aria-label="Upload avatar image"
                   className={styles.avatarInput}
                   onChange={handleAvatarChange}
                 />
