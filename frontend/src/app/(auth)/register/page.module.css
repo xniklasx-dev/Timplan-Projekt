@@ -9,10 +9,10 @@
 
 /* Grauer Container */
 .cards {
-  width: 100%;
+  width: 100svh;
   max-width: 480px;
   background: var(--color-surface);
-  padding: 2.5rem;
+  padding: 2.5rem; 
   border-radius: 16px;
   box-shadow: 0 20px 40px var(--color-surface-shadow);
   transition: all 0.3s ease;
@@ -116,7 +116,7 @@
 }
 
 .linkText a {
-  color: var(--color-accent);
+  color: var(--color-focus);
   font-weight: 500;
 }
 

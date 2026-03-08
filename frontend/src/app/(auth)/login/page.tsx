@@ -5,16 +5,21 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { login } from "../../lib/auth/auth.service";
+import { useAuth } from "../../lib/auth/AuthContext";
+import ForgotPasswordModal from "./ForgotPasswordModal";
 
 
 export default function LoginPage() {
+  console.log("USE_MOCK:", process.env.NEXT_PUBLIC_USE_MOCK);
   const router = useRouter();
+  const { login: loginContext } = useAuth();
 
-  const [email, setEmail] = useState<string>("");
+  const [emailOrUsername, setEmailOrUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -22,9 +27,10 @@ export default function LoginPage() {
     setError("");
 
     try {
-      await login({ email, password });
+      const user = await login({ emailOrUsername, password });
+      loginContext(user);
 
-      router.push("/dashboard");
+      router.push("/");
 
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -45,11 +51,11 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className={styles.form}>
           <input
             className={styles.input}
-            type="email"
+            type="text"
             placeholder="E-Mail or Username"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={emailOrUsername}
+            onChange={(e) => setEmailOrUsername(e.target.value)}
           />
 
           <input
@@ -60,6 +66,16 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+
+          <p className={styles.forgotPassword}>
+            <button
+              type="button"
+              className={styles.forgotPasswordButton}
+              onClickCapture={() => setShowForgotPassword(true)}
+            >
+              Forgot password?
+            </button>
+          </p>
 
           <button 
             type="submit"
@@ -74,9 +90,12 @@ export default function LoginPage() {
         
         <p className={styles.linkText}>
           Don&apos;t have an account?{" "} 
-          <Link href="/register">Registrieren</Link>
+          <Link href="/register">Sign up</Link>
         </p>
       </div>
+      {showForgotPassword && (
+        <ForgotPasswordModal onClose={() => setShowForgotPassword(false)} />
+      )}
     </div>
   );
 }

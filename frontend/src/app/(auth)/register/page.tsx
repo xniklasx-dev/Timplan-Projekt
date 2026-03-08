@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { register } from "../../lib/auth/auth.service";
+import { useAuth } from "../../lib/auth/AuthContext";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { user, login } = useAuth();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -18,6 +20,11 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState("");
 
   const [message, setMessage] = useState("");
+  
+  if (user) {
+    router.push("/");
+    return null;
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,7 +35,8 @@ export default function RegisterPage() {
     setMessage("");
 
     try {
-      await register({ username, email, password });
+      const user = await register({ username, email, password });
+      login(user);
 
       setSuccess("Registration successful! You can now login.")
       setUsername("");
@@ -101,7 +109,7 @@ export default function RegisterPage() {
 
         <p className={styles.linkText}>
           Already have an account?{" "} 
-          <Link href="/login">Login</Link>
+          <Link href="/login">Sign in</Link>
         </p>
       
 
