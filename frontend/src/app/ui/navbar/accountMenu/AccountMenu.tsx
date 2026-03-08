@@ -57,7 +57,7 @@ export default function AccountMenu(/*{ user }: { user: User | null }*/) {
 
         {user ? (
             <span className={styles.avatarInitial}>
-              {user.username.charAt(0).toUpperCase()}
+              {(user.displayname ?? user.username).charAt(0).toUpperCase()}
             </span>
           ) : (
           <span className={styles.avatarIcon}/>
@@ -69,9 +69,23 @@ export default function AccountMenu(/*{ user }: { user: User | null }*/) {
           {user ? (
             <>
               <div className={styles.menuHeader}>
-                <div className={styles.menuTitle}>{user.username}</div>
+                <div className={styles.menuTitle}>{user.displayname ?? user.username}</div>
                 <div className={styles.menuSub}>{user.email ?? ''}</div>
               </div>
+
+              <div className={styles.menuDivider} />
+
+              {/* Coming soon */}
+              <button
+                className={styles.menuItemButton}
+                type="button"
+                disabled
+              >
+                <span className={styles.menuItemInner}>
+                  {/*<UserPlus size={16} />*/}
+                  Switch Account
+                </span>
+              </button>
 
               <div className={styles.menuDivider} />
 

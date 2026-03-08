@@ -6,15 +6,22 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3000";
 
 export async function login(data: LoginDTO): Promise<User> {
     if (USE_MOCK) {
+        console.log("Search for: ", data.emailOrUsername, data.password);
+        console.log("Mock users: ", mockUsers.map(u => ({username: u.username, email: u.email, password: u.password})));
         const user = mockUsers.find(
-        (u) => u.email === data.email && u.password === data.password
+        (u) => (u.email === data.emailOrUsername ||
+                u.username === data.emailOrUsername) &&
+                u.password === data.password
     );
+
+    console.log("Found user: ", user);
 
     if (!user) throw new Error("Invalid email or password");
 
         return {
             id: user.id,
             username: user.username,
+            displayname: user.displayname,
             email: user.email,
             token: user.token ?? "mock-token-fallback" 
         };       
@@ -68,10 +75,9 @@ return res.json();
 }
 
 export async function logout(): Promise<void> {
-    if (USE_MOCK) { return; 
-        await fetch(`${API_BASE}/auth/logout`, {
+    if (USE_MOCK)  return; 
+    await fetch(`${API_BASE}/auth/logout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        });
-    }
+    });
 }

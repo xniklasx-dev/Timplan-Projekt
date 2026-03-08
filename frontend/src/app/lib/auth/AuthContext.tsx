@@ -1,18 +1,17 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-
 import { User } from "./auth.types";
 
 interface AuthContextType {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
+  updateUser: (user: Partial<User>) => void;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
-
 const STORAGE_KEY = "timplan_user";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -43,8 +42,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }
 
+  function updateUser(data: Partial<User>) {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...data };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

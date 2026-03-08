@@ -5,9 +5,16 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { register } from "../../lib/auth/auth.service";
+import { useAuth } from "../../lib/auth/AuthContext";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { user, login } = useAuth();
+
+  if (user) {
+    router.push("/");
+    return null;
+  }
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -28,7 +35,8 @@ export default function RegisterPage() {
     setMessage("");
 
     try {
-      await register({ username, email, password });
+      const user = await register({ username, email, password });
+      login(user);
 
       setSuccess("Registration successful! You can now login.")
       setUsername("");

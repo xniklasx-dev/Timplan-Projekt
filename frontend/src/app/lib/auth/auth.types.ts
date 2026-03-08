@@ -1,6 +1,6 @@
 
 export interface LoginDTO {
-    email: string;
+    emailOrUsername: string;
     password: string;
 }
 
@@ -13,6 +13,8 @@ export interface RegisterDTO {
 export interface User {
     id: string;
     username: string;
+    displayname?: string;
+    avatarUrl?: string;
     email: string;
     token: string;
 }

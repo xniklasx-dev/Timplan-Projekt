@@ -1,17 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useAuth } from "../../../lib/auth/AuthContext";
 import styles from "./page.module.css";
 
-// Später durch echten Auth-Context ersetzen
-const mockUser = {
-  username: "testuser",
-  email: "testuser@example.com",
-};
-
 export default function AccountSettingsPage() {
-  const [username, setUsername] = useState(mockUser.username);
-  const [email, setEmail] = useState(mockUser.email);
+  const { user, updateUser } = useAuth();
+  const [username, setUsername] = useState(user?.username ?? "");
+  const [displayname, setDisplayname] = useState(user?.displayname ?? "");
+  const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl ?? "");
+  const [email, setEmail] = useState(user?.email ?? "");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,6 +20,25 @@ export default function AccountSettingsPage() {
   const [passwordError, setPasswordError] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    // Later: API-Call to upload avatar and get URL, for now just convert to base64
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setProfileError("Image size must be less than 2MB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      setAvatarUrl(base64);
+      updateUser({ avatarUrl: base64 });
+    };
+    reader.readAsDataURL(file);
+  }
+
   function handleProfileSave(e: React.FormEvent) {
     e.preventDefault();
     setProfileError("");
@@ -30,7 +47,8 @@ export default function AccountSettingsPage() {
       setProfileError("Username and email cannot be empty.");
       return;
     }
-    // Später: API-Call
+    // Later: API-Call to update profile
+    updateUser({ username, email, displayname });
     setProfileSuccess("Profile updated successfully.");
   }
 
@@ -50,7 +68,7 @@ export default function AccountSettingsPage() {
       setPasswordError("Passwords do not match.");
       return;
     }
-    // Später: API-Call
+    // Later: API-Call to change password
     setPasswordSuccess("Password changed successfully.");
     setCurrentPassword("");
     setNewPassword("");
@@ -71,6 +89,40 @@ export default function AccountSettingsPage() {
           <h2 className={styles.sectionTitle}>Profile Information</h2>
           <div className={styles.card}>
             <form onSubmit={handleProfileSave} className={styles.form}>
+
+              {/* Avatar Upload */}
+              <div className={styles.avatarSection}>
+                <div className={styles.avatarPreview}
+                    onClick={() => fileInputRef.current?.click()}>
+                    {avatarUrl ? (
+                    <img src={avatarUrl} alt="Avatar" className={styles.avatarImage} />
+                  ) : (
+                    <span className={styles.avatarInitial}>
+                      {(user?.displayname ?? user?.username ?? "?").charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <div className={styles.avatarOverlay}>Change</div>
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className={styles.avatarInput}
+                  onChange={handleAvatarChange}
+                />
+                {avatarUrl && (
+                  <button
+                    type="button"
+                    className={styles.removeAvatarButton}
+                    onClick={() => {
+                      setAvatarUrl("");
+                      updateUser({ avatarUrl: "" });
+                    }}
+                  >
+                    Remove photo
+                  </button>
+                )}
+              </div>
               <div className={styles.fieldGroup}>
                 <label className={styles.label}>Username</label>
                 <input
@@ -79,6 +131,16 @@ export default function AccountSettingsPage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Username"
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Display Name</label>
+                <input
+                  className={styles.input}
+                  type="text"
+                  value={displayname}
+                  onChange={(e) => setDisplayname(e.target.value)}
+                  placeholder="Your display name"
                 />
               </div>
               <div className={styles.fieldGroup}>
@@ -146,7 +208,6 @@ export default function AccountSettingsPage() {
 
         {/* Danger Zone */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitleDanger}>Danger Zone</h2>
           <div className={styles.dangerCard}>
             <div className={styles.dangerInfo}>
               <span className={styles.dangerTitle}>Delete Account</span>

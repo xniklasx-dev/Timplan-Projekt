@@ -32,7 +32,6 @@ export default function RootLayout({
         <AuthProvider>
           {children}
         </AuthProvider> 
-          {children}
       </body>
     </html>
   );

@@ -5,10 +5,10 @@ const router = Router();
 
 // POST /auth/login
 router.post("/auth/login", (req, res) => {
-  const { email, password } = req.body;
+  const { emailOrUsername, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
+  if (!emailOrUsername || !password) {
+    return res.status(400).json({ error: "Email/Username and password are required" });
   }
 
   let users;
@@ -20,8 +20,9 @@ router.post("/auth/login", (req, res) => {
   }
 
   const user = users.find(
-    (u: { email: string; password: string }) =>
-      u.email === email && u.password === password
+    (u: { username: string; email: string; password: string }) =>
+      (u.username === emailOrUsername || u.email === emailOrUsername) && 
+      u.password === password
   );
 
   if (!user) {
@@ -53,7 +54,7 @@ router.post("/auth/register", (req, res) => {
   }
 
   const existingUser = users.find(
-    (u: { email: string }) => u.email === email
+    (u: { username: string; email: string }) => u.email === email
   );
 
   if (existingUser) {

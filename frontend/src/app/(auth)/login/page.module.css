@@ -116,8 +116,22 @@
 }
 
 .linkText a {
-  color: var(--color-accent);
+  color: var(--color-focus);
   font-weight: 500;
+}
+
+.forgotPassword {
+  margin-left: auto;
+  font-size: 0.85rem;
+  margin-top: -0.3rem;
+}
+
+.forgotPassword a {
+  color: var(--color-text-muted);
+}
+
+.forgotPassword a:hover {
+  color: var(--color-accent);
 }
 
 /* ===================================== */
