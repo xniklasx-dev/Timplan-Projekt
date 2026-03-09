@@ -2,10 +2,12 @@
 
 import { useState, useRef } from "react";
 import { useAuth } from "../../../lib/auth/AuthContext";
+import Spinner from "../../../ui/spinner/Spinner";
+import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 import styles from "./page.module.css";
 
 export default function AccountSettingsPage() {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, isLoading } = useAuth();
   const [username, setUsername] = useState(user?.username ?? "");
   const [displayname, setDisplayname] = useState(user?.displayname ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl ?? "");
@@ -22,6 +24,9 @@ export default function AccountSettingsPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  if (isLoading) return <Spinner />;
+      if (!user) return null; 
+
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     // Later: API-Call to upload avatar and get URL, for now just convert to base64
@@ -30,17 +35,11 @@ export default function AccountSettingsPage() {
       setProfileError("Image size must be less than 2MB.");
       return;
     }
-    //const objectURL = URL.createObjectURL(file);
-    //setAvatarUrl(objectURL);
-    //updateUser({ avatarUrl: objectURL });
-
     const reader = new FileReader();
   reader.onload = () => {
     const base64 = reader.result as string;
-    console.log("base64 length:", base64.length);
     setAvatarUrl(base64);
     updateUser({ avatarUrl: base64 });
-    console.log("user after update:", localStorage.getItem("timplan_user"));
   };
   reader.readAsDataURL(file);
   }
@@ -168,9 +167,9 @@ export default function AccountSettingsPage() {
               </div>
               {profileError && <p className={styles.error}>{profileError}</p>}
               {profileSuccess && <p className={styles.success}>{profileSuccess}</p>}
-              <button type="submit" className={styles.button}>
+              <AccentButton type="submit" fullWidth>
                 Save Changes
-              </button>
+              </AccentButton>
             </form>
           </div>
         </section>
@@ -212,9 +211,9 @@ export default function AccountSettingsPage() {
               </div>
               {passwordError && <p className={styles.error}>{passwordError}</p>}
               {passwordSuccess && <p className={styles.success}>{passwordSuccess}</p>}
-              <button type="submit" className={styles.button}>
+              <AccentButton type="submit" fullWidth>
                 Change Password
-              </button>
+              </AccentButton>
             </form>
           </div>
         </section>
@@ -254,7 +253,6 @@ export default function AccountSettingsPage() {
             )}
           </div>
         </section>
-
       </div>
     </div>
   );

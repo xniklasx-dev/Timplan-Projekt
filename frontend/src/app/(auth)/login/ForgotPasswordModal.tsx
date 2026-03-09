@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
+import { useClickOutside } from "@/app/hooks/useClickOutside";
 import styles from "./page.module.css";
 
 interface Props {
@@ -9,6 +11,9 @@ interface Props {
 export default function ForgotPasswordModal({ onClose }: Props) {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
+  useClickOutside([modalRef], onClose, true);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,17 +22,17 @@ export default function ForgotPasswordModal({ onClose }: Props) {
   }
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+    <div className={styles.modalOverlay}>
+      <div ref={modalRef} className={styles.modal}>
         <h2 className={styles.modalTitle}>Reset Password</h2>
         {sent ? (
           <>
             <p className={styles.modalText}>
               If this email exists, a reset link has been sent.
             </p>
-            <button type="button" className={styles.button} onClick={onClose}>
+            <AccentButton type="button" onClick={onClose} autoFocus fullWidth>
               Back to Login
-            </button>
+            </AccentButton>
           </>
         ) : (
           <form onSubmit={handleSubmit} className={styles.form}>
@@ -42,9 +47,9 @@ export default function ForgotPasswordModal({ onClose }: Props) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <button type="submit" className={styles.button}>
+            <AccentButton type="submit" fullWidth>
               Send reset link
-            </button>
+            </AccentButton>
             <button type="button" className={styles.linkButton} onClick={onClose}>
               Cancel
             </button>

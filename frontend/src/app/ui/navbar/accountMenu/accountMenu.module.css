@@ -2,45 +2,39 @@
 .accountWrap {
   position: relative;
 }
-
 .accountButton {
   width: 50px;
   height: 50px;
   border-radius: 999px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: var(--color-accent);
+  border: 1px solid var(--color-accent);
   color: var(--color-text);
   display: grid;
   place-items: center;
   cursor: pointer;
   transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
 }
-
 .accountButton:hover {
   background: var(--color-surface-hover);
   box-shadow: 0 10px 25px var(--color-surface-shadow);
   transform: translateY(-1px);
 }
-
 .accountButton:active {
   transform: translateY(0px);
   box-shadow: none;
 }
-
 /* ── Avatar ────────────────────────────────── */
 .avatarInitial {
   font-size: 18px;
   font-weight: 700;
   color: var(--color-text);
 }
-
 .avatarImage {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
 }
-
 /* ── Dropdown Menu ─────────────────────────── */
 .accountMenu {
   position: absolute;
@@ -56,29 +50,25 @@
     inset 0 0 0 1px var(--color-subtle-overlay);
   z-index: 50;
 }
-
+/* ── Menu Header ────────────────────────────── */
 .menuHeader {
   padding: 10px 10px 12px 10px;
 }
-
 .menuTitle {
   font-weight: 800;
   color: var(--color-text);
   font-size: 14px;
 }
-
 .menuSub {
   margin-top: 4px;
   color: var(--color-text-muted);
   font-size: 12.5px;
 }
-
 .menuDivider {
   height: 1px;
   background: var(--color-divider);
   margin: 6px 0;
 }
-
 /* ── Menu Items ────────────────────────────── */
 .menuItem {
   display: flex;
@@ -87,12 +77,10 @@
   color: var(--color-text);
   transition: background 0.12s ease, transform 0.12s ease;
 }
-
 .menuItem:hover {
   background: var(--color-surface-hover);
   transform: translateY(-1px);
 }
-
 .menuItemButton {
   width: 100%;
   text-align: left;
@@ -106,14 +94,21 @@
   font-family: inherit;
   transition: background 0.12s ease, transform 0.12s ease;
 }
-
-.menuItemButton:hover {
+.menuItemButton:not(.menuItemLogout):hover {
   background: var(--color-surface-hover);
   transform: translateY(-1px);
 }
-
 .menuItemInner {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+.menuItemLogout {
+  color: var(--color-accent);
+  font-weight: 600;
+  background: var(--color-surface-hover);
+}
+.menuItemLogout:hover {
+  background: var(--color-accent);
+  color: var(--color-text);
 }

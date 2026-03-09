@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { useAuth  } from "@/app/lib/auth/AuthContext";
 import styles from "./page.module.css";
+import Spinner from "@/app/ui/spinner/Spinner";
 
 export default function SettingsPage() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
+    if (isLoading) return <Spinner />;
     if (!user) return null; 
 
   return (
