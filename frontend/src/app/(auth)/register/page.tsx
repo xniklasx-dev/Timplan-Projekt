@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { register } from "../../lib/auth/auth.service";
-import { useAuth } from "../../lib/auth/AuthContext";
-import Spinner from "../../ui/spinner/Spinner";
+import { register } from "@/app/lib/auth/auth.service";
+import { useAuth } from "@/app/lib/auth/AuthContext";
+import Spinner from "@/app/ui/spinner/Spinner";
 import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 
 export default function RegisterPage() {

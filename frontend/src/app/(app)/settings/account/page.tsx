@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useAuth } from "../../../lib/auth/AuthContext";
-import Spinner from "../../../ui/spinner/Spinner";
+import { useAuth } from "@/app/lib/auth/AuthContext";
+import Spinner from "@/app/ui/spinner/Spinner";
 import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 import styles from "./page.module.css";
 

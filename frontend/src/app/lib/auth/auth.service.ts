@@ -1,5 +1,5 @@
 import { LoginDTO, RegisterDTO, User } from "./auth.types";
-import { mockUsers, MockUser } from "../../mocks/users.mock";
+import { mockUsers, MockUser } from "@/app/mocks/users.mock";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3000";
