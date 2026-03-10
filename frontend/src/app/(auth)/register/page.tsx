@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -19,28 +19,27 @@ export default function RegisterPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
   const [message, setMessage] = useState("");
   
-  if (user) {
-    router.push("/");
-    return null;
-  }
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user, router]);
+
+  if (user) return null;
+  
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setSuccess("");
-
     setMessage("");
 
     try {
       const user = await register({ username, email, password });
       login(user);
 
-      setSuccess("Registration successful! You can now login.")
       setUsername("");
       setEmail("");
       setPassword("");
@@ -95,8 +94,7 @@ export default function RegisterPage() {
         />
 
         {error && <p className={styles.error}>{error}</p>}
-        {success && <p className={styles.success}>{success}</p>}
-
+        {message && <p className={styles.message}>{message}</p>}
 
         <AccentButton 
           type="submit"
