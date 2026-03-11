@@ -1,0 +1,110 @@
+.learningEndPage{
+    position: relative;
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+
+    padding: 20px;
+
+    text-align: center;
+    font-size: 20px;
+
+    border: 2px solid var(--color-border);
+    border-radius: 15px;
+
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.h1{
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 2.3rem;
+    width: 90%;
+    margin-bottom: 0;
+}
+
+.divider{
+    width: 80%;
+    height: 3px;
+    background: var(--color-border);
+    margin-top: 0px;
+}
+
+.total{
+    font-size: 1.5rem;
+    color: var(--color-text-muted);
+    margin-top: 0.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.statsContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 1rem;
+    padding: 1rem;
+    width: 100%;
+}
+
+.progressRing {
+    width: clamp(180px, 24vw, 260px);
+    height: clamp(180px, 24vw, 260px);
+    overflow: visible;
+}
+
+.stats{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 0.8rem;
+    width: clamp(180px, 24vw, 240px);
+    height: clamp(180px, 24vw, 240px);
+    font-size: 1.3rem;}
+
+.colorDot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+    margin-right: 0.5rem; 
+}
+
+.easyDot {
+    background: var(--color-easy);
+}
+
+.mediumDot {
+    background: var(--color-medium);
+}
+
+.hardDot {
+    background: var(--color-hard);
+}
+
+.backDashboard{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 5px solid var(--color-glow);
+    
+    border-radius: 10px;
+    font-size: 20px;
+}
+.backDashboard:hover {
+    border: 5px solid var(--color-accent-hover);
+    transform:  translateY(-1px);
+    box-shadow: 0 3px 25px var(--color-accent-hover);
+}
