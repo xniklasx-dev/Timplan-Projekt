@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import styles from "./learning_end_page.module.css";
 
-export default function LearningEndPage({ deckCards }: { deckCards: any[] }) {
+export default function LearningEndPage({ deckCards, selectedDeck }: { deckCards: any[]; selectedDeck: any }) {
     const router = useRouter();
   const size = 240;
   const strokeWidth = 30;
@@ -27,10 +27,13 @@ export default function LearningEndPage({ deckCards }: { deckCards: any[] }) {
   let cumulativePercent = 0;
 
   return (
-    <div className="learning-end-page">
+    <div className={styles.learningEndPage}>
+        <h1 className={styles.h1}>Wonderful! You've completed the deck {selectedDeck.name}!</h1>
+        <div className={styles.divider}></div>
+        <div className={styles.total}>Total cards reviewed: {total}</div>
         <div className={styles.statsContainer}>
-        <svg width={size} height={size}>
-        {/* Background */}
+          <svg className={styles.progressRing} viewBox={`0 0 ${size} ${size}`}>
+            {/* Background */}
             <circle
                 cx={center}
                 cy={center}
@@ -40,36 +43,44 @@ export default function LearningEndPage({ deckCards }: { deckCards: any[] }) {
                 fill="transparent"/>
 
             {segments.map((segment, index) => {
-                const percent = segment.value / total;
-                const dashLength = circumference * percent;
-                const dashOffset = circumference * cumulativePercent;
+              const percent = segment.value / total;
+              const dashLength = circumference * percent;
+              const dashOffset = circumference * cumulativePercent;
 
-          cumulativePercent += percent;
+              cumulativePercent += percent;
 
-          return (
-            <circle
-              key={index}
-              cx={center}
-              cy={center}
-              r={radius}
-              stroke={segment.color}
-              strokeWidth={strokeWidth}
-              fill="transparent"
-              strokeDasharray={`${dashLength} ${circumference}`}
-              strokeDashoffset={-dashOffset}
-              strokeLinecap="butt"
-              transform={`rotate(-90 ${center} ${center})`}
-            />
-          );
-        })}
-      </svg>
-      <div className={styles.stats}>
-        <p>Easy: {easyCards}</p>
-        <p>Medium: {mediumCards}</p>
-        <p>Hard: {hardCards}</p>
+              return (
+                <circle
+                key={index}
+                cx={center}
+                cy={center}
+                r={radius}
+                stroke={segment.color}
+                strokeWidth={strokeWidth}
+                fill="transparent"
+                strokeDasharray={`${dashLength} ${circumference}`}
+                strokeDashoffset={-dashOffset}
+                strokeLinecap="butt"
+                transform={`rotate(-90 ${center} ${center})`}/>
+              );
+            })}
+          </svg>
+        <div className={styles.stats}>
+          <p className={styles.statItem}>
+            <span className={`${styles.colorDot} ${styles.easyDot}`}></span>
+            Easy: {easyCards}
+          </p>
+          <p className={styles.statItem}>
+            <span className={`${styles.colorDot} ${styles.mediumDot}`}></span>
+            Medium: {mediumCards}
+          </p>
+          <p className={styles.statItem}>
+            <span className={`${styles.colorDot} ${styles.hardDot}`}></span>
+            Hard: {hardCards}
+          </p>
+        </div>
       </div>
-      </div>
-      <button className={styles.learn_button_active} onClick={() => router.push("/learning/")}>
+      <button className={styles.backDashboard} onClick={() => router.push("/learning/")}>
         Back to Dashboard
       </button>
     </div>

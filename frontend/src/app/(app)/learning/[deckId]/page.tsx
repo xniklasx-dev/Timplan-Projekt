@@ -48,15 +48,16 @@ export default function Learning() {
   }
   const initialDeckCards = getCardsForDeck(selectedDeck, cards) .filter(card => card.due <= new Date());
 
-  const [deckCards, setDeckCards] = useState(initialDeckCards);
+  const [sessionCards, setSessionCards] = useState(initialDeckCards);
+  const [resultCards, setResultCards] = useState<Card[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [learnedCount, setLearnedCount] = useState(0);
   const [stats, setStats]= useState<StatsMap>(dateData);
 
-  const currentCard = deckCards[currentIndex];
+  const currentCard = sessionCards[currentIndex];
 
   const changeIndex = (index: number) => {
-    if (index >= 0 && index < deckCards.length) {
+    if (index >= 0 && index < sessionCards.length) {
       setCurrentIndex(index);
     }};
 
@@ -65,20 +66,21 @@ export default function Learning() {
 
     setStats(updatedStats);
 
-    // Karte im Array ersetzen
-    if (rating === 0){
-      const updatedCards = [...deckCards, updatedCard];
-      updatedCards[currentIndex] = updatedCard;
-
-      setDeckCards(updatedCards);
-    }
-    else{
-    const updatedCards = [...deckCards];
+    if (rating === 0) {
+    const updatedCards = [...sessionCards];
     updatedCards[currentIndex] = updatedCard;
-    setLearnedCount((prev) => prev + 1);
+    updatedCards.push(updatedCard);
 
-    setDeckCards(updatedCards);
-    }
+    setSessionCards(updatedCards);
+  } else {
+    const updatedCards = [...sessionCards];
+    updatedCards[currentIndex] = updatedCard;
+    setSessionCards(updatedCards);
+
+    setResultCards((prev) => [...prev, updatedCard]);
+    setLearnedCount((prev) => prev + 1);
+  }
+
 
     setCurrentIndex((prev) => prev + 1);}
   
@@ -86,8 +88,7 @@ export default function Learning() {
     return (
       <div className={styles.page}>
         <main className={styles.main}>
-          <h1>Congratulations! You've completed the deck {selectedDeck.name}!</h1>
-          <LearningEndPage deckCards={deckCards}/>
+          <LearningEndPage deckCards={resultCards} selectedDeck={selectedDeck} />
         </main>
       </div>);}
   return (
