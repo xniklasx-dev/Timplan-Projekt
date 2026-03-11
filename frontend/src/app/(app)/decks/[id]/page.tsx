@@ -1,19 +1,19 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import type { Deck, Card } from "@/app/lib/definitions";
-import Link from "next/link";
 import styles from "../page.module.css";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
 import placeholderCards from "@/app/lib/placeholder-cards.json";
+import DeckCard from "@/app/ui/decks/deckCard/DeckCard";
+import SingleCard from "@/app/ui/decks/singleCard/SingleCard";
 
 const decksData: Deck[] = placeholderDecks as unknown as Deck[];
 const cardsData: Card[] = placeholderCards as unknown as Card[];
 
 export default function Deck() {
   const params = useParams();
-  const router = useRouter();
 
   const deckId = params.id as string;
 
@@ -134,60 +134,33 @@ export default function Deck() {
 
         {childDecks.map((deck) => {
           if (!deck) return null;
+
           return (
-            <Link
+            <DeckCard
               key={deck.id}
-              href={`/decks/${deck.id}`}
-              ref={(el) => {
+              deck={deck}
+              isGridView={isGridView}
+              registerRefAction={(el) => {
                 if (!el) return;
                 cardRefs.current.set(deck.id, el);
               }}
-              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
-                }`}
-            >
-              <div className={styles.deckTop}>
-                <h2 className={styles.deckName}>{deck?.name}</h2>
-
-                {deck?.description && (
-                  <p className={styles.deckDescription}>{deck?.description}</p>
-                )}
-              </div>
-
-              <div className={styles.deckStats}>
-                <div className={styles.stat}>
-                  <span className={styles.statValue}>
-                    {deck?.cardIds.length}
-                  </span>
-                  <span className={styles.statLabel}>Cards</span>
-                </div>
-
-                <div className={styles.stat}>
-                  <span className={styles.statValue}>{deck?.dueToday}</span>
-                  <span className={styles.statLabel}>Due</span>
-                </div>
-              </div>
-            </Link>
+            />
           );
         })}
 
         {cards.map((card) => {
           if (!card) return null;
+
           return (
-            <div
+            <SingleCard
               key={card.id}
-              ref={(el) => {
+              card={card}
+              isGridView={isGridView}
+              registerRefAction={(el) => {
                 if (!el) return;
                 cardRefs.current.set(card.id, el);
               }}
-              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
-                }`}
-            >
-              <div className={styles.deckTop}>
-                <h2 className={styles.deckName}>{card?.front}</h2>
-
-                <p className={styles.deckDescription}>{card?.back}</p>
-              </div>
-            </div>
+            />
           );
         })}
       </section>

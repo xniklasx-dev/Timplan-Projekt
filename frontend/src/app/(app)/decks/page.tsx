@@ -1,12 +1,10 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import type { Deck } from '../../lib/definitions';
-import Link from "next/link";
 import styles from "./page.module.css";
-import placeholderDecks from "@/app/lib/placeholder-decks.json";
-import StartLessonButton from "../../ui/buttons/startLessonButton/StartLessonButton";
+import placeholderDecks from "../../lib/placeholder-decks.json";
+import DeckCard from "../../ui/decks/deckCard/DeckCard";
 
 const initialDecks: Deck[] = placeholderDecks as unknown as Deck[];
 
@@ -14,8 +12,6 @@ export default function Decks() {
   const [isGridView, setIsGridView] = useState(false);
 
   const [decks] = useState<Deck[] | null>(initialDecks);
-
-  const router = useRouter();
 
   const cardRefs = useRef(new Map<string, HTMLElement>());
 
@@ -120,66 +116,15 @@ export default function Decks() {
           decks
             .filter((deck) => !deck.parentDeckId || +deck.parentDeckId <= 0)
             .map((deck) => (
-              <Link
+              <DeckCard
                 key={deck.id}
-                href={`/decks/${deck.id}`}
-                ref={(el) => {
+                deck={deck}
+                isGridView={isGridView}
+                registerRefAction={(el) => {
                   if (!el) return;
                   cardRefs.current.set(deck.id, el);
                 }}
-                className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
-                  }`}
-              >
-                <div className={styles.startButtonWrapper}>
-                  <StartLessonButton
-                    title={deck.cardIds?.length === 0 ? "No cards in this deck yet" : "Start studying"}
-                    disabled={deck.cardIds?.length === 0}
-                    onClick={(e: React.MouseEvent) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      if (deck.cardIds.length === 0) return;
-
-                      router.push("/learning/" + deck.id);
-                    }}
-                  />
-                </div>
-
-                <div className={styles.deckTop}>
-                  <h2 className={styles.deckName}>{deck.name}</h2>
-                  {deck.description && (
-                    <p className={styles.deckDescription}>{deck.description}</p>
-                  )}
-                </div>
-
-                <div className={styles.deckStats}>
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.cardIds.length}</span>
-                    <span className={styles.statLabel}>Cards</span>
-                  </div>
-
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.dueToday}</span>
-                    <span className={styles.statLabel}>Due</span>
-                  </div>
-
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.newCards}</span>
-                    <span className={styles.statLabel}>New</span>
-                  </div>
-
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.learningCards}</span>
-                    <span className={styles.statLabel}>Learning</span>
-                  </div>
-
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.reviewCards}</span>
-                    <span className={styles.statLabel}>Review</span>
-                  </div>
-
-                </div>
-              </Link>
+              />
             ))
         )}
       </section>
