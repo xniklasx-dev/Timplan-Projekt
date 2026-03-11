@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './accountMenu.module.css';
-import { useAuth } from '../../../lib/auth/AuthContext';
+import { useAuth } from '@/app/lib/auth/AuthContext';
+import { useClickOutside } from '@/app/hooks/useClickOutside';
 
 export default function AccountMenu(/*{ user }: { user: User | null }*/) {
   const {user, logout} = useAuth();
@@ -14,27 +15,7 @@ export default function AccountMenu(/*{ user }: { user: User | null }*/) {
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    function onClickOutside(evt: MouseEvent) {
-      if (!open) return;
-      const targetElement = evt.target as Node | null;
-      if (!targetElement) return;
-      if (btnRef.current?.contains(targetElement)) return;
-      if (menuRef.current?.contains(targetElement)) return;
-      setOpen(false);
-    }
-    
-    function onKey(evt: KeyboardEvent) {
-      if (evt.key === 'Escape') setOpen(false);
-    }
-
-    document.addEventListener('mousedown', onClickOutside);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onClickOutside);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
+  useClickOutside([btnRef, menuRef], () => setOpen(false), open);
 
   function handleLogout() {
     logout();
@@ -108,7 +89,7 @@ export default function AccountMenu(/*{ user }: { user: User | null }*/) {
               <div className={styles.menuDivider} />
 
               <button 
-                className={styles.menuItemButton} 
+                className={`${styles.menuItemButton} ${styles.menuItemLogout}`} 
                 type="button" 
                 onClick={handleLogout}
                 aria-label='Logout'>
