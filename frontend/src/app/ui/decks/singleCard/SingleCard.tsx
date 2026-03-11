@@ -1,6 +1,7 @@
 "use client";
 
 import type { Card } from "@/app/lib/definitions";
+import EditButton from "@/app/ui/buttons/editButton/EditButton";
 import styles from "@/app/(app)/decks/page.module.css";
 
 type SingleCardProps = {
@@ -20,9 +21,12 @@ export default function SingleCard({
             className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
                 }`}
         >
+            <div className={styles.startButtonWrapper}>
+                <EditButton cardId={card.id} title="Edit Card" />
+            </div>
+
             <div className={styles.deckTop}>
                 <h2 className={styles.deckName}>{card.front}</h2>
-
                 <p className={styles.deckDescription}>{card.back}</p>
             </div>
         </div>

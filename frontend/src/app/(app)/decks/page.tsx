@@ -23,8 +23,15 @@ export default function Decks() {
   return (
     <main className={styles.page}>
       <DeckHeader
+        title="Deck Library"
+        subtitle="Select a deck to start studying"
         isGridView={isGridView}
         onToggleViewAction={handleToggleView}
+        dropdownButtons={[
+          { label: "Add Deck", onClick: () => console.log("Add Deck clicked") },
+          { label: "Import Deck", onClick: () => console.log("Import Deck clicked") },
+          { label: "Settings", onClick: () => console.log("Settings clicked") },
+        ]}
       />
 
       <DeckGrid decks={topLevelDecks} isGridView={isGridView} />

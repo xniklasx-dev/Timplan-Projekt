@@ -63,7 +63,6 @@ export default function DeckGrid({ decks = [], cards = [], isGridView }: DeckGri
         animateFlip();
     };
 
-    // Automatically animate whenever decks/cards change
     useLayoutEffect(() => {
         if (hasMounted.current) animateFlip();
     }, [decks, cards, isGridView]);

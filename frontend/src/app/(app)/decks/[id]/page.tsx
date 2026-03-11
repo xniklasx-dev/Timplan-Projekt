@@ -41,6 +41,11 @@ export default function Deck() {
         subtitle={currentDeck.description}
         isGridView={isGridView}
         onToggleViewAction={handleToggleView}
+        dropdownButtons={[
+          { label: "Edit Deck", onClick: () => console.log("Edit Deck clicked") },
+          { label: "Add Card", onClick: () => console.log("Add Card clicked") },
+          { label: "Share Deck", onClick: () => console.log("Share Deck clicked") },
+        ]}
       />
 
       <DeckGrid decks={childDecks} cards={cards} isGridView={isGridView} />
