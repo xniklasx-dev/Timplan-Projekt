@@ -11,18 +11,18 @@ export default function LearningEndPage({ deckCards, selectedDeck }: { deckCards
   const circumference = 2 * Math.PI * radius;
 
   const total = deckCards.length;
-
-  if (!total) return null;
+  const hasResults = total > 0;
 
   const easyCards = deckCards.filter(card => card.rating === 3).length;
   const mediumCards = deckCards.filter(card => card.rating === 2).length;
   const hardCards = deckCards.filter(card => card.rating === 1).length;
 
-  const segments = [
+  const segments = hasResults ? [
     { value: hardCards, color: "var(--color-hard)" },
     { value: mediumCards, color: "var(--color-medium)" },
     { value: easyCards, color: "var(--color-easy)" },
-  ];
+  ] : [];
+
 
   let cumulativePercent = 0;
 
@@ -38,7 +38,7 @@ export default function LearningEndPage({ deckCards, selectedDeck }: { deckCards
                 cx={center}
                 cy={center}
                 r={radius}
-                stroke="#222"
+                stroke="var(--color-disabled)"
                 strokeWidth={strokeWidth}
                 fill="transparent"/>
 
