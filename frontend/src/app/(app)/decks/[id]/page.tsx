@@ -8,6 +8,7 @@ import placeholderDecks from "@/app/lib/placeholder-decks.json";
 import placeholderCards from "@/app/lib/placeholder-cards.json";
 import DeckCard from "@/app/ui/decks/deckCard/DeckCard";
 import SingleCard from "@/app/ui/decks/singleCard/SingleCard";
+import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
 
 const decksData: Deck[] = placeholderDecks as unknown as Deck[];
 const cardsData: Card[] = placeholderCards as unknown as Card[];
@@ -90,45 +91,12 @@ export default function Deck() {
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.titleRow}>
-          <h1 className={styles.title}>{currentDeck.name}</h1>
-
-          <label className={styles.viewToggle}>
-            <input
-              type="checkbox"
-              className={styles.toggleInput}
-              checked={isGridView}
-              onChange={handleToggleView}
-            />
-
-            <div className={styles.toggleTrack}>
-              <div className={styles.toggleIndicator}></div>
-
-              <span className={styles.toggleOption}>
-                <svg viewBox="0 0 24 24" className={styles.icon}>
-                  <rect x="4" y="5" width="16" height="3" rx="1" />
-                  <rect x="4" y="10.5" width="16" height="3" rx="1" />
-                  <rect x="4" y="16" width="16" height="3" rx="1" />
-                </svg>
-              </span>
-
-              <span className={styles.toggleOption}>
-                <svg viewBox="0 0 24 24" className={styles.icon}>
-                  <rect x="3" y="3" width="7" height="7" rx="1" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" />
-                  <rect x="14" y="14" width="7" height="7" rx="1" />
-                </svg>
-              </span>
-            </div>
-          </label>
-        </div>
-
-        {currentDeck.description && (
-          <p className={styles.subtitle}>{currentDeck.description}</p>
-        )}
-      </header>
+      <DeckHeader
+        title={currentDeck.name}
+        subtitle={currentDeck.description}
+        isGridView={isGridView}
+        onToggleViewAction={handleToggleView}
+      />
 
       <section className={isGridView ? styles.deckGrid : styles.deckLine}>
 
