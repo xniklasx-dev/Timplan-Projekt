@@ -1,16 +1,18 @@
 "use client";
 
 import { useRef, useLayoutEffect } from "react";
-import type { Deck } from "@/app/lib/definitions";
+import type { Deck, Card } from "@/app/lib/definitions";
 import DeckCard from "../deckCard/DeckCard";
+import SingleCard from "../singleCard/SingleCard";
 import styles from "@/app/(app)/decks/page.module.css";
 
 type DeckGridProps = {
-    decks: Deck[];
+    decks?: Deck[];
+    cards?: Card[];
     isGridView: boolean;
 };
 
-export default function DeckGrid({ decks, isGridView }: DeckGridProps) {
+export default function DeckGrid({ decks = [], cards = [], isGridView }: DeckGridProps) {
     const cardRefs = useRef(new Map<string, HTMLElement>());
     const hasMounted = useRef(false);
 
@@ -26,11 +28,10 @@ export default function DeckGrid({ decks, isGridView }: DeckGridProps) {
         return rects;
     };
 
-    const animateFlip = (next: boolean) => {
+    const animateFlip = () => {
         const first = measure();
         requestAnimationFrame(() => {
             const last = measure();
-
             cardRefs.current.forEach((el, id) => {
                 const a = first.get(id);
                 const b = last.get(id);
@@ -57,16 +58,18 @@ export default function DeckGrid({ decks, isGridView }: DeckGridProps) {
         });
     };
 
-    const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!hasMounted.current) {
-            return;
-        }
-        const next = event.target.checked;
-        animateFlip(next);
+    const handleToggle = () => {
+        if (!hasMounted.current) return;
+        animateFlip();
     };
 
-    if (!decks || decks.length === 0) {
-        return <p className={styles.subtitle}>No decks found</p>;
+    // Automatically animate whenever decks/cards change
+    useLayoutEffect(() => {
+        if (hasMounted.current) animateFlip();
+    }, [decks, cards, isGridView]);
+
+    if (decks.length === 0 && cards.length === 0) {
+        return <p className={styles.subtitle}>No items found</p>;
     }
 
     return (
@@ -79,6 +82,18 @@ export default function DeckGrid({ decks, isGridView }: DeckGridProps) {
                     registerRefAction={(el) => {
                         if (!el) return;
                         cardRefs.current.set(deck.id, el);
+                    }}
+                />
+            ))}
+
+            {cards.map((card) => (
+                <SingleCard
+                    key={card.id}
+                    card={card}
+                    isGridView={isGridView}
+                    registerRefAction={(el) => {
+                        if (!el) return;
+                        cardRefs.current.set(card.id, el);
                     }}
                 />
             ))}
