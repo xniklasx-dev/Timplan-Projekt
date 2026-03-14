@@ -176,6 +176,19 @@ export default function Deck() {
             label: "Add Deck",
             onClick: handleOpenAddDeckEditor,
           },
+          {
+            label: "Delete Deck",
+            onClick: () => {
+              if (
+                window.confirm("Are you sure you want to delete this deck?")
+              ) {
+                setDecks((currentDecks) =>
+                  currentDecks.filter((deck) => deck.id !== currentDeck.id),
+                );
+                router.push("/decks");
+              }
+            },
+          },
         ]}
       />
 
