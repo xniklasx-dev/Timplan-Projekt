@@ -22,7 +22,6 @@ export default function Deck() {
 
   const [isGridView, setIsGridView] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
   const currentDeck = decksData.find((d) => d.id === deckId);
   if (!currentDeck) return <main className={styles.page}>Deck not found</main>;
@@ -42,24 +41,12 @@ export default function Deck() {
   };
 
   const handleOpenNewCardEditor = () => {
-    setActiveCardId(NEW_CARD_ID);
     setIsModalOpen(true);
   };
 
   const handleCloseEditor = () => {
     setIsModalOpen(false);
-    setActiveCardId(null);
   };
-
-  console.log(
-    "deck page cardsData ids:",
-    cardsData.map((card) => card.id),
-  );
-  console.log(
-    "deck page c0:",
-    cardsData.find((card) => card.id === "c0"),
-  );
-  console.log("activeCardId:", activeCardId);
 
   return (
     <main className={styles.page}>
@@ -88,8 +75,9 @@ export default function Deck() {
       <DeckGrid decks={childDecks} cards={cards} isGridView={isGridView} />
 
       <SingleCardEditor
+        key={NEW_CARD_ID}
         open={isModalOpen}
-        cardId={activeCardId}
+        cardId={NEW_CARD_ID}
         onClose={handleCloseEditor}
       />
     </main>
