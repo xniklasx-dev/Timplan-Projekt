@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { login } from "../../lib/auth/auth.service";
-import { useAuth } from "../../lib/auth/AuthContext";
+import { login } from "@/app/lib/auth/auth.service";
+import { useAuth } from "@/app/lib/auth/AuthContext";
+import Spinner from "@/app/ui/spinner/Spinner";
+import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 import ForgotPasswordModal from "./ForgotPasswordModal";
-
 
 export default function LoginPage() {
   console.log("USE_MOCK:", process.env.NEXT_PUBLIC_USE_MOCK);
@@ -44,58 +45,60 @@ export default function LoginPage() {
   }
 
   return (
-    <div className={styles.page}>
-      <div className={styles.cards}>
-        <h1 className={styles.title}>Login</h1>
+    <>
+      <h1 className={styles.title}>Login</h1>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <input
-            className={styles.input}
-            type="text"
-            placeholder="E-Mail or Username"
-            required
-            value={emailOrUsername}
-            onChange={(e) => setEmailOrUsername(e.target.value)}
-          />
+      <form onSubmit={showForgotPassword ? (e) => e.preventDefault() : handleSubmit} className={styles.form}>
+        <input
+          className={styles.input}
+          type="text"
+          placeholder="E-Mail or Username"
+          required
+          value={emailOrUsername}
+          onChange={(e) => setEmailOrUsername(e.target.value)}
+        />
 
-          <input
-            className={styles.input}
-            type="password"
-            placeholder="Password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <input
+          className={styles.input}
+          type="password"
+          placeholder="Password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          <p className={styles.forgotPassword}>
-            <button
-              type="button"
-              className={styles.forgotPasswordButton}
-              onClickCapture={() => setShowForgotPassword(true)}
-            >
-              Forgot password?
-            </button>
-          </p>
-
-          <button 
-            type="submit"
-            className={styles.button}
-            disabled={loading}>
-              
-            {loading ? "Logging in..." : "Login"}
+        <p className={styles.forgotPassword}>
+          <button
+            type="button"
+            className={styles.forgotPasswordButton}
+            onClickCapture={() => setShowForgotPassword(true)}
+          >
+            Forgot password?
           </button>
-        </form>
-      
-        {error && <p className={styles.error}>{error}</p>}
-        
-        <p className={styles.linkText}>
-          Don&apos;t have an account?{" "} 
-          <Link href="/register">Sign up</Link>
         </p>
-      </div>
+
+        <AccentButton 
+          type="submit"
+          fullWidth
+          disabled={loading}>
+            
+          {loading ? (
+          <>
+            <Spinner small /> Logging in...
+          </> ) : ( "Login")}
+        </AccentButton>
+      </form>
+    
+      {error && <p className={styles.error}>{error}</p>}
+      
+      <p className={styles.linkText}>
+        Don&apos;t have an account?{" "} 
+        <Link href="/register">Sign up</Link>
+      </p>
+    
       {showForgotPassword && (
         <ForgotPasswordModal onClose={() => setShowForgotPassword(false)} />
       )}
-    </div>
+    </>
   );
 }

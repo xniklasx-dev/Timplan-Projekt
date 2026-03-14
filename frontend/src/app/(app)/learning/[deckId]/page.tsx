@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import styles from "./page.module.css";
 import LearnCard from "../../../ui/learning_cards/learning_cards";
-import DashboardLearning from "@/app/ui/learning_cards/dashboard_learning";
+import LearningEndPage from "@/app/ui/learning_cards/learning_end_page";
 
 import decksData from "@/app/lib/placeholder-decks.json";
 import cardsData from "@/app/lib/placeholder-cards.json";
@@ -48,47 +48,70 @@ export default function Learning() {
   }
   const initialDeckCards = getCardsForDeck(selectedDeck, cards) .filter(card => card.due <= new Date());
 
-  const [deckCards, setDeckCards] = useState(initialDeckCards);
+  const [sessionCards, setSessionCards] = useState(initialDeckCards);
+  const [resultCards, setResultCards] = useState<Card[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [learnedCount, setLearnedCount] = useState(0);
   const [stats, setStats]= useState<StatsMap>(dateData);
+  const [isFinished, setIsFinished] = useState(false);
 
-  const currentCard = deckCards[currentIndex];
+  const currentCard = sessionCards[currentIndex];
 
   const changeIndex = (index: number) => {
-    if (index >= 0 && index < deckCards.length) {
+    if (index >= 0 && index < sessionCards.length) {
       setCurrentIndex(index);
     }};
 
+  const handlePrev = () => {
+    setLearnedCount((prev) => prev - 1);
+    changeIndex(currentIndex - 1);
+  }
+
+  const handleSkip = () => {
+    setLearnedCount((prev) => prev + 1);
+
+    if (currentIndex >= initialDeckCards.length) {
+      setIsFinished(true);
+      return;}
+
+    setCurrentIndex((prev) => prev + 1);
+  }
+  
   const handleRate = (rating: 0 | 1 | 2 | 3) => {
     const { updatedCard, updatedStats } = rateCard(currentCard, rating, stats);
 
     setStats(updatedStats);
 
-    // Karte im Array ersetzen
-    if (rating === 0){
-      const updatedCards = [...deckCards, updatedCard];
-      updatedCards[currentIndex] = updatedCard;
-
-      setDeckCards(updatedCards);
-    }
-    else{
-    const updatedCards = [...deckCards];
+    if (rating === 0) {
+    const updatedCards = [...sessionCards];
     updatedCards[currentIndex] = updatedCard;
-    setLearnedCount((prev) => prev + 1);
+    updatedCards.push(updatedCard);
 
-    setDeckCards(updatedCards);
-    }
+    setSessionCards(updatedCards);
+  } else {
+    const updatedCards = [...sessionCards];
+    updatedCards[currentIndex] = updatedCard;
+    setSessionCards(updatedCards);
+
+    setResultCards((prev) => [...prev, updatedCard]);
+    setLearnedCount((prev) => prev + 1);
+  }
+
 
     setCurrentIndex((prev) => prev + 1);}
   
-  if (!currentCard) {
-    return <div>Session beendet 🎉</div>;}
+  if (isFinished||!currentCard) {
+    return (
+      <div className={styles.page}>
+        <main className={styles.main}>
+          <LearningEndPage deckCards={resultCards} selectedDeck={selectedDeck} />
+        </main>
+      </div>);}
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         <h1>{selectedDeck.name} {learnedCount}/{initialDeckCards.length}</h1>
-        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} onRate={handleRate} changeIndex={changeIndex} deckLength={initialDeckCards.length} />
+        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} onRate={handleRate} onPrev={handlePrev} onSkip={handleSkip} changeIndex={changeIndex} deckLength={initialDeckCards.length} />
       </main>
     </div>
   );
