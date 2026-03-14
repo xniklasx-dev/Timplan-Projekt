@@ -9,6 +9,7 @@ import placeholderCards from "@/app/lib/placeholder-cards.json";
 import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
 import DeckGrid from "@/app/ui/decks/deckGrid/DeckGrid";
 import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
+import DeckEditor from "@/app/ui/decks/deckEditor/DeckEditor";
 
 const decksData: Deck[] = placeholderDecks as unknown as Deck[];
 const cardsData: Card[] = placeholderCards as unknown as Card[];
@@ -24,6 +25,7 @@ export default function Deck() {
   const [activeEditorCardId, setActiveEditorCardId] = useState<string | null>(
     null,
   );
+  const [isDeckEditorOpen, setIsDeckEditorOpen] = useState(false);
 
   const currentDeck = decksData.find((d) => d.id === deckId);
   if (!currentDeck) return <main className={styles.page}>Deck not found</main>;
@@ -54,6 +56,14 @@ export default function Deck() {
     setActiveEditorCardId(null);
   };
 
+  const handleOpenDeckEditor = () => {
+    setIsDeckEditorOpen(true);
+  };
+
+  const handleCloseDeckEditor = () => {
+    setIsDeckEditorOpen(false);
+  };
+
   return (
     <main className={styles.page}>
       <DeckHeader
@@ -73,7 +83,7 @@ export default function Deck() {
           },
           {
             label: "Edit Deck",
-            onClick: () => console.log("Edit Deck clicked"),
+            onClick: handleOpenDeckEditor,
           },
           {
             label: "Add Deck",
@@ -94,6 +104,13 @@ export default function Deck() {
         open={activeEditorCardId !== null}
         cardId={activeEditorCardId}
         onClose={handleCloseEditor}
+      />
+
+      <DeckEditor
+        key={`${currentDeck.id}-${isDeckEditorOpen ? "open" : "closed"}`}
+        open={isDeckEditorOpen}
+        deckId={currentDeck.id}
+        onClose={handleCloseDeckEditor}
       />
     </main>
   );
