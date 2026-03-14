@@ -1,0 +1,202 @@
+.base {
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-text);
+
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    background 0.15s ease,
+    transform 0.08s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.base:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.base:disabled {
+  background: var(--color-disabled);
+  border-color: var(--color-disabled);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.accent {
+  padding: 1rem;
+  border-radius: 12px;
+
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-size: 1rem;
+}
+
+.accent:hover {
+  box-shadow: 0 0 0 1px var(--color-glow);
+}
+
+.accent:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.iconButton {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton:hover {
+  box-shadow: 0 0 0 2px var(--color-glow);
+}
+
+.iconButton:active {
+  transform: translateY(1px) scale(0.95);
+}
+
+.buttonText {
+  margin-left: 8px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownTrigger {
+  min-height: 48px;
+  padding: 10px 16px;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1;
+}
+
+.dropdownTrigger:hover {
+  box-shadow: 0 0 0 1px var(--color-glow);
+}
+
+.dropdownTrigger:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.dropdownTriggerOpen {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  box-shadow: 0 0 0 1px var(--color-glow);
+}
+
+.dropdownLabel {
+  white-space: nowrap;
+}
+
+.dropdownChevron {
+  font-size: 12px;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+
+.dropdownChevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  z-index: 100;
+
+  min-width: 200px;
+  padding: 8px;
+
+  border-radius: 16px;
+  border: 1px solid var(--color-accent);
+  background: var(--color-background-secondary, #151515);
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.dropdownMenuRight {
+  right: 0;
+}
+
+.dropdownMenuLeft {
+  left: 0;
+}
+
+.dropdownItem {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--color-text);
+
+  display: flex;
+  align-items: center;
+
+  text-align: left;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.08s ease,
+    box-shadow 0.15s ease;
+}
+
+.dropdownItem:hover {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  box-shadow: 0 0 0 1px var(--color-glow);
+}
+
+.dropdownItem:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.dropdownItem:disabled,
+.dropdownItemDisabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.dropdownTrigger:focus-visible,
+.dropdownItem:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-glow),
+    0 0 0 4px color-mix(in srgb, var(--color-accent) 25%, transparent);
+}

@@ -1,196 +1,222 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { Deck, Card } from "@/app/lib/definitions";
-import Link from "next/link";
 import styles from "../page.module.css";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
 import placeholderCards from "@/app/lib/placeholder-cards.json";
+import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
+import DeckGrid from "@/app/ui/decks/deckGrid/DeckGrid";
+import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
+import DeckEditor from "@/app/ui/decks/deckEditor/DeckEditor";
 
-const decksData: Deck[] = placeholderDecks as unknown as Deck[];
+const initialDecksData: Deck[] = placeholderDecks as unknown as Deck[];
 const cardsData: Card[] = placeholderCards as unknown as Card[];
+
+const NEW_CARD_ID = "c0";
+const DECKS_STORAGE_KEY = "timplan-decks";
+
+type DeckEditorState = {
+  open: boolean;
+  deckId: string | null;
+  parentDeckId?: string;
+};
+
+function loadDecks(): Deck[] {
+  if (typeof window === "undefined") {
+    return initialDecksData;
+  }
+
+  try {
+    const storedDecks = window.localStorage.getItem(DECKS_STORAGE_KEY);
+
+    if (!storedDecks) {
+      return initialDecksData;
+    }
+
+    const parsedDecks = JSON.parse(storedDecks) as Deck[];
+
+    return Array.isArray(parsedDecks) && parsedDecks.length > 0
+      ? parsedDecks
+      : initialDecksData;
+  } catch {
+    return initialDecksData;
+  }
+}
 
 export default function Deck() {
   const params = useParams();
   const router = useRouter();
-
   const deckId = params.id as string;
 
+  const [decks, setDecks] = useState<Deck[]>(loadDecks);
   const [isGridView, setIsGridView] = useState(false);
+  const [activeEditorCardId, setActiveEditorCardId] = useState<string | null>(
+    null,
+  );
+  const [deckEditorState, setDeckEditorState] = useState<DeckEditorState>({
+    open: false,
+    deckId: null,
+    parentDeckId: undefined,
+  });
 
-  const cardRefs = useRef(new Map<string, HTMLElement>());
-  const hasMounted = useRef(false);
+  useEffect(() => {
+    window.localStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(decks));
+  }, [decks]);
 
-  useLayoutEffect(() => {
-    hasMounted.current = true;
-  }, []);
+  const currentDeck = decks.find((d) => d.id === deckId);
+  if (!currentDeck) return <main className={styles.page}>Deck not found</main>;
 
-  const currentDeck = decksData.find((d) => d.id === deckId);
+  const childDecks: Deck[] =
+    currentDeck.childDeckIds
+      ?.map((id) => decks.find((d) => d.id === id))
+      .filter((d): d is Deck => !!d) ?? [];
 
-  const childDecks =
-    currentDeck?.childDeckIds
-      ?.map((id) => decksData.find((d) => d.id === id))
-      .filter(Boolean) ?? [];
-
-  const cards =
-    currentDeck?.cardIds
-      .map((id) => cardsData.find((c) => c.id === id))
-      .filter(Boolean) ?? [];
-
-  const measure = () => {
-    const rects = new Map<string, DOMRect>();
-    cardRefs.current.forEach((el, id) => {
-      rects.set(id, el.getBoundingClientRect());
-    });
-    return rects;
-  };
+  const cards: Card[] =
+    currentDeck.cardIds
+      ?.map((id) => cardsData.find((c) => c.id === id))
+      .filter((c): c is Card => !!c) ?? [];
 
   const handleToggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!hasMounted.current) {
-      setIsGridView(event.target.checked);
-      return;
-    }
+    setIsGridView(event.target.checked);
+  };
 
-    const next = event.target.checked;
-    const first = measure();
+  const handleOpenNewCardEditor = () => {
+    setActiveEditorCardId(NEW_CARD_ID);
+  };
 
-    setIsGridView(next);
+  const handleOpenExistingCardEditor = (cardId: string) => {
+    setActiveEditorCardId(cardId);
+  };
 
-    requestAnimationFrame(() => {
-      const last = measure();
+  const handleCloseEditor = () => {
+    setActiveEditorCardId(null);
+  };
 
-      cardRefs.current.forEach((el, id) => {
-        const a = first.get(id);
-        const b = last.get(id);
-        if (!a || !b) return;
-
-        const dx = a.left - b.left;
-        const dy = a.top - b.top;
-        const sx = a.width / b.width;
-        const sy = a.height / b.height;
-
-        el.animate(
-          [
-            { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
-            { transform: "translate(0px, 0px) scale(1, 1)" },
-          ],
-          {
-            duration: 380,
-            easing: "cubic-bezier(.2, .8, .2, 1)",
-          }
-        );
-      });
+  const handleOpenDeckEditor = () => {
+    setDeckEditorState({
+      open: true,
+      deckId: currentDeck.id,
+      parentDeckId: currentDeck.parentDeckId,
     });
   };
 
-  if (!currentDeck) {
-    return <main className={styles.page}>Deck not found</main>;
-  }
+  const handleOpenAddDeckEditor = () => {
+    setDeckEditorState({
+      open: true,
+      deckId: null,
+      parentDeckId: currentDeck.id,
+    });
+  };
+
+  const handleCloseDeckEditor = () => {
+    setDeckEditorState({
+      open: false,
+      deckId: null,
+      parentDeckId: undefined,
+    });
+  };
+
+  const handleSaveDeck = (savedDeck: Deck, options: { isNew: boolean }) => {
+    setDecks((currentDecks) => {
+      if (options.isNew) {
+        const updatedParentDecks = currentDecks.map((deck) => {
+          if (deck.id !== currentDeck.id) {
+            return deck;
+          }
+
+          const currentChildDeckIds = deck.childDeckIds ?? [];
+
+          return {
+            ...deck,
+            childDeckIds: currentChildDeckIds.includes(savedDeck.id)
+              ? currentChildDeckIds
+              : [...currentChildDeckIds, savedDeck.id],
+            updatedAt: new Date(),
+            revision: deck.revision + 1,
+          };
+        });
+
+        return [...updatedParentDecks, savedDeck];
+      }
+
+      return currentDecks.map((deck) =>
+        deck.id === savedDeck.id ? savedDeck : deck,
+      );
+    });
+
+    if (options.isNew) {
+      router.push(`/decks/${savedDeck.id}`);
+    }
+  };
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.titleRow}>
-          <h1 className={styles.title}>{currentDeck.name}</h1>
+      <DeckHeader
+        title={currentDeck.name}
+        subtitle={currentDeck.description}
+        isGridView={isGridView}
+        onToggleViewAction={handleToggleView}
+        dropdownButtonLabel="Test"
+        dropdownButtons={[
+          {
+            label: "Edit Cards",
+            onClick: () => router.push(`/cards/edit/${currentDeck.id}`),
+          },
+          {
+            label: "Add Card",
+            onClick: handleOpenNewCardEditor,
+          },
+          {
+            label: "Edit Deck",
+            onClick: handleOpenDeckEditor,
+          },
+          {
+            label: "Add Deck",
+            onClick: handleOpenAddDeckEditor,
+          },
+          {
+            label: "Delete Deck",
+            onClick: () => {
+              if (
+                window.confirm("Are you sure you want to delete this deck?")
+              ) {
+                setDecks((currentDecks) =>
+                  currentDecks.filter((deck) => deck.id !== currentDeck.id),
+                );
+                router.push("/decks");
+              }
+            },
+          },
+        ]}
+      />
 
-          <label className={styles.viewToggle}>
-            <input
-              type="checkbox"
-              className={styles.toggleInput}
-              checked={isGridView}
-              onChange={handleToggleView}
-            />
+      <DeckGrid
+        decks={childDecks}
+        cards={cards}
+        isGridView={isGridView}
+        onEditCardAction={handleOpenExistingCardEditor}
+      />
 
-            <div className={styles.toggleTrack}>
-              <div className={styles.toggleIndicator}></div>
+      <SingleCardEditor
+        key={activeEditorCardId ?? "closed"}
+        open={activeEditorCardId !== null}
+        cardId={activeEditorCardId}
+        onClose={handleCloseEditor}
+      />
 
-              <span className={styles.toggleOption}>
-                <svg viewBox="0 0 24 24" className={styles.icon}>
-                  <rect x="4" y="5" width="16" height="3" rx="1" />
-                  <rect x="4" y="10.5" width="16" height="3" rx="1" />
-                  <rect x="4" y="16" width="16" height="3" rx="1" />
-                </svg>
-              </span>
-
-              <span className={styles.toggleOption}>
-                <svg viewBox="0 0 24 24" className={styles.icon}>
-                  <rect x="3" y="3" width="7" height="7" rx="1" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" />
-                  <rect x="14" y="14" width="7" height="7" rx="1" />
-                </svg>
-              </span>
-            </div>
-          </label>
-        </div>
-
-        {currentDeck.description && (
-          <p className={styles.subtitle}>{currentDeck.description}</p>
-        )}
-      </header>
-
-      <section className={isGridView ? styles.deckGrid : styles.deckLine}>
-
-        {childDecks.map((deck) => {
-          if (!deck) return null;
-          return (
-            <Link
-              key={deck.id}
-              href={`/decks/${deck.id}`}
-              ref={(el) => {
-                if (!el) return;
-                cardRefs.current.set(deck.id, el);
-              }}
-              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
-                }`}
-            >
-              <div className={styles.deckTop}>
-                <h2 className={styles.deckName}>{deck?.name}</h2>
-
-                {deck?.description && (
-                  <p className={styles.deckDescription}>{deck?.description}</p>
-                )}
-              </div>
-
-              <div className={styles.deckStats}>
-                <div className={styles.stat}>
-                  <span className={styles.statValue}>
-                    {deck?.cardIds.length}
-                  </span>
-                  <span className={styles.statLabel}>Cards</span>
-                </div>
-
-                <div className={styles.stat}>
-                  <span className={styles.statValue}>{deck?.dueToday}</span>
-                  <span className={styles.statLabel}>Due</span>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
-
-        {cards.map((card) => {
-          if (!card) return null;
-          return (
-            <div
-              key={card.id}
-              ref={(el) => {
-                if (!el) return;
-                cardRefs.current.set(card.id, el);
-              }}
-              className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
-                }`}
-            >
-              <div className={styles.deckTop}>
-                <h2 className={styles.deckName}>{card?.front}</h2>
-
-                <p className={styles.deckDescription}>{card?.back}</p>
-              </div>
-            </div>
-          );
-        })}
-      </section>
+      <DeckEditor
+        key={`${deckEditorState.deckId ?? `new-${deckEditorState.parentDeckId ?? "root"}`}-${
+          deckEditorState.open ? "open" : "closed"
+        }`}
+        open={deckEditorState.open}
+        deckId={deckEditorState.deckId}
+        parentDeckId={deckEditorState.parentDeckId}
+        decks={decks}
+        onClose={handleCloseDeckEditor}
+        onSaveAction={handleSaveDeck}
+      />
     </main>
   );
 }

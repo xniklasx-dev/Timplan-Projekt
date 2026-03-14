@@ -1,188 +1,131 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Deck } from '../../lib/definitions';
-import Link from "next/link";
-import styles from "./page.module.css";
+import type { Deck } from "@/app/lib/definitions";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
-import StartLessonButton from "../../ui/buttons/startLessonButton/StartLessonButton";
+import styles from "./page.module.css";
+import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
+import DeckGrid from "@/app/ui/decks/deckGrid/DeckGrid";
+import DeckEditor from "@/app/ui/decks/deckEditor/DeckEditor";
 
 const initialDecks: Deck[] = placeholderDecks as unknown as Deck[];
+const DECKS_STORAGE_KEY = "timplan-decks";
 
-export default function Decks() {
-  const [isGridView, setIsGridView] = useState(false);
+type DeckEditorState = {
+  open: boolean;
+  deckId: string | null;
+};
 
-  const [decks] = useState<Deck[] | null>(initialDecks);
+function loadDecks(): Deck[] {
+  if (typeof window === "undefined") {
+    return initialDecks;
+  }
 
-  const router = useRouter();
+  try {
+    const storedDecks = window.localStorage.getItem(DECKS_STORAGE_KEY);
 
-  const cardRefs = useRef(new Map<string, HTMLElement>());
-
-  const hasMounted = useRef(false);
-  useLayoutEffect(() => {
-    hasMounted.current = true;
-  }, []);
-
-  const measure = () => {
-    const rects = new Map<string, DOMRect>();
-    cardRefs.current.forEach((el, id) => {
-      rects.set(id, el.getBoundingClientRect());
-    });
-    return rects;
-  };
-
-  const handleToggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!hasMounted.current) {
-      setIsGridView(event.target.checked);
-      return;
+    if (!storedDecks) {
+      return initialDecks;
     }
 
-    const next = event.target.checked;
+    const parsedDecks = JSON.parse(storedDecks) as Deck[];
 
-    const first = measure();
+    return Array.isArray(parsedDecks) && parsedDecks.length > 0
+      ? parsedDecks
+      : initialDecks;
+  } catch {
+    return initialDecks;
+  }
+}
 
-    setIsGridView(next);
+export default function Decks() {
+  const router = useRouter();
 
-    requestAnimationFrame(() => {
-      const last = measure();
+  const [isGridView, setIsGridView] = useState(false);
+  const [decks, setDecks] = useState<Deck[]>(loadDecks);
+  const [deckEditorState, setDeckEditorState] = useState<DeckEditorState>({
+    open: false,
+    deckId: null,
+  });
 
-      cardRefs.current.forEach((el, id) => {
-        const a = first.get(id);
-        const b = last.get(id);
-        if (!a || !b) return;
+  useEffect(() => {
+    window.localStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(decks));
+  }, [decks]);
 
-        const dx = a.left - b.left;
-        const dy = a.top - b.top;
-        const sx = a.width / b.width;
-        const sy = a.height / b.height;
+  const handleToggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsGridView(event.target.checked);
+  };
 
-        if (dx === 0 && dy === 0 && sx === 1 && sy === 1) return;
+  const handleEditCard = (cardId: string) => {
+    console.log(`Edit card with ID: ${cardId}`);
+  };
 
-        el.animate(
-          [
-            { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
-            { transform: "translate(0px, 0px) scale(1, 1)" },
-          ],
-          {
-            duration: 380,
-            easing: "cubic-bezier(.2, .8, .2, 1)",
-          },
-        );
-      });
+  const handleOpenAddDeckEditor = () => {
+    setDeckEditorState({
+      open: true,
+      deckId: null,
     });
   };
+
+  const handleCloseDeckEditor = () => {
+    setDeckEditorState({
+      open: false,
+      deckId: null,
+    });
+  };
+
+  const handleSaveDeck = (savedDeck: Deck, options: { isNew: boolean }) => {
+    setDecks((currentDecks) => {
+      if (options.isNew) {
+        return [...currentDecks, savedDeck];
+      }
+
+      return currentDecks.map((deck) =>
+        deck.id === savedDeck.id ? savedDeck : deck,
+      );
+    });
+
+    if (options.isNew) {
+      router.push(`/decks/${savedDeck.id}`);
+    }
+  };
+
+  const topLevelDecks =
+    decks.filter((deck) => !deck.parentDeckId || +deck.parentDeckId <= 0) ?? [];
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.titleRow}>
-          <h1 className={styles.title}>Deck Library</h1>
+      <DeckHeader
+        title="Deck Library"
+        subtitle="Select a deck to start studying"
+        isGridView={isGridView}
+        onToggleViewAction={handleToggleView}
+        dropdownButtonLabel="Test"
+        dropdownButtons={[
+          {
+            label: "Add Deck",
+            onClick: handleOpenAddDeckEditor,
+          },
+        ]}
+      />
 
-          <label className={styles.viewToggle}>
-            <input
-              type="checkbox"
-              className={styles.toggleInput}
-              checked={isGridView}
-              onChange={handleToggleView}
-            />
+      <DeckGrid
+        decks={topLevelDecks}
+        isGridView={isGridView}
+        onEditCardAction={handleEditCard}
+      />
 
-            <div className={styles.toggleTrack}>
-              <div className={styles.toggleIndicator}></div>
-
-              <span className={styles.toggleOption}>
-                <svg viewBox="0 0 24 24" className={styles.icon}>
-                  <rect x="4" y="5" width="16" height="3" rx="1" />
-                  <rect x="4" y="10.5" width="16" height="3" rx="1" />
-                  <rect x="4" y="16" width="16" height="3" rx="1" />
-                </svg>
-              </span>
-
-              <span className={styles.toggleOption}>
-                <svg viewBox="0 0 24 24" className={styles.icon}>
-                  <rect x="3" y="3" width="7" height="7" rx="1" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" />
-                  <rect x="14" y="14" width="7" height="7" rx="1" />
-                </svg>
-              </span>
-            </div>
-          </label>
-        </div>
-
-        <p className={styles.subtitle}>Select a deck to start studying</p>
-      </header>
-
-      <section className={isGridView ? styles.deckGrid : styles.deckLine}>
-        {!decks ? (
-          <p className={styles.subtitle}>Loading decks...</p>
-        ) : (
-          decks
-            .filter((deck) => !deck.parentDeckId || +deck.parentDeckId <= 0)
-            .map((deck) => (
-              <Link
-                key={deck.id}
-                href={`/decks/${deck.id}`}
-                ref={(el) => {
-                  if (!el) return;
-                  cardRefs.current.set(deck.id, el);
-                }}
-                className={`${styles.deckCard} ${isGridView ? styles.deckCardGrid : styles.deckCardLine
-                  }`}
-              >
-                <div className={styles.startButtonWrapper}>
-                  <StartLessonButton
-                    title={deck.cardIds?.length === 0 ? "No cards in this deck yet" : "Start studying"}
-                    disabled={deck.cardIds?.length === 0}
-                    onClick={(e: React.MouseEvent) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      if (deck.cardIds.length === 0) return;
-
-                      router.push("/learning/" + deck.id);
-                    }}
-                  />
-                </div>
-
-                <div className={styles.deckTop}>
-                  <h2 className={styles.deckName}>{deck.name}</h2>
-                  {deck.description && (
-                    <p className={styles.deckDescription}>{deck.description}</p>
-                  )}
-                </div>
-
-                <div className={styles.deckStats}>
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.cardIds.length}</span>
-                    <span className={styles.statLabel}>Cards</span>
-                  </div>
-
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.dueToday}</span>
-                    <span className={styles.statLabel}>Due</span>
-                  </div>
-
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.newCards}</span>
-                    <span className={styles.statLabel}>New</span>
-                  </div>
-
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.learningCards}</span>
-                    <span className={styles.statLabel}>Learning</span>
-                  </div>
-
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.reviewCards}</span>
-                    <span className={styles.statLabel}>Review</span>
-                  </div>
-
-                </div>
-              </Link>
-            ))
-        )}
-      </section>
+      <DeckEditor
+        key={`${
+          deckEditorState.deckId ?? "new-top-level"
+        }-${deckEditorState.open ? "open" : "closed"}`}
+        open={deckEditorState.open}
+        deckId={deckEditorState.deckId}
+        decks={decks}
+        onClose={handleCloseDeckEditor}
+        onSaveAction={handleSaveDeck}
+      />
     </main>
   );
 }
