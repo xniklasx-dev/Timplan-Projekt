@@ -1,50 +1,42 @@
 "use client";
 
-import React, { JSX, useState } from "react";
+import React, { JSX } from "react";
 import Image from "next/image";
 import styles from "../buttons.module.css";
-import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
 
 type EditButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    children?: React.ReactNode;
-    fullWidth?: boolean;
-    cardId: string;               // the card to edit
+  children?: React.ReactNode;
+  fullWidth?: boolean;
+  cardId: string;
+  onEditAction: (cardId: string) => void;
 };
 
 export default function EditButton({
-    fullWidth,
-    children,
-    className,
-    cardId,
-    ...props
+  fullWidth,
+  children,
+  className,
+  cardId,
+  onEditAction,
+  onClick,
+  ...props
 }: EditButtonProps): JSX.Element {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  return (
+    <button
+      type="button"
+      className={`${styles.base} ${styles.iconButton} ${
+        fullWidth ? styles.fullWidth : ""
+      } ${className || ""}`}
+      {...props}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-    return (
-        <>
-            <button
-                className={`${styles.base} ${styles.iconButton} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
-                {...props}
-                onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setIsModalOpen(true);
-                }}
-            >
-                <Image
-                    src="/edit_icon.svg"
-                    alt="Edit"
-                    width={20}
-                    height={20}
-                />
-                {children && <span className={styles.buttonText}>{children}</span>}
-            </button>
-
-            <SingleCardEditor
-                open={isModalOpen}
-                cardId={cardId}
-                onClose={() => setIsModalOpen(false)}
-            />
-        </>
-    );
+        onClick?.(e);
+        onEditAction(cardId);
+      }}
+    >
+      <Image src="/edit_icon.svg" alt="Edit" width={20} height={20} />
+      {children && <span className={styles.buttonText}>{children}</span>}
+    </button>
+  );
 }
