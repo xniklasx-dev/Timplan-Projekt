@@ -8,14 +8,16 @@ type DeckHeaderProps = {
     subtitle?: string;
     isGridView: boolean;
     onToggleViewAction: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    dropdownButtons?: { label: string; onClick: () => void }[]; // optional
+    dropdownButtonLabel?: string;
+    dropdownButtons?: { label: string; onClick: () => void }[];
 };
 
 export default function DeckHeader({
-    title = "Deck Library",
-    subtitle = "Select a deck to start studying",
+    title = "",
+    subtitle = "",
     isGridView,
     onToggleViewAction,
+    dropdownButtonLabel = "",
     dropdownButtons = [],
 }: DeckHeaderProps) {
     return (
@@ -24,7 +26,6 @@ export default function DeckHeader({
                 <h1 className={styles.title}>{title}</h1>
 
                 <div className={styles.headerControls}>
-                    {/* Toggle view */}
                     <label className={styles.viewToggle}>
                         <input
                             type="checkbox"
@@ -55,9 +56,8 @@ export default function DeckHeader({
                         </div>
                     </label>
 
-                    {/* Dropdown buttons */}
                     {dropdownButtons.length > 0 && (
-                        <DropdownButton label="Options" items={dropdownButtons} />
+                        <DropdownButton label={dropdownButtonLabel} items={dropdownButtons} />
                     )}
                 </div>
             </div>

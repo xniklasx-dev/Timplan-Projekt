@@ -2,7 +2,7 @@
 
 import React, { JSX, useState } from "react";
 import Image from "next/image";
-import styles from "./editButton.module.css";
+import styles from "../buttons.module.css";
 import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
 
 type EditButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -23,7 +23,7 @@ export default function EditButton({
     return (
         <>
             <button
-                className={`${styles.button} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
+                className={`${styles.base} ${styles.iconButton} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
                 {...props}
                 onClick={(e) => {
                     e.preventDefault();

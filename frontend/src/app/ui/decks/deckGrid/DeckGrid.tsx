@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useCallback } from "react";
 import type { Deck, Card } from "@/app/lib/definitions";
 import DeckCard from "../deckCard/DeckCard";
 import SingleCard from "../singleCard/SingleCard";
@@ -20,15 +20,15 @@ export default function DeckGrid({ decks = [], cards = [], isGridView }: DeckGri
         hasMounted.current = true;
     }, []);
 
-    const measure = () => {
-        const rects = new Map<string, DOMRect>();
-        cardRefs.current.forEach((el, id) => {
-            rects.set(id, el.getBoundingClientRect());
-        });
-        return rects;
-    };
+    const animateFlip = useCallback(() => {
+        const measure = () => {
+            const rects = new Map<string, DOMRect>();
+            cardRefs.current.forEach((el, id) => {
+                rects.set(id, el.getBoundingClientRect());
+            });
+            return rects;
+        };
 
-    const animateFlip = () => {
         const first = measure();
         requestAnimationFrame(() => {
             const last = measure();
@@ -56,16 +56,11 @@ export default function DeckGrid({ decks = [], cards = [], isGridView }: DeckGri
                 );
             });
         });
-    };
-
-    const handleToggle = () => {
-        if (!hasMounted.current) return;
-        animateFlip();
-    };
+    }, [cardRefs]);
 
     useLayoutEffect(() => {
         if (hasMounted.current) animateFlip();
-    }, [decks, cards, isGridView]);
+    }, [decks, cards, isGridView, animateFlip]);
 
     if (decks.length === 0 && cards.length === 0) {
         return <p className={styles.subtitle}>No items found</p>;

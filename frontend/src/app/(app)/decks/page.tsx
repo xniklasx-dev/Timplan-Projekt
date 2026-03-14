@@ -27,6 +27,7 @@ export default function Decks() {
         subtitle="Select a deck to start studying"
         isGridView={isGridView}
         onToggleViewAction={handleToggleView}
+        dropdownButtonLabel="Test"
         dropdownButtons={[
           { label: "Add Deck", onClick: () => console.log("Add Deck clicked") },
           { label: "Import Deck", onClick: () => console.log("Import Deck clicked") },
