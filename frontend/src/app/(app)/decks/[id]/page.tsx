@@ -64,12 +64,16 @@ export default function Deck() {
         dropdownButtonLabel="Test"
         dropdownButtons={[
           {
-            label: "Edit Deck",
+            label: "Edit Cards",
             onClick: () => router.push(`/cards/edit/${currentDeck.id}`),
           },
           {
             label: "Add Card",
             onClick: handleOpenNewCardEditor,
+          },
+          {
+            label: "Edit Deck",
+            onClick: () => console.log("Edit Deck clicked"),
           },
           {
             label: "Add Deck",

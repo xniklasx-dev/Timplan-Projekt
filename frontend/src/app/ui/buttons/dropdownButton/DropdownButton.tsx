@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import styles from "./dropdownButton.module.css";
+import styles from "../buttons.module.css";
 
 type DropdownActionItem = {
   label: string;
@@ -65,21 +65,29 @@ export default function DropdownButton({
     <div className={styles.dropdown} ref={wrapperRef}>
       <button
         type="button"
-        className={`${styles.trigger} ${open ? styles.triggerOpen : ""}`}
+        className={`${styles.base} ${styles.dropdownTrigger} ${
+          open ? styles.dropdownTriggerOpen : ""
+        }`}
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        <span className={styles.label}>{label}</span>
-        <span className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`}>
+        <span className={styles.dropdownLabel}>{label}</span>
+        <span
+          className={`${styles.dropdownChevron} ${
+            open ? styles.dropdownChevronOpen : ""
+          }`}
+        >
           ▾
         </span>
       </button>
 
       {open && (
         <div
-          className={`${styles.menu} ${
-            align === "left" ? styles.menuLeft : styles.menuRight
+          className={`${styles.dropdownMenu} ${
+            align === "left"
+              ? styles.dropdownMenuLeft
+              : styles.dropdownMenuRight
           }`}
           role="menu"
         >
@@ -89,7 +97,7 @@ export default function DropdownButton({
                 return (
                   <span
                     key={`${item.label}-${index}`}
-                    className={`${styles.item} ${styles.itemDisabled}`}
+                    className={`${styles.dropdownItem} ${styles.dropdownItemDisabled}`}
                     role="menuitem"
                     aria-disabled="true"
                   >
@@ -102,7 +110,7 @@ export default function DropdownButton({
                 <Link
                   key={`${item.label}-${index}`}
                   href={item.href}
-                  className={styles.item}
+                  className={styles.dropdownItem}
                   role="menuitem"
                   onClick={() => setOpen(false)}
                 >
@@ -115,7 +123,7 @@ export default function DropdownButton({
               <button
                 key={`${item.label}-${index}`}
                 type="button"
-                className={styles.item}
+                className={styles.dropdownItem}
                 role="menuitem"
                 disabled={item.disabled}
                 onClick={() => {
