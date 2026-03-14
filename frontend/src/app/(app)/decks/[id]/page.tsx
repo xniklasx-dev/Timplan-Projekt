@@ -1,21 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import type { Deck, Card } from "@/app/lib/definitions";
 import styles from "../page.module.css";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
 import placeholderCards from "@/app/lib/placeholder-cards.json";
 import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
 import DeckGrid from "@/app/ui/decks/deckGrid/DeckGrid";
+import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
 
 const decksData: Deck[] = placeholderDecks as unknown as Deck[];
 const cardsData: Card[] = placeholderCards as unknown as Card[];
 
+const NEW_CARD_ID = "c0";
+
 export default function Deck() {
   const params = useParams();
+  const router = useRouter();
   const deckId = params.id as string;
+
   const [isGridView, setIsGridView] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
   const currentDeck = decksData.find((d) => d.id === deckId);
   if (!currentDeck) return <main className={styles.page}>Deck not found</main>;
@@ -34,6 +41,26 @@ export default function Deck() {
     setIsGridView(event.target.checked);
   };
 
+  const handleOpenNewCardEditor = () => {
+    setActiveCardId(NEW_CARD_ID);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseEditor = () => {
+    setIsModalOpen(false);
+    setActiveCardId(null);
+  };
+
+  console.log(
+    "deck page cardsData ids:",
+    cardsData.map((card) => card.id),
+  );
+  console.log(
+    "deck page c0:",
+    cardsData.find((card) => card.id === "c0"),
+  );
+  console.log("activeCardId:", activeCardId);
+
   return (
     <main className={styles.page}>
       <DeckHeader
@@ -41,14 +68,30 @@ export default function Deck() {
         subtitle={currentDeck.description}
         isGridView={isGridView}
         onToggleViewAction={handleToggleView}
+        dropdownButtonLabel="Test"
         dropdownButtons={[
-          { label: "Edit Deck", onClick: () => console.log("Edit Deck clicked") },
-          { label: "Add Card", onClick: () => console.log("Add Card clicked") },
-          { label: "Share Deck", onClick: () => console.log("Share Deck clicked") },
+          {
+            label: "Edit Deck",
+            onClick: () => router.push(`/cards/edit/${currentDeck.id}`),
+          },
+          {
+            label: "Add Card",
+            onClick: handleOpenNewCardEditor,
+          },
+          {
+            label: "Add Deck",
+            onClick: () => console.log("Add Deck clicked"),
+          },
         ]}
       />
 
       <DeckGrid decks={childDecks} cards={cards} isGridView={isGridView} />
+
+      <SingleCardEditor
+        open={isModalOpen}
+        cardId={activeCardId}
+        onClose={handleCloseEditor}
+      />
     </main>
   );
 }

@@ -30,8 +30,8 @@ export default function Decks() {
         dropdownButtonLabel="Test"
         dropdownButtons={[
           { label: "Add Deck", onClick: () => console.log("Add Deck clicked") },
-          { label: "Import Deck", onClick: () => console.log("Import Deck clicked") },
-          { label: "Settings", onClick: () => console.log("Settings clicked") },
+          { label: "Test Button 1", onClick: () => console.log("Test Button 1 clicked") },
+          { label: "Test Button 2", onClick: () => console.log("Test Button 2 clicked") },
         ]}
       />
 

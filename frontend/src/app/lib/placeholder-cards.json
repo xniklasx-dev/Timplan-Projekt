@@ -1,13 +1,18 @@
 [
   {
+    "id": "c0",
+    "front": "",
+    "back": "",
+    "hint": "",
+    "extra": "",
+    "state": "new"
+  },
+  {
     "id": "c1",
     "deckId": "1",
     "front": "Deutsch: Haus",
     "back": "Englisch: house",
-    "tags": [
-      "language",
-      "vocabulary"
-    ],
+    "tags": ["language", "vocabulary"],
     "media": [],
     "state": "new",
     "due": "2026-03-04T00:00:00.000Z",
@@ -26,10 +31,7 @@
     "deckId": "1",
     "front": "Deutsch: Baum",
     "back": "Englisch: tree",
-    "tags": [
-      "language",
-      "vocabulary"
-    ],
+    "tags": ["language", "vocabulary"],
     "media": [],
     "state": "learning",
     "due": "2026-03-12T00:00:00.000Z",
@@ -46,10 +48,7 @@
     "deckId": "1",
     "front": "Deutsch: Wasser",
     "back": "Englisch: water",
-    "tags": [
-      "language",
-      "vocabulary"
-    ],
+    "tags": ["language", "vocabulary"],
     "media": [],
     "state": "suspended",
     "due": "2026-03-08T00:00:00.000Z",
@@ -67,10 +66,7 @@
     "deckId": "1",
     "front": "Deutsch: Freund",
     "back": "Englisch: friend",
-    "tags": [
-      "language",
-      "vocabulary"
-    ],
+    "tags": ["language", "vocabulary"],
     "media": [],
     "state": "suspended",
     "due": "2026-03-05T00:00:00.000Z",
@@ -88,10 +84,7 @@
     "deckId": "2",
     "front": "Was ist die kleinste Einheit eines Lebewesens?",
     "back": "Die Zelle",
-    "tags": [
-      "science",
-      "biology"
-    ],
+    "tags": ["science", "biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -111,10 +104,7 @@
     "deckId": "2",
     "front": "Welcher Prozess wandelt Lichtenergie in Zucker um?",
     "back": "Fotosynthese",
-    "tags": [
-      "science",
-      "biology"
-    ],
+    "tags": ["science", "biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -131,10 +121,7 @@
     "deckId": "2",
     "front": "Welches Molekül trägt die Erbinformation?",
     "back": "DNA",
-    "tags": [
-      "science",
-      "biology"
-    ],
+    "tags": ["science", "biology"],
     "media": [],
     "state": "suspended",
     "due": "2026-03-04T00:00:00.000Z",
@@ -152,10 +139,7 @@
     "deckId": "2",
     "front": "Wie nennt man Tiere, die nur Pflanzen fressen?",
     "back": "Pflanzenfresser",
-    "tags": [
-      "science",
-      "biology"
-    ],
+    "tags": ["science", "biology"],
     "media": [],
     "state": "suspended",
     "due": "2026-03-08T00:00:00.000Z",
@@ -173,10 +157,7 @@
     "deckId": "2",
     "front": "Welches Organ pumpt Blut durch den Körper?",
     "back": "Das Herz",
-    "tags": [
-      "science",
-      "biology"
-    ],
+    "tags": ["science", "biology"],
     "media": [],
     "state": "suspended",
     "due": "2026-03-09T00:00:00.000Z",
@@ -194,9 +175,7 @@
     "deckId": "3",
     "front": "In welchem Jahr begann der Erste Weltkrieg?",
     "back": "1914",
-    "tags": [
-      "history"
-    ],
+    "tags": ["history"],
     "media": [],
     "state": "suspended",
     "due": "2026-03-12T00:00:00.000Z",
@@ -216,9 +195,7 @@
     "deckId": "3",
     "front": "Wann endete der Zweite Weltkrieg in Europa?",
     "back": "1945",
-    "tags": [
-      "history"
-    ],
+    "tags": ["history"],
     "media": [],
     "state": "suspended",
     "due": "2026-03-11T00:00:00.000Z",
@@ -235,9 +212,7 @@
     "deckId": "3",
     "front": "In welchem Jahr fiel die Berliner Mauer?",
     "back": "1989",
-    "tags": [
-      "history"
-    ],
+    "tags": ["history"],
     "media": [],
     "state": "suspended",
     "due": "2026-03-04T00:00:00.000Z",
@@ -255,9 +230,7 @@
     "deckId": "4",
     "front": "Spanisch: hola",
     "back": "Deutsch: hallo",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -276,9 +249,7 @@
     "deckId": "4",
     "front": "Spanisch: gracias",
     "back": "Deutsch: danke",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -295,9 +266,7 @@
     "deckId": "4",
     "front": "Spanisch: adiós",
     "back": "Deutsch: auf Wiedersehen",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -314,9 +283,7 @@
     "deckId": "4",
     "front": "Spanisch: por favor",
     "back": "Deutsch: bitte",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "new",
     "due": "2026-03-10T00:00:00.000Z",
@@ -334,9 +301,7 @@
     "deckId": "4",
     "front": "Spanisch: sí",
     "back": "Deutsch: ja",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "new",
     "due": "2026-03-06T00:00:00.000Z",
@@ -353,9 +318,7 @@
     "deckId": "4",
     "front": "Spanisch: no",
     "back": "Deutsch: nein",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "learning",
     "due": "2026-03-04T00:00:00.000Z",
@@ -373,9 +336,7 @@
     "deckId": "4",
     "front": "Spanisch: agua",
     "back": "Deutsch: Wasser",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "learning",
     "due": "2026-03-04T00:00:00.000Z",
@@ -394,9 +355,7 @@
     "deckId": "4",
     "front": "Spanisch: comida",
     "back": "Deutsch: Essen",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "learning",
     "due": "2026-03-03T00:00:00.000Z",
@@ -413,9 +372,7 @@
     "deckId": "4",
     "front": "Spanisch: amigo",
     "back": "Deutsch: Freund",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "learning",
     "due": "2026-03-04T00:00:00.000Z",
@@ -433,9 +390,7 @@
     "deckId": "4",
     "front": "Spanisch: casa",
     "back": "Deutsch: Haus",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -453,9 +408,7 @@
     "deckId": "4",
     "front": "Spanisch: escuela",
     "back": "Deutsch: Schule",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -474,9 +427,7 @@
     "deckId": "4",
     "front": "Spanisch: tiempo",
     "back": "Deutsch: Zeit",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -493,9 +444,7 @@
     "deckId": "5",
     "front": "Löse: 3x + 5 = 20",
     "back": "x = 5",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "new",
     "due": "2026-03-06T00:00:00.000Z",
@@ -514,9 +463,7 @@
     "deckId": "5",
     "front": "Löse: 7x - 14 = 0",
     "back": "x = 2",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "new",
     "due": "2026-03-09T00:00:00.000Z",
@@ -533,9 +480,7 @@
     "deckId": "5",
     "front": "Löse: 5x = 45",
     "back": "x = 9",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-11T00:00:00.000Z",
@@ -553,9 +498,7 @@
     "deckId": "5",
     "front": "Löse: x/4 = 6",
     "back": "x = 24",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -573,9 +516,7 @@
     "deckId": "5",
     "front": "Löse: 2x + 9 = 17",
     "back": "x = 4",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -593,9 +534,7 @@
     "deckId": "5",
     "front": "Ableitung von x²",
     "back": "2x",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -613,9 +552,7 @@
     "deckId": "5",
     "front": "Ableitung von x³",
     "back": "3x²",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-12T00:00:00.000Z",
@@ -634,9 +571,7 @@
     "deckId": "5",
     "front": "Ableitung von 5x",
     "back": "5",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -653,9 +588,7 @@
     "deckId": "5",
     "front": "Ableitung von 7",
     "back": "0",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -673,9 +606,7 @@
     "deckId": "5",
     "front": "Ableitung von 4x²",
     "back": "8x",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-08T00:00:00.000Z",
@@ -693,9 +624,7 @@
     "deckId": "5",
     "front": "Was ist 12 · 8?",
     "back": "96",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -714,9 +643,7 @@
     "deckId": "5",
     "front": "Was ist 15 + 27?",
     "back": "42",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -733,9 +660,7 @@
     "deckId": "5",
     "front": "Was ist 81 / 9?",
     "back": "9",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -754,9 +679,7 @@
     "deckId": "5",
     "front": "Was ist 14²?",
     "back": "196",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -773,9 +696,7 @@
     "deckId": "5",
     "front": "Was ist die Wurzel aus 64?",
     "back": "8",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -793,9 +714,7 @@
     "deckId": "5",
     "front": "Wie viel sind 25 % von 200?",
     "back": "50",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -814,9 +733,7 @@
     "deckId": "5",
     "front": "Wie viel sind 10 % von 350?",
     "back": "35",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -834,9 +751,7 @@
     "deckId": "5",
     "front": "Wie lautet die Formel für den Flächeninhalt eines Rechtecks?",
     "back": "A = a · b",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -853,9 +768,7 @@
     "deckId": "5",
     "front": "Wie lautet die Formel für den Umfang eines Quadrats?",
     "back": "U = 4a",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -874,9 +787,7 @@
     "deckId": "5",
     "front": "Wie berechnet man den Mittelwert zweier Zahlen a und b?",
     "back": "(a + b) / 2",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -893,10 +804,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol H?",
     "back": "Wasserstoff",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-10T00:00:00.000Z",
@@ -915,10 +823,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol He?",
     "back": "Helium",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-06T00:00:00.000Z",
@@ -935,10 +840,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Li?",
     "back": "Lithium",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -955,10 +857,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol C?",
     "back": "Kohlenstoff",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-08T00:00:00.000Z",
@@ -976,10 +875,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol N?",
     "back": "Stickstoff",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-10T00:00:00.000Z",
@@ -996,10 +892,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol O?",
     "back": "Sauerstoff",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-12T00:00:00.000Z",
@@ -1017,10 +910,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Na?",
     "back": "Natrium",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-05T00:00:00.000Z",
@@ -1038,10 +928,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Mg?",
     "back": "Magnesium",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -1058,10 +945,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Al?",
     "back": "Aluminium",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -1078,10 +962,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Si?",
     "back": "Silicium",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "new",
     "due": "2026-03-04T00:00:00.000Z",
@@ -1099,10 +980,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol P?",
     "back": "Phosphor",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "learning",
     "due": "2026-03-04T00:00:00.000Z",
@@ -1121,10 +999,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol S?",
     "back": "Schwefel",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "learning",
     "due": "2026-03-11T00:00:00.000Z",
@@ -1141,10 +1016,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Cl?",
     "back": "Chlor",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -1163,10 +1035,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol K?",
     "back": "Kalium",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -1183,10 +1052,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Ca?",
     "back": "Calcium",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -1204,10 +1070,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Fe?",
     "back": "Eisen",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -1226,10 +1089,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Cu?",
     "back": "Kupfer",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -1247,10 +1107,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Zn?",
     "back": "Zink",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -1267,10 +1124,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Ag?",
     "back": "Silber",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -1289,10 +1143,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Au?",
     "back": "Gold",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -1309,10 +1160,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Hg?",
     "back": "Quecksilber",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -1331,10 +1179,7 @@
     "deckId": "6",
     "front": "Welches Element hat das Symbol Pb?",
     "back": "Blei",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -1352,10 +1197,7 @@
     "deckId": "6",
     "front": "Wie heißt H2O im Alltag?",
     "back": "Wasser",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -1373,10 +1215,7 @@
     "deckId": "6",
     "front": "Wie heißt NaCl im Alltag?",
     "back": "Kochsalz",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -1393,10 +1232,7 @@
     "deckId": "6",
     "front": "Wie viele Protonen hat Kohlenstoff?",
     "back": "6",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -1415,10 +1251,7 @@
     "deckId": "6",
     "front": "Wie viele Protonen hat Sauerstoff?",
     "back": "8",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-08T00:00:00.000Z",
@@ -1436,10 +1269,7 @@
     "deckId": "6",
     "front": "Was ist der pH-Wert einer neutralen Lösung?",
     "back": "7",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -1457,10 +1287,7 @@
     "deckId": "6",
     "front": "Welche Teilchen werden bei einer Ionenbindung übertragen?",
     "back": "Elektronen",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -1478,10 +1305,7 @@
     "deckId": "6",
     "front": "Wie nennt man den kleinsten noch typischen Teil eines Elements?",
     "back": "Atom",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -1499,10 +1323,7 @@
     "deckId": "6",
     "front": "Wie nennt man Stoffe, die den pH-Wert unter 7 haben?",
     "back": "Säuren",
-    "tags": [
-      "science",
-      "chemistry"
-    ],
+    "tags": ["science", "chemistry"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -1519,9 +1340,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Deutschland?",
     "back": "Berlin",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "new",
     "due": "2026-03-02T00:00:00.000Z",
@@ -1540,9 +1359,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Frankreich?",
     "back": "Paris",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "new",
     "due": "2026-03-03T00:00:00.000Z",
@@ -1559,9 +1376,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Spanien?",
     "back": "Madrid",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "new",
     "due": "2026-03-08T00:00:00.000Z",
@@ -1578,9 +1393,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Italien?",
     "back": "Rom",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -1598,9 +1411,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Portugal?",
     "back": "Lissabon",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -1618,9 +1429,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Österreich?",
     "back": "Wien",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "learning",
     "due": "2026-03-09T00:00:00.000Z",
@@ -1638,9 +1447,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt der Schweiz?",
     "back": "Bern",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -1659,9 +1466,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt der Niederlande?",
     "back": "Amsterdam",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -1678,9 +1483,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Belgien?",
     "back": "Brüssel",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -1698,9 +1501,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Polen?",
     "back": "Warschau",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -1718,9 +1519,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Tschechien?",
     "back": "Prag",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -1739,9 +1538,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Schweden?",
     "back": "Stockholm",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -1758,9 +1555,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Norwegen?",
     "back": "Oslo",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -1779,9 +1574,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Dänemark?",
     "back": "Kopenhagen",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -1798,9 +1591,7 @@
     "deckId": "7",
     "front": "Was ist die Hauptstadt von Griechenland?",
     "back": "Athen",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -1818,9 +1609,7 @@
     "deckId": "7",
     "front": "Welcher Kontinent ist flächenmäßig der größte?",
     "back": "Asien",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -1839,9 +1628,7 @@
     "deckId": "7",
     "front": "Welcher Ozean ist der größte der Erde?",
     "back": "Der Pazifische Ozean",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -1859,9 +1646,7 @@
     "deckId": "7",
     "front": "Welcher Fluss fließt durch Ägypten und ist lebenswichtig für das Land?",
     "back": "Der Nil",
-    "tags": [
-      "geography"
-    ],
+    "tags": ["geography"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -1878,9 +1663,7 @@
     "deckId": "8",
     "front": "Was ist eine Variable in JavaScript?",
     "back": "Ein benannter Speicherplatz für Werte",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "new",
     "due": "2026-03-08T00:00:00.000Z",
@@ -1899,9 +1682,7 @@
     "deckId": "8",
     "front": "Wofür verwendet man const in JavaScript?",
     "back": "Für Variablen, die nicht neu zugewiesen werden sollen",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "new",
     "due": "2026-03-03T00:00:00.000Z",
@@ -1918,9 +1699,7 @@
     "deckId": "8",
     "front": "Was ist der Unterschied zwischen == und === in JavaScript?",
     "back": "=== prüft zusätzlich den Typ",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "new",
     "due": "2026-03-10T00:00:00.000Z",
@@ -1937,9 +1716,7 @@
     "deckId": "8",
     "front": "Was ist eine Funktion in JavaScript?",
     "back": "Ein wiederverwendbarer Codeblock",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -1957,9 +1734,7 @@
     "deckId": "8",
     "front": "Was ist ein Array?",
     "back": "Eine geordnete Liste von Werten",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "new",
     "due": "2026-03-04T00:00:00.000Z",
@@ -1976,9 +1751,7 @@
     "deckId": "8",
     "front": "Was ist ein Objekt in JavaScript?",
     "back": "Eine Sammlung von Schlüssel-Wert-Paaren",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -1996,9 +1769,7 @@
     "deckId": "8",
     "front": "Was bedeutet JSON?",
     "back": "JavaScript Object Notation",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "new",
     "due": "2026-03-08T00:00:00.000Z",
@@ -2016,9 +1787,7 @@
     "deckId": "8",
     "front": "Wofür nutzt man await?",
     "back": "Zum Warten auf das Ergebnis eines Promise",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -2035,9 +1804,7 @@
     "deckId": "8",
     "front": "Was ist ein Promise?",
     "back": "Ein Objekt für zukünftige asynchrone Ergebnisse",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "learning",
     "due": "2026-03-04T00:00:00.000Z",
@@ -2055,9 +1822,7 @@
     "deckId": "8",
     "front": "Was macht Array.map()?",
     "back": "Es erzeugt ein neues Array durch Transformation aller Elemente",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "learning",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2075,9 +1840,7 @@
     "deckId": "8",
     "front": "Was macht Array.filter()?",
     "back": "Es erstellt ein neues Array mit passenden Elementen",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "learning",
     "due": "2026-03-12T00:00:00.000Z",
@@ -2096,9 +1859,7 @@
     "deckId": "8",
     "front": "Was macht Array.find()?",
     "back": "Es gibt das erste passende Element zurück",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "learning",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2115,9 +1876,7 @@
     "deckId": "8",
     "front": "Was ist eine Closure in JavaScript?",
     "back": "Eine Funktion, die auf Variablen ihres äußeren Bereichs zugreifen kann",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "learning",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2136,9 +1895,7 @@
     "deckId": "8",
     "front": "Was bedeutet scope in JavaScript?",
     "back": "Der Sichtbarkeitsbereich von Variablen",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -2155,9 +1912,7 @@
     "deckId": "8",
     "front": "Was ist der DOM?",
     "back": "Die Baumstruktur einer HTML-Seite im Browser",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "learning",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2175,9 +1930,7 @@
     "deckId": "8",
     "front": "Was macht addEventListener()?",
     "back": "Es registriert eine Reaktion auf ein Ereignis",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2196,9 +1949,7 @@
     "deckId": "8",
     "front": "Was bedeutet immutability in React?",
     "back": "Daten werden nicht direkt verändert, sondern ersetzt",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -2216,9 +1967,7 @@
     "deckId": "8",
     "front": "Wofür steht JSX?",
     "back": "Für eine Syntax, die HTML-ähnlichen Code in JavaScript erlaubt",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2235,9 +1984,7 @@
     "deckId": "8",
     "front": "Was ist ein React Component?",
     "back": "Eine wiederverwendbare UI-Einheit",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -2256,9 +2003,7 @@
     "deckId": "8",
     "front": "Was sind Props in React?",
     "back": "Eingabedaten für eine Komponente",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -2275,9 +2020,7 @@
     "deckId": "8",
     "front": "Was ist State in React?",
     "back": "Veränderlicher interner Zustand einer Komponente",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -2296,9 +2039,7 @@
     "deckId": "8",
     "front": "Wofür nutzt man useEffect?",
     "back": "Für Nebeneffekte wie Fetches oder Event-Listener",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -2316,9 +2057,7 @@
     "deckId": "8",
     "front": "Was macht useMemo?",
     "back": "Es speichert ein berechnetes Ergebnis zwischen Rendern",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -2336,9 +2075,7 @@
     "deckId": "8",
     "front": "Was ist TypeScript?",
     "back": "Eine typisierte Erweiterung von JavaScript",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -2355,9 +2092,7 @@
     "deckId": "8",
     "front": "Warum sollte man Benutzereingaben validieren?",
     "back": "Um fehlerhafte oder schädliche Daten abzufangen",
-    "tags": [
-      "programming"
-    ],
+    "tags": ["programming"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -2376,10 +2111,7 @@
     "deckId": "9",
     "front": "Wie lautet Newtons zweites Gesetz?",
     "back": "F = m · a",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -2398,10 +2130,7 @@
     "deckId": "9",
     "front": "Welche Einheit hat die Kraft?",
     "back": "Newton",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "new",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2418,10 +2147,7 @@
     "deckId": "9",
     "front": "Welche Einheit hat die Geschwindigkeit?",
     "back": "Meter pro Sekunde",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "new",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2438,10 +2164,7 @@
     "deckId": "9",
     "front": "Welche Einheit hat die Beschleunigung?",
     "back": "Meter pro Sekunde zum Quadrat",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "new",
     "due": "2026-03-02T00:00:00.000Z",
@@ -2459,10 +2182,7 @@
     "deckId": "9",
     "front": "Was misst ein Thermometer?",
     "back": "Temperatur",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -2480,10 +2200,7 @@
     "deckId": "9",
     "front": "Wie lautet die Formel für Dichte?",
     "back": "ρ = m / V",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "learning",
     "due": "2026-03-04T00:00:00.000Z",
@@ -2501,10 +2218,7 @@
     "deckId": "9",
     "front": "Wie lautet die Formel für Geschwindigkeit?",
     "back": "v = s / t",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2523,10 +2237,7 @@
     "deckId": "9",
     "front": "Wie nennt man die Energie der Bewegung?",
     "back": "Kinetische Energie",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "review",
     "due": "2026-03-08T00:00:00.000Z",
@@ -2543,10 +2254,7 @@
     "deckId": "9",
     "front": "Welche Einheit hat die elektrische Spannung?",
     "back": "Volt",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -2564,10 +2272,7 @@
     "deckId": "9",
     "front": "Welche Einheit hat die elektrische Stromstärke?",
     "back": "Ampere",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -2585,10 +2290,7 @@
     "deckId": "9",
     "front": "Was besagt das ohmsche Gesetz?",
     "back": "U = R · I",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -2607,10 +2309,7 @@
     "deckId": "9",
     "front": "Was ist Licht physikalisch betrachtet?",
     "back": "Elektromagnetische Strahlung",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -2627,10 +2326,7 @@
     "deckId": "9",
     "front": "Wie groß ist die Fallbeschleunigung auf der Erde ungefähr?",
     "back": "9,81 m/s²",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2649,10 +2345,7 @@
     "deckId": "9",
     "front": "Was bleibt in einem abgeschlossenen System erhalten?",
     "back": "Die Energie",
-    "tags": [
-      "science",
-      "physics"
-    ],
+    "tags": ["science", "physics"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -2669,10 +2362,7 @@
     "deckId": "10",
     "front": "Wer malte die Mona Lisa?",
     "back": "Leonardo da Vinci",
-    "tags": [
-      "art",
-      "history"
-    ],
+    "tags": ["art", "history"],
     "media": [],
     "state": "new",
     "due": "2026-03-08T00:00:00.000Z",
@@ -2691,10 +2381,7 @@
     "deckId": "10",
     "front": "In welcher Epoche wirkte Leonardo da Vinci?",
     "back": "Renaissance",
-    "tags": [
-      "art",
-      "history"
-    ],
+    "tags": ["art", "history"],
     "media": [],
     "state": "new",
     "due": "2026-03-10T00:00:00.000Z",
@@ -2711,10 +2398,7 @@
     "deckId": "10",
     "front": "Wer malte die Sternennacht?",
     "back": "Vincent van Gogh",
-    "tags": [
-      "art",
-      "history"
-    ],
+    "tags": ["art", "history"],
     "media": [],
     "state": "learning",
     "due": "2026-03-12T00:00:00.000Z",
@@ -2732,10 +2416,7 @@
     "deckId": "10",
     "front": "Zu welcher Kunstrichtung wird Claude Monet gezählt?",
     "back": "Impressionismus",
-    "tags": [
-      "art",
-      "history"
-    ],
+    "tags": ["art", "history"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -2753,10 +2434,7 @@
     "deckId": "10",
     "front": "Wer schuf das Fresko Die Schule von Athen?",
     "back": "Raffael",
-    "tags": [
-      "art",
-      "history"
-    ],
+    "tags": ["art", "history"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -2774,10 +2452,7 @@
     "deckId": "10",
     "front": "Welche Epoche kam historisch nach dem Mittelalter?",
     "back": "Die Neuzeit",
-    "tags": [
-      "art",
-      "history"
-    ],
+    "tags": ["art", "history"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -2795,10 +2470,7 @@
     "deckId": "10",
     "front": "Was kennzeichnet den Barock in der Kunst?",
     "back": "Pracht, Bewegung und starke Kontraste",
-    "tags": [
-      "art",
-      "history"
-    ],
+    "tags": ["art", "history"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -2817,10 +2489,7 @@
     "deckId": "10",
     "front": "Wer malte Guernica?",
     "back": "Pablo Picasso",
-    "tags": [
-      "art",
-      "history"
-    ],
+    "tags": ["art", "history"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -2837,10 +2506,7 @@
     "deckId": "10",
     "front": "Welcher Baustil ist für Spitzbögen und große Fenster bekannt?",
     "back": "Die Gotik",
-    "tags": [
-      "art",
-      "history"
-    ],
+    "tags": ["art", "history"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -2858,9 +2524,7 @@
     "deckId": "11",
     "front": "Was bedeutet der Begriff Philosophie wörtlich?",
     "back": "Liebe zur Weisheit",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "new",
     "due": "2026-03-04T00:00:00.000Z",
@@ -2879,9 +2543,7 @@
     "deckId": "11",
     "front": "Wer gilt als Lehrer von Platon?",
     "back": "Sokrates",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "new",
     "due": "2026-03-02T00:00:00.000Z",
@@ -2898,9 +2560,7 @@
     "deckId": "11",
     "front": "Wer war der Schüler von Sokrates und Lehrer von Aristoteles?",
     "back": "Platon",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -2917,9 +2577,7 @@
     "deckId": "11",
     "front": "Was untersucht die Ethik?",
     "back": "Das moralisch richtige Handeln",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -2937,9 +2595,7 @@
     "deckId": "11",
     "front": "Was untersucht die Erkenntnistheorie?",
     "back": "Wie Wissen entsteht und begründet wird",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -2957,9 +2613,7 @@
     "deckId": "11",
     "front": "Was ist ein Argument?",
     "back": "Eine Begründung für eine Behauptung",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -2977,9 +2631,7 @@
     "deckId": "11",
     "front": "Was bedeutet Determinismus?",
     "back": "Die Annahme, dass alle Ereignisse gesetzmäßig festgelegt sind",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -2998,9 +2650,7 @@
     "deckId": "11",
     "front": "Was ist Utilitarismus?",
     "back": "Eine Ethik, die das größtmögliche Glück für die größtmögliche Zahl anstrebt",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -3017,9 +2667,7 @@
     "deckId": "11",
     "front": "Wofür ist René Descartes bekannt?",
     "back": "Für den Satz 'Ich denke, also bin ich'",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "review",
     "due": "2026-03-08T00:00:00.000Z",
@@ -3037,9 +2685,7 @@
     "deckId": "11",
     "front": "Was ist ein Gedankenexperiment?",
     "back": "Ein vorgestelltes Szenario zum Prüfen einer Idee",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -3057,9 +2703,7 @@
     "deckId": "11",
     "front": "Was fragt die Metaphysik?",
     "back": "Was die grundlegende Struktur der Wirklichkeit ist",
-    "tags": [
-      "philosophy"
-    ],
+    "tags": ["philosophy"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -3078,9 +2722,7 @@
     "deckId": "12",
     "front": "Wie viele Halbtonschritte hat eine Oktave?",
     "back": "12",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "new",
     "due": "2026-03-04T00:00:00.000Z",
@@ -3099,9 +2741,7 @@
     "deckId": "12",
     "front": "Wie viele Töne hat eine Dur-Tonleiter?",
     "back": "7",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "new",
     "due": "2026-03-08T00:00:00.000Z",
@@ -3118,9 +2758,7 @@
     "deckId": "12",
     "front": "Wie heißt das Symbol für eine Erhöhung um einen Halbton?",
     "back": "Kreuz",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -3137,9 +2775,7 @@
     "deckId": "12",
     "front": "Wie heißt das Symbol für eine Erniedrigung um einen Halbton?",
     "back": "b",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "new",
     "due": "2026-03-02T00:00:00.000Z",
@@ -3157,9 +2793,7 @@
     "deckId": "12",
     "front": "Wie viele Schläge hat ein 4/4-Takt pro Takt?",
     "back": "4",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "new",
     "due": "2026-03-04T00:00:00.000Z",
@@ -3176,9 +2810,7 @@
     "deckId": "12",
     "front": "Wie viele Schläge hat ein 3/4-Takt pro Takt?",
     "back": "3",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "learning",
     "due": "2026-03-12T00:00:00.000Z",
@@ -3196,9 +2828,7 @@
     "deckId": "12",
     "front": "Wie viele Schläge dauert eine ganze Note im 4/4-Takt?",
     "back": "4",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "learning",
     "due": "2026-03-06T00:00:00.000Z",
@@ -3217,9 +2847,7 @@
     "deckId": "12",
     "front": "Wie viele Schläge dauert eine halbe Note im 4/4-Takt?",
     "back": "2",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "learning",
     "due": "2026-03-03T00:00:00.000Z",
@@ -3236,9 +2864,7 @@
     "deckId": "12",
     "front": "Wie viele Schläge dauert eine Viertelnote im 4/4-Takt?",
     "back": "1",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "learning",
     "due": "2026-03-12T00:00:00.000Z",
@@ -3256,9 +2882,7 @@
     "deckId": "12",
     "front": "Wie viele Schläge dauert eine Achtelnote im 4/4-Takt?",
     "back": "0,5",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -3276,9 +2900,7 @@
     "deckId": "12",
     "front": "Wie nennt man den Abstand zwischen zwei Tönen?",
     "back": "Intervall",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -3297,9 +2919,7 @@
     "deckId": "12",
     "front": "Wie heißt das Intervall von C nach G?",
     "back": "Quinte",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -3316,9 +2936,7 @@
     "deckId": "12",
     "front": "Wie heißt das Intervall von C nach E?",
     "back": "Terz",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -3337,9 +2955,7 @@
     "deckId": "12",
     "front": "Aus welchen Tönen besteht ein C-Dur-Dreiklang?",
     "back": "C, E und G",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -3356,9 +2972,7 @@
     "deckId": "12",
     "front": "Wie nennt man die Geschwindigkeit eines Musikstücks?",
     "back": "Tempo",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -3376,9 +2990,7 @@
     "deckId": "12",
     "front": "Wie nennt man die Lautstärke in der Musik?",
     "back": "Dynamik",
-    "tags": [
-      "music"
-    ],
+    "tags": ["music"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -3397,9 +3009,7 @@
     "deckId": "13",
     "front": "Wofür steht TCP?",
     "back": "Transmission Control Protocol",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -3418,9 +3028,7 @@
     "deckId": "13",
     "front": "Wofür steht IP?",
     "back": "Internet Protocol",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -3437,9 +3045,7 @@
     "deckId": "13",
     "front": "Was ist eine IP-Adresse?",
     "back": "Eine Adresse zur Identifikation eines Geräts im Netzwerk",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -3456,9 +3062,7 @@
     "deckId": "13",
     "front": "Was ist ein Router?",
     "back": "Ein Gerät, das Pakete zwischen Netzwerken weiterleitet",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "new",
     "due": "2026-03-09T00:00:00.000Z",
@@ -3476,9 +3080,7 @@
     "deckId": "13",
     "front": "Was ist ein Switch?",
     "back": "Ein Gerät, das Frames innerhalb eines lokalen Netzes weiterleitet",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -3495,9 +3097,7 @@
     "deckId": "13",
     "front": "Was macht DNS?",
     "back": "Es übersetzt Domainnamen in IP-Adressen",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "new",
     "due": "2026-03-05T00:00:00.000Z",
@@ -3515,9 +3115,7 @@
     "deckId": "13",
     "front": "Was bedeutet HTTP?",
     "back": "Hypertext Transfer Protocol",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -3536,9 +3134,7 @@
     "deckId": "13",
     "front": "Was bedeutet HTTPS?",
     "back": "HTTP mit TLS-Verschlüsselung",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "learning",
     "due": "2026-03-11T00:00:00.000Z",
@@ -3555,9 +3151,7 @@
     "deckId": "13",
     "front": "Wofür wird Port 80 typischerweise verwendet?",
     "back": "Für HTTP",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "learning",
     "due": "2026-03-03T00:00:00.000Z",
@@ -3575,9 +3169,7 @@
     "deckId": "13",
     "front": "Wofür wird Port 443 typischerweise verwendet?",
     "back": "Für HTTPS",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -3595,9 +3187,7 @@
     "deckId": "13",
     "front": "Was ist eine MAC-Adresse?",
     "back": "Eine Hardware-Adresse einer Netzwerkschnittstelle",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -3616,9 +3206,7 @@
     "deckId": "13",
     "front": "Was ist ein Paket in einem Netzwerk?",
     "back": "Eine strukturierte Dateneinheit zur Übertragung",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -3635,9 +3223,7 @@
     "deckId": "13",
     "front": "Was ist Latenz?",
     "back": "Die Verzögerung bei der Übertragung von Daten",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -3656,9 +3242,7 @@
     "deckId": "13",
     "front": "Was ist Bandbreite?",
     "back": "Die mögliche Datenmenge pro Zeit",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -3675,9 +3259,7 @@
     "deckId": "13",
     "front": "Was ist ein LAN?",
     "back": "Ein lokales Netzwerk",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -3695,9 +3277,7 @@
     "deckId": "13",
     "front": "Was ist ein WAN?",
     "back": "Ein weiträumiges Netzwerk",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -3716,9 +3296,7 @@
     "deckId": "13",
     "front": "Was macht DHCP?",
     "back": "Es vergibt IP-Adressen automatisch",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -3736,9 +3314,7 @@
     "deckId": "13",
     "front": "Was ist NAT?",
     "back": "Die Umsetzung privater in öffentliche Adressen",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -3755,9 +3331,7 @@
     "deckId": "13",
     "front": "Was ist ein Subnetz?",
     "back": "Ein Teilbereich eines IP-Netzes",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -3776,9 +3350,7 @@
     "deckId": "13",
     "front": "Was beschreibt das OSI-Modell?",
     "back": "Ein Schichtenmodell für Netzwerkkommunikation",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -3795,9 +3367,7 @@
     "deckId": "13",
     "front": "Auf welcher OSI-Schicht arbeitet IP hauptsächlich?",
     "back": "Auf Schicht 3",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -3816,9 +3386,7 @@
     "deckId": "13",
     "front": "Auf welcher OSI-Schicht arbeitet TCP hauptsächlich?",
     "back": "Auf Schicht 4",
-    "tags": [
-      "computer science"
-    ],
+    "tags": ["computer science"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -3836,9 +3404,7 @@
     "deckId": "14",
     "front": "Wofür steht SQL?",
     "back": "Structured Query Language",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "new",
     "due": "2026-03-12T00:00:00.000Z",
@@ -3857,9 +3423,7 @@
     "deckId": "14",
     "front": "Was macht SELECT in SQL?",
     "back": "Es liest Daten aus einer Tabelle",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "new",
     "due": "2026-03-02T00:00:00.000Z",
@@ -3876,9 +3440,7 @@
     "deckId": "14",
     "front": "Was macht WHERE in SQL?",
     "back": "Es filtert Zeilen nach einer Bedingung",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "learning",
     "due": "2026-03-12T00:00:00.000Z",
@@ -3896,9 +3458,7 @@
     "deckId": "14",
     "front": "Was macht INSERT INTO?",
     "back": "Es fügt neue Zeilen in eine Tabelle ein",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "learning",
     "due": "2026-03-09T00:00:00.000Z",
@@ -3916,9 +3476,7 @@
     "deckId": "14",
     "front": "Was macht UPDATE in SQL?",
     "back": "Es ändert bestehende Datensätze",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -3936,9 +3494,7 @@
     "deckId": "14",
     "front": "Was macht DELETE in SQL?",
     "back": "Es löscht Datensätze",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -3956,9 +3512,7 @@
     "deckId": "14",
     "front": "Was ist ein Primary Key?",
     "back": "Ein eindeutiger Schlüssel pro Zeile",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -3977,9 +3531,7 @@
     "deckId": "14",
     "front": "Was ist ein Foreign Key?",
     "back": "Ein Verweis auf einen Schlüssel in einer anderen Tabelle",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -3996,9 +3548,7 @@
     "deckId": "14",
     "front": "Was ist ein Index in einer Datenbank?",
     "back": "Eine Datenstruktur zur schnelleren Suche",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -4016,9 +3566,7 @@
     "deckId": "14",
     "front": "Was bedeutet Normalisierung?",
     "back": "Das strukturierte Aufteilen von Daten zur Vermeidung von Redundanz",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -4036,9 +3584,7 @@
     "deckId": "14",
     "front": "Was ist ein JOIN?",
     "back": "Eine Verknüpfung von Zeilen aus mehreren Tabellen",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -4057,9 +3603,7 @@
     "deckId": "14",
     "front": "Warum sind Prepared Statements sicherer?",
     "back": "Weil sie SQL-Injection erschweren",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -4076,9 +3620,7 @@
     "deckId": "14",
     "front": "Was ist eine Transaktion?",
     "back": "Eine zusammengehörige Folge von Datenbankoperationen",
-    "tags": [
-      "database"
-    ],
+    "tags": ["database"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -4097,9 +3639,7 @@
     "deckId": "15",
     "front": "Was misst der Mittelwert?",
     "back": "Den durchschnittlichen Wert einer Datenmenge",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "new",
     "due": "2026-03-10T00:00:00.000Z",
@@ -4118,9 +3658,7 @@
     "deckId": "15",
     "front": "Was ist der Median?",
     "back": "Der mittlere Wert einer sortierten Datenmenge",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "new",
     "due": "2026-03-03T00:00:00.000Z",
@@ -4137,9 +3675,7 @@
     "deckId": "15",
     "front": "Was ist der Modus?",
     "back": "Der am häufigsten vorkommende Wert",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "new",
     "due": "2026-03-04T00:00:00.000Z",
@@ -4156,9 +3692,7 @@
     "deckId": "15",
     "front": "Was ist die Spannweite?",
     "back": "Maximum minus Minimum",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -4176,9 +3710,7 @@
     "deckId": "15",
     "front": "Was misst die Varianz?",
     "back": "Die durchschnittliche quadrierte Abweichung vom Mittelwert",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4196,9 +3728,7 @@
     "deckId": "15",
     "front": "Was ist die Standardabweichung?",
     "back": "Die Wurzel aus der Varianz",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -4216,9 +3746,7 @@
     "deckId": "15",
     "front": "Was bedeutet Stichprobe?",
     "back": "Eine Teilmenge der Grundgesamtheit",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4237,9 +3765,7 @@
     "deckId": "15",
     "front": "Was bedeutet Grundgesamtheit?",
     "back": "Alle Elemente, über die eine Aussage gemacht werden soll",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-04T00:00:00.000Z",
@@ -4256,9 +3782,7 @@
     "deckId": "15",
     "front": "Was ist eine absolute Häufigkeit?",
     "back": "Wie oft ein Wert vorkommt",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "learning",
     "due": "2026-03-11T00:00:00.000Z",
@@ -4276,9 +3800,7 @@
     "deckId": "15",
     "front": "Was ist eine relative Häufigkeit?",
     "back": "Der Anteil eines Wertes an allen Beobachtungen",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4296,9 +3818,7 @@
     "deckId": "15",
     "front": "Was ist eine Korrelation?",
     "back": "Ein Maß für den Zusammenhang zweier Variablen",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -4317,9 +3837,7 @@
     "deckId": "15",
     "front": "Was bedeutet Kausalität?",
     "back": "Dass eine Ursache tatsächlich eine Wirkung erzeugt",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -4336,9 +3854,7 @@
     "deckId": "15",
     "front": "Was ist ein Histogramm?",
     "back": "Ein Diagramm zur Darstellung von Häufigkeiten kontinuierlicher Daten",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -4357,9 +3873,7 @@
     "deckId": "15",
     "front": "Was ist ein Boxplot?",
     "back": "Eine grafische Darstellung von Lage und Streuung",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -4376,9 +3890,7 @@
     "deckId": "15",
     "front": "Was ist ein Konfidenzintervall?",
     "back": "Ein Bereich, der einen unbekannten Parameter mit bestimmter Sicherheit einschließt",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4396,9 +3908,7 @@
     "deckId": "15",
     "front": "Was ist eine Nullhypothese?",
     "back": "Die Ausgangsannahme in einem statistischen Test",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -4417,9 +3927,7 @@
     "deckId": "15",
     "front": "Was bedeutet p-Wert?",
     "back": "Ein Maß dafür, wie gut die Daten zur Nullhypothese passen",
-    "tags": [
-      "math"
-    ],
+    "tags": ["math"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -4437,9 +3945,7 @@
     "deckId": "16",
     "front": "Welches Organ treibt den Blutkreislauf an?",
     "back": "Das Herz",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -4458,9 +3964,7 @@
     "deckId": "16",
     "front": "Welches Organ übernimmt den Gasaustausch?",
     "back": "Die Lunge",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "new",
     "due": "2026-03-09T00:00:00.000Z",
@@ -4477,9 +3981,7 @@
     "deckId": "16",
     "front": "Welches Organ filtert das Blut und bildet Urin?",
     "back": "Die Niere",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "new",
     "due": "2026-03-02T00:00:00.000Z",
@@ -4496,9 +3998,7 @@
     "deckId": "16",
     "front": "Welches Organ produziert Galle?",
     "back": "Die Leber",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "new",
     "due": "2026-03-09T00:00:00.000Z",
@@ -4516,9 +4016,7 @@
     "deckId": "16",
     "front": "Welches Organ speichert Urin?",
     "back": "Die Harnblase",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "new",
     "due": "2026-03-12T00:00:00.000Z",
@@ -4535,9 +4033,7 @@
     "deckId": "16",
     "front": "Welcher Knochen ist der längste im menschlichen Körper?",
     "back": "Der Oberschenkelknochen",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "new",
     "due": "2026-03-06T00:00:00.000Z",
@@ -4555,9 +4051,7 @@
     "deckId": "16",
     "front": "Wie viele Kammern hat das menschliche Herz?",
     "back": "Vier",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "new",
     "due": "2026-03-08T00:00:00.000Z",
@@ -4575,9 +4069,7 @@
     "deckId": "16",
     "front": "Wie nennt man die rote Blutfarbe verursachende Substanz?",
     "back": "Hämoglobin",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "new",
     "due": "2026-03-10T00:00:00.000Z",
@@ -4594,9 +4086,7 @@
     "deckId": "16",
     "front": "Wie viele Zähne hat ein erwachsener Mensch normalerweise?",
     "back": "32",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -4613,9 +4103,7 @@
     "deckId": "16",
     "front": "Wie heißt der größte Teil des Gehirns?",
     "back": "Großhirn",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-04T00:00:00.000Z",
@@ -4633,9 +4121,7 @@
     "deckId": "16",
     "front": "Wie heißt der Muskel, der die Brust- von der Bauchhöhle trennt?",
     "back": "Zwerchfell",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-04T00:00:00.000Z",
@@ -4654,9 +4140,7 @@
     "deckId": "16",
     "front": "Wie nennt man die Verbindung zwischen Muskel und Knochen?",
     "back": "Sehne",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4673,9 +4157,7 @@
     "deckId": "16",
     "front": "Wie nennt man die Verbindung zwischen Knochen und Knochen?",
     "back": "Band",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4694,9 +4176,7 @@
     "deckId": "16",
     "front": "Welches Blutgefäß führt Blut vom Herzen weg?",
     "back": "Die Arterie",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-03T00:00:00.000Z",
@@ -4713,9 +4193,7 @@
     "deckId": "16",
     "front": "Welches Blutgefäß führt Blut zum Herzen zurück?",
     "back": "Die Vene",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -4733,9 +4211,7 @@
     "deckId": "16",
     "front": "Wie heißt der größte Hautbestandteil an der Oberfläche?",
     "back": "Epidermis",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-03T00:00:00.000Z",
@@ -4754,9 +4230,7 @@
     "deckId": "16",
     "front": "Welche Zellen sind für die Immunabwehr besonders wichtig?",
     "back": "Weiße Blutkörperchen",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-08T00:00:00.000Z",
@@ -4774,9 +4248,7 @@
     "deckId": "16",
     "front": "Wie heißt die feste Grundsubstanz der Knochen?",
     "back": "Knochengewebe",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4793,9 +4265,7 @@
     "deckId": "16",
     "front": "Welches Organ verdaut Nahrung im sauren Milieu vor?",
     "back": "Der Magen",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4814,9 +4284,7 @@
     "deckId": "16",
     "front": "Wo findet der Großteil der Nährstoffaufnahme statt?",
     "back": "Im Dünndarm",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-08T00:00:00.000Z",
@@ -4833,9 +4301,7 @@
     "deckId": "16",
     "front": "Wie heißt der letzte Abschnitt des Verdauungstrakts?",
     "back": "Dickdarm",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -4854,9 +4320,7 @@
     "deckId": "16",
     "front": "Wie viele Halswirbel hat der Mensch normalerweise?",
     "back": "Sieben",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4874,9 +4338,7 @@
     "deckId": "16",
     "front": "Wie heißt die Kniescheibe fachsprachlich?",
     "back": "Patella",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4894,9 +4356,7 @@
     "deckId": "16",
     "front": "Wie nennt man den kleinsten funktionellen Teil der Niere?",
     "back": "Nephron",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -4913,9 +4373,7 @@
     "deckId": "16",
     "front": "Welches Organ ist für das Hören zuständig?",
     "back": "Das Ohr",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -4934,9 +4392,7 @@
     "deckId": "16",
     "front": "Welches Sinnesorgan nimmt Lichtreize auf?",
     "back": "Das Auge",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4954,9 +4410,7 @@
     "deckId": "16",
     "front": "Wie heißt der Hauptatemweg zwischen Kehlkopf und Bronchien?",
     "back": "Die Luftröhre",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-08T00:00:00.000Z",
@@ -4974,9 +4428,7 @@
     "deckId": "16",
     "front": "Welcher Teil des Nervensystems umfasst Gehirn und Rückenmark?",
     "back": "Das zentrale Nervensystem",
-    "tags": [
-      "biology"
-    ],
+    "tags": ["biology"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -4994,9 +4446,7 @@
     "deckId": "17",
     "front": "Was versteht man in der Ökonomie unter Angebot?",
     "back": "Die Menge eines Gutes, die Anbieter zu einem Preis verkaufen wollen",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "new",
     "due": "2026-03-10T00:00:00.000Z",
@@ -5015,9 +4465,7 @@
     "deckId": "17",
     "front": "Was versteht man unter Nachfrage?",
     "back": "Die Menge eines Gutes, die Käufer zu einem Preis kaufen wollen",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -5034,9 +4482,7 @@
     "deckId": "17",
     "front": "Was ist Inflation?",
     "back": "Ein allgemeiner Anstieg des Preisniveaus",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "new",
     "due": "2026-03-12T00:00:00.000Z",
@@ -5053,9 +4499,7 @@
     "deckId": "17",
     "front": "Was ist Deflation?",
     "back": "Ein allgemeiner Rückgang des Preisniveaus",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "learning",
     "due": "2026-03-09T00:00:00.000Z",
@@ -5073,9 +4517,7 @@
     "deckId": "17",
     "front": "Was ist das Bruttoinlandsprodukt?",
     "back": "Der Wert aller im Inland produzierten Endgüter und Dienstleistungen",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -5093,9 +4535,7 @@
     "deckId": "17",
     "front": "Was ist ein Marktgleichgewicht?",
     "back": "Der Punkt, an dem Angebot und Nachfrage übereinstimmen",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -5113,9 +4553,7 @@
     "deckId": "17",
     "front": "Was ist ein Monopol?",
     "back": "Ein Markt mit nur einem Anbieter",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -5134,9 +4572,7 @@
     "deckId": "17",
     "front": "Was ist ein Oligopol?",
     "back": "Ein Markt mit wenigen großen Anbietern",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -5153,9 +4589,7 @@
     "deckId": "17",
     "front": "Was sind Fixkosten?",
     "back": "Kosten, die unabhängig von der Produktionsmenge anfallen",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -5173,9 +4607,7 @@
     "deckId": "17",
     "front": "Was sind variable Kosten?",
     "back": "Kosten, die mit der Produktionsmenge steigen oder fallen",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -5193,9 +4625,7 @@
     "deckId": "17",
     "front": "Was ist Gewinn?",
     "back": "Erlös minus Kosten",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -5214,9 +4644,7 @@
     "deckId": "17",
     "front": "Was bedeutet Produktivität?",
     "back": "Output im Verhältnis zum Input",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -5233,9 +4661,7 @@
     "deckId": "17",
     "front": "Was ist die Opportunitätskosten-Idee?",
     "back": "Der Wert der besten nicht gewählten Alternative",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -5254,9 +4680,7 @@
     "deckId": "17",
     "front": "Was ist ein Zinssatz?",
     "back": "Der Preis für geliehenes Geld",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -5273,9 +4697,7 @@
     "deckId": "17",
     "front": "Was ist eine Rezession?",
     "back": "Eine Phase rückläufiger wirtschaftlicher Aktivität",
-    "tags": [
-      "economics"
-    ],
+    "tags": ["economics"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -5293,9 +4715,7 @@
     "deckId": "18",
     "front": "Was untersucht die Psychologie?",
     "back": "Erleben und Verhalten von Menschen",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -5314,9 +4734,7 @@
     "deckId": "18",
     "front": "Was ist klassische Konditionierung?",
     "back": "Lernen durch Verknüpfung von Reizen",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "new",
     "due": "2026-03-08T00:00:00.000Z",
@@ -5333,9 +4751,7 @@
     "deckId": "18",
     "front": "Was ist operante Konditionierung?",
     "back": "Lernen durch Konsequenzen eines Verhaltens",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "new",
     "due": "2026-03-09T00:00:00.000Z",
@@ -5352,9 +4768,7 @@
     "deckId": "18",
     "front": "Was ist das Kurzzeitgedächtnis?",
     "back": "Ein Speicher für Informationen über kurze Zeit",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "new",
     "due": "2026-03-04T00:00:00.000Z",
@@ -5372,9 +4786,7 @@
     "deckId": "18",
     "front": "Was ist das Langzeitgedächtnis?",
     "back": "Ein relativ dauerhafter Informationsspeicher",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "new",
     "due": "2026-03-05T00:00:00.000Z",
@@ -5391,9 +4803,7 @@
     "deckId": "18",
     "front": "Was bedeutet Motivation?",
     "back": "Die innere oder äußere Antriebskraft für Verhalten",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "new",
     "due": "2026-03-09T00:00:00.000Z",
@@ -5411,9 +4821,7 @@
     "deckId": "18",
     "front": "Was ist Emotion?",
     "back": "Ein komplexer psychischer und körperlicher Zustand",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -5432,9 +4840,7 @@
     "deckId": "18",
     "front": "Was ist Stress?",
     "back": "Eine Belastungsreaktion auf Anforderungen",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-12T00:00:00.000Z",
@@ -5451,9 +4857,7 @@
     "deckId": "18",
     "front": "Was versteht man unter Resilienz?",
     "back": "Psychische Widerstandsfähigkeit in belastenden Situationen",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -5471,9 +4875,7 @@
     "deckId": "18",
     "front": "Was ist Empathie?",
     "back": "Die Fähigkeit, sich in andere hineinzuversetzen",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-11T00:00:00.000Z",
@@ -5491,9 +4893,7 @@
     "deckId": "18",
     "front": "Was ist Aufmerksamkeit?",
     "back": "Die gezielte Ausrichtung geistiger Ressourcen auf Reize oder Aufgaben",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -5512,9 +4912,7 @@
     "deckId": "18",
     "front": "Was ist Wahrnehmung?",
     "back": "Die Verarbeitung von Sinneseindrücken",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -5531,9 +4929,7 @@
     "deckId": "18",
     "front": "Was ist eine Persönlichkeitseigenschaft?",
     "back": "Ein relativ stabiles Merkmal einer Person",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -5552,9 +4948,7 @@
     "deckId": "18",
     "front": "Was bedeutet Intelligenz in der Psychologie?",
     "back": "Die Fähigkeit, Probleme zu lösen und zu lernen",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -5571,9 +4965,7 @@
     "deckId": "18",
     "front": "Was ist soziale Erwünschtheit in Befragungen?",
     "back": "Die Tendenz, Antworten zu geben, die gut wirken",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "review",
     "due": "2026-03-08T00:00:00.000Z",
@@ -5591,9 +4983,7 @@
     "deckId": "18",
     "front": "Was ist eine Hypothese?",
     "back": "Eine prüfbare Annahme",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "review",
     "due": "2026-03-05T00:00:00.000Z",
@@ -5612,9 +5002,7 @@
     "deckId": "18",
     "front": "Was ist eine unabhängige Variable?",
     "back": "Die gezielt veränderte Einflussgröße",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -5632,9 +5020,7 @@
     "deckId": "18",
     "front": "Was ist eine abhängige Variable?",
     "back": "Die gemessene Reaktion auf eine Veränderung",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -5651,9 +5037,7 @@
     "deckId": "18",
     "front": "Was ist eine Korrelation?",
     "back": "Ein statistischer Zusammenhang zwischen zwei Merkmalen",
-    "tags": [
-      "psychology"
-    ],
+    "tags": ["psychology"],
     "media": [],
     "state": "review",
     "due": "2026-03-12T00:00:00.000Z",
@@ -5672,9 +5056,7 @@
     "deckId": "19",
     "front": "Französisch: bonjour",
     "back": "Deutsch: guten Tag",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -5693,9 +5075,7 @@
     "deckId": "19",
     "front": "Französisch: merci",
     "back": "Deutsch: danke",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "new",
     "due": "2026-03-02T00:00:00.000Z",
@@ -5712,9 +5092,7 @@
     "deckId": "19",
     "front": "Französisch: au revoir",
     "back": "Deutsch: auf Wiedersehen",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "new",
     "due": "2026-03-04T00:00:00.000Z",
@@ -5731,9 +5109,7 @@
     "deckId": "19",
     "front": "Französisch: s'il vous plaît",
     "back": "Deutsch: bitte",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -5751,9 +5127,7 @@
     "deckId": "19",
     "front": "Französisch: eau",
     "back": "Deutsch: Wasser",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -5771,9 +5145,7 @@
     "deckId": "19",
     "front": "Französisch: pain",
     "back": "Deutsch: Brot",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -5791,9 +5163,7 @@
     "deckId": "19",
     "front": "Französisch: ami",
     "back": "Deutsch: Freund",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -5812,9 +5182,7 @@
     "deckId": "19",
     "front": "Französisch: maison",
     "back": "Deutsch: Haus",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -5831,9 +5199,7 @@
     "deckId": "19",
     "front": "Französisch: école",
     "back": "Deutsch: Schule",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -5851,9 +5217,7 @@
     "deckId": "19",
     "front": "Französisch: temps",
     "back": "Deutsch: Zeit",
-    "tags": [
-      "language"
-    ],
+    "tags": ["language"],
     "media": [],
     "state": "review",
     "due": "2026-03-08T00:00:00.000Z",
@@ -5871,9 +5235,7 @@
     "deckId": "20",
     "front": "Wie teilt man große Lernziele am besten auf?",
     "back": "In kleine, konkrete Teilaufgaben",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-07T00:00:00.000Z",
@@ -5892,9 +5254,7 @@
     "deckId": "20",
     "front": "Warum ist ein Lernplan nützlich?",
     "back": "Weil er Zeit und Themen strukturiert",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-05T00:00:00.000Z",
@@ -5911,9 +5271,7 @@
     "deckId": "20",
     "front": "Was bringt regelmäßiges Wiederholen?",
     "back": "Es festigt Inhalte im Langzeitgedächtnis",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-05T00:00:00.000Z",
@@ -5930,9 +5288,7 @@
     "deckId": "20",
     "front": "Warum sind Pausen beim Lernen wichtig?",
     "back": "Weil Aufmerksamkeit und Leistung sonst sinken",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-06T00:00:00.000Z",
@@ -5950,9 +5306,7 @@
     "deckId": "20",
     "front": "Was ist Active Recall?",
     "back": "Aktives Abrufen von Wissen ohne nachzuschauen",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-09T00:00:00.000Z",
@@ -5969,9 +5323,7 @@
     "deckId": "20",
     "front": "Was ist Spaced Repetition?",
     "back": "Wiederholen in wachsenden Zeitabständen",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -5989,9 +5341,7 @@
     "deckId": "20",
     "front": "Warum sollte man Altklausuren üben?",
     "back": "Weil sie Format und Anspruch zeigen",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-06T00:00:00.000Z",
@@ -6009,9 +5359,7 @@
     "deckId": "20",
     "front": "Was sollte man vor einer Prüfung zuerst klären?",
     "back": "Welche Themen und Formate geprüft werden",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-11T00:00:00.000Z",
@@ -6028,9 +5376,7 @@
     "deckId": "20",
     "front": "Warum helfen eigene Zusammenfassungen?",
     "back": "Weil man Inhalte dabei aktiv verarbeitet",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-02T00:00:00.000Z",
@@ -6047,9 +5393,7 @@
     "deckId": "20",
     "front": "Was ist ein gutes Zeichen dafür, dass man etwas verstanden hat?",
     "back": "Wenn man es einfach erklären kann",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-02T00:00:00.000Z",
@@ -6067,9 +5411,7 @@
     "deckId": "20",
     "front": "Warum sollte man beim Lernen Prioritäten setzen?",
     "back": "Weil nicht alle Themen gleich wichtig sind",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-09T00:00:00.000Z",
@@ -6087,9 +5429,7 @@
     "deckId": "20",
     "front": "Was ist Prokrastination?",
     "back": "Das unnötige Aufschieben von Aufgaben",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "new",
     "due": "2026-03-03T00:00:00.000Z",
@@ -6106,9 +5446,7 @@
     "deckId": "20",
     "front": "Wie kann man eine große Aufgabe leichter beginnen?",
     "back": "Mit einem sehr kleinen ersten Schritt",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -6127,9 +5465,7 @@
     "deckId": "20",
     "front": "Warum ist Schlaf vor Prüfungen wichtig?",
     "back": "Weil Schlaf Gedächtnis und Konzentration unterstützt",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -6146,9 +5482,7 @@
     "deckId": "20",
     "front": "Was hilft gegen Prüfungsstress kurz vor dem Start?",
     "back": "Ruhiges Atmen und klare Fokussierung",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-08T00:00:00.000Z",
@@ -6166,9 +5500,7 @@
     "deckId": "20",
     "front": "Warum sind realistische Lernziele besser als vage Vorsätze?",
     "back": "Weil sie überprüfbar und planbar sind",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -6187,9 +5519,7 @@
     "deckId": "20",
     "front": "Was bringt es, Ablenkungen beim Lernen zu entfernen?",
     "back": "Der Fokus bleibt stabiler",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -6207,9 +5537,7 @@
     "deckId": "20",
     "front": "Warum ist Hands-on-Übung wichtig?",
     "back": "Weil Wissen durch Anwendung tiefer verankert wird",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-05T00:00:00.000Z",
@@ -6226,9 +5554,7 @@
     "deckId": "20",
     "front": "Was sollte man tun, wenn man bei einem Thema festhängt?",
     "back": "Die Teilfrage isolieren und gezielt klären",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-10T00:00:00.000Z",
@@ -6247,9 +5573,7 @@
     "deckId": "20",
     "front": "Warum ist Feedback beim Lernen wertvoll?",
     "back": "Weil es blinde Flecken sichtbar macht",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-07T00:00:00.000Z",
@@ -6266,9 +5590,7 @@
     "deckId": "20",
     "front": "Was ist ein typischer Fehler beim Auswendiglernen?",
     "back": "Nur zu lesen statt aktiv abzurufen",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-06T00:00:00.000Z",
@@ -6287,9 +5609,7 @@
     "deckId": "20",
     "front": "Wie hilft ein Timer beim Lernen?",
     "back": "Er schafft klare Arbeits- und Pausenblöcke",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "learning",
     "due": "2026-03-12T00:00:00.000Z",
@@ -6307,9 +5627,7 @@
     "deckId": "20",
     "front": "Warum sollte man Lösungen nicht zu früh ansehen?",
     "back": "Weil sonst der eigene Denkprozess abgekürzt wird",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -6327,9 +5645,7 @@
     "deckId": "20",
     "front": "Was bedeutet Transfer beim Lernen?",
     "back": "Gelerntes auf neue Aufgaben anwenden",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-03T00:00:00.000Z",
@@ -6346,9 +5662,7 @@
     "deckId": "20",
     "front": "Warum ist ein aufgeräumter Arbeitsplatz hilfreich?",
     "back": "Weil er unnötige Reize reduziert",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -6367,9 +5681,7 @@
     "deckId": "20",
     "front": "Was bringt lautes Erklären eines Themas?",
     "back": "Es deckt Wissenslücken schnell auf",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -6387,9 +5699,7 @@
     "deckId": "20",
     "front": "Warum ist Wiederholen direkt vor dem Schlafen oft sinnvoll?",
     "back": "Weil Inhalte danach konsolidiert werden können",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -6407,9 +5717,7 @@
     "deckId": "20",
     "front": "Wie erkennt man, dass ein Lernplan zu voll ist?",
     "back": "Wenn wichtige Aufgaben ständig verschoben werden",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-10T00:00:00.000Z",
@@ -6427,9 +5735,7 @@
     "deckId": "20",
     "front": "Warum sind Beispiele beim Lernen wichtig?",
     "back": "Weil abstrakte Regeln dadurch greifbar werden",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -6447,9 +5753,7 @@
     "deckId": "20",
     "front": "Was sollte man nach einer schlechten Probeprüfung tun?",
     "back": "Fehler analysieren statt nur die Note betrachten",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -6466,9 +5770,7 @@
     "deckId": "20",
     "front": "Wie hilft Chunking beim Lernen?",
     "back": "Es gruppiert Informationen in sinnvolle Einheiten",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -6488,9 +5790,7 @@
     "deckId": "20",
     "front": "Warum ist Regelmäßigkeit oft wichtiger als einzelne Lernmarathons?",
     "back": "Weil konstantes Lernen nachhaltiger wirkt",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-11T00:00:00.000Z",
@@ -6507,9 +5807,7 @@
     "deckId": "20",
     "front": "Was ist eine gute Strategie für schwer startbare Aufgaben?",
     "back": "Zeitlich sehr klein anfangen, etwa fünf Minuten",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -6527,9 +5825,7 @@
     "deckId": "20",
     "front": "Warum sollte man Verständnisfragen von Detailfragen trennen?",
     "back": "Weil beides unterschiedliche Lernmethoden braucht",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -6547,9 +5843,7 @@
     "deckId": "20",
     "front": "Wie hilft Selbstreflexion nach dem Lernen?",
     "back": "Sie zeigt, was funktioniert hat und was nicht",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-04T00:00:00.000Z",
@@ -6567,9 +5861,7 @@
     "deckId": "20",
     "front": "Warum sind Mischübungen aus verschiedenen Themen sinnvoll?",
     "back": "Weil sie Auswahl und Anwendung trainieren",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-06T00:00:00.000Z",
@@ -6587,9 +5879,7 @@
     "deckId": "20",
     "front": "Was sollte man tun, wenn ein Thema komplett unklar bleibt?",
     "back": "Grundlagen prüfen und externe Erklärung suchen",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
@@ -6608,9 +5898,7 @@
     "deckId": "20",
     "front": "Warum ist Wasser und Bewegung beim Lernen sinnvoll?",
     "back": "Weil Körperzustand die mentale Leistung beeinflusst",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-02T00:00:00.000Z",
@@ -6627,9 +5915,7 @@
     "deckId": "20",
     "front": "Was ist der Vorteil von Lernkarten gegenüber markiertem Text?",
     "back": "Sie zwingen zum aktiven Abrufen",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-09T00:00:00.000Z",
@@ -6647,9 +5933,7 @@
     "deckId": "20",
     "front": "Wie beendet man eine Lerneinheit sinnvoll?",
     "back": "Mit kurzem Rückblick und nächstem klaren Schritt",
-    "tags": [
-      "general"
-    ],
+    "tags": ["general"],
     "media": [],
     "state": "review",
     "due": "2026-03-07T00:00:00.000Z",
