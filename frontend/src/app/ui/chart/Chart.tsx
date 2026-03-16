@@ -2,8 +2,9 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import Chart from "chart.js/auto";
-import type { Chart as ChartJS, Plugin } from "chart.js";
+import type { Chart as ChartJS, Plugin, Element } from "chart.js";
 import styles from "../../(app)/statistic/page.module.css";
+
 
 interface CardCounts {
     easy: number;
@@ -74,7 +75,7 @@ const dataLabelsPlugin: Plugin<"bar"> = {
         chart.data.datasets.forEach((dataset, i) => {
             const meta = chart.getDatasetMeta(i);
 
-            meta.data.forEach((bar: any, index: number) => {
+            meta.data.forEach((bar: Element & { x:number, y: number, base?: number}, index: number) => {
                 const value = dataset.data[index] as number;
                 //no bars for 0
                 if (value === 0) return;
