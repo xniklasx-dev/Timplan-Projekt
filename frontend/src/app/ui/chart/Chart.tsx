@@ -119,13 +119,13 @@ const ChartComponent: React.FC = () => {
         let values: CardCounts[] = [];
 
         if (view === "week") {
-            labels = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+            labels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
             values = dailyWeekData;
         } else if (view === "month") {
             values = groupIntoWeeks(dailyMonthData);
             labels = values.map((_, i) => `Woche ${i + 1}`);
         } else {
-            labels = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+            labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             values = monthlyYearData;
         }
         //get data
