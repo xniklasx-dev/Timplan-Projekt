@@ -2,64 +2,84 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import styles from './SingleCardEditor.module.css';
+import styles from './SingleCardAdd.module.css';
 
 import type { Card } from '@/app/lib/definitions';
-import cardsData from '@/app/lib/placeholder-cards.json';
 
-type SingleCardEditorProps = {
+type SingleCardAddProps = {
   open: boolean;
-  cardId: string | null;
+  deckId: string;
   onClose: () => void;
+  onCreate: (card: Card) => void;
 };
 
-const allCards = cardsData as unknown as Card[];
+function createNewCard(deckId: string): Card {
+  const now = new Date();
 
-function normalizeCard(card: Card): Card {
   return {
-    ...card,
-    hint: card.hint ?? '',
-    extra: card.extra ?? '',
+    id:
+      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `card-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+    deckId,
+
+    front: '',
+    back: '',
+    hint: '',
+    extra: '',
+
+    tags: [],
+    media: [],
+
+    state: 'new',
+    due: now,
+    rating: 0,
+
+    lastReview: undefined,
+
+    totalReviews: 0,
+    correctReviews: 0,
+
+    createdAt: now,
+    updatedAt: now,
+    deleted: false,
+
+    revision: 1,
   };
 }
 
-export default function SingleCardEditor({
-  open,
-  cardId,
+type SingleCardAddContentProps = {
+  deckId: string;
+  onClose: () => void;
+  onCreate: (card: Card) => void;
+};
+
+function SingleCardAddContent({
+  deckId,
   onClose,
-}: SingleCardEditorProps) {
-  const baseCard = useMemo(() => {
-    if (!cardId) return null;
-    return allCards.find((card) => card.id === cardId) ?? null;
-  }, [cardId]);
-
-  const normalizedBaseCard = useMemo(() => {
-    return baseCard ? normalizeCard(baseCard) : null;
-  }, [baseCard]);
-
-  const [draft, setDraft] = useState<Card | null>(
-    normalizedBaseCard ? { ...normalizedBaseCard } : null
-  );
+  onCreate,
+}: SingleCardAddContentProps) {
+  const [draft, setDraft] = useState<Card>(() => createNewCard(deckId));
 
   const hasUnsavedChanges = useMemo(() => {
-    if (!normalizedBaseCard || !draft) return false;
-
     return (
-      draft.front !== normalizedBaseCard.front ||
-      draft.back !== normalizedBaseCard.back ||
-      (draft.hint ?? '') !== (normalizedBaseCard.hint ?? '') ||
-      (draft.extra ?? '') !== (normalizedBaseCard.extra ?? '')
+      draft.front.trim() !== '' ||
+      draft.back.trim() !== '' ||
+      (draft.hint ?? '').trim() !== '' ||
+      (draft.extra ?? '').trim() !== ''
     );
-  }, [normalizedBaseCard, draft]);
+  }, [draft]);
+
+  const canCreate = useMemo(() => {
+    return draft.front.trim() !== '' && draft.back.trim() !== '';
+  }, [draft.front, draft.back]);
 
   useEffect(() => {
-    if (!open) return;
-
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         if (hasUnsavedChanges) {
           const shouldClose = window.confirm(
-            'You have unsaved changes. Do you really want to close this editor?'
+            'You have unsaved changes. Do you really want to close this form?'
           );
 
           if (!shouldClose) {
@@ -72,32 +92,27 @@ export default function SingleCardEditor({
     }
 
     document.addEventListener('keydown', handleKeyDown);
-    document.body.style.overflow = 'hidden';
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
     };
-  }, [open, onClose, hasUnsavedChanges]);
+  }, [hasUnsavedChanges, onClose]);
 
   function updateField(
     field: 'front' | 'back' | 'hint' | 'extra',
     value: string
   ) {
-    setDraft((current) =>
-      current
-        ? {
-            ...current,
-            [field]: value,
-          }
-        : current
-    );
+    setDraft((current) => ({
+      ...current,
+      [field]: value,
+      updatedAt: new Date(),
+    }));
   }
 
   function handleClose() {
     if (hasUnsavedChanges) {
       const shouldClose = window.confirm(
-        'You have unsaved changes. Do you really want to close this editor?'
+        'You have unsaved changes. Do you really want to close this form?'
       );
 
       if (!shouldClose) {
@@ -112,57 +127,23 @@ export default function SingleCardEditor({
     handleClose();
   }
 
-  function handleSave() {
-  }
+  function handleCreate() {
+    if (!canCreate) return;
 
-  if (!open || !cardId) {
-    return null;
-  }
+    const now = new Date();
 
-  if (!draft) {
-    return (
-      <div className={styles.overlay} onClick={handleOverlayClick}>
-        <div
-          className={styles.modal}
-          onClick={(event) => event.stopPropagation()}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="single-card-edit-title"
-        >
-          <div className={styles.header}>
-            <div className={styles.headerMain}>
-              <span className={styles.eyebrow}>Single Card Edit</span>
-              <h2 id="single-card-edit-title" className={styles.title}>
-                2  Card not found
-              </h2>
-            </div>
+    const newCard: Card = {
+      ...draft,
+      front: draft.front.trim(),
+      back: draft.back.trim(),
+      hint: draft.hint?.trim() ?? '',
+      extra: draft.extra?.trim() ?? '',
+      createdAt: now,
+      updatedAt: now,
+    };
 
-            <button
-              type="button"
-              className={styles.closeButton}
-              onClick={handleClose}
-              aria-label="Close modal"
-            >
-              ×
-            </button>
-          </div>
-
-          <p className={styles.notFoundText}>
-            No card was found for id: <strong>{cardId}</strong>
-          </p>
-
-          <div className={styles.footer}>
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              onClick={handleClose}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    onCreate(newCard);
+    onClose();
   }
 
   return (
@@ -172,18 +153,19 @@ export default function SingleCardEditor({
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="single-card-edit-title"
+        aria-labelledby="single-card-add-title"
       >
         <div className={styles.header}>
           <div className={styles.headerMain}>
-            <span className={styles.eyebrow}>Single Card Edit</span>
+            <span className={styles.eyebrow}>Single Card Add</span>
 
-            <h2 id="single-card-edit-title" className={styles.title}>
-              {draft.front.trim() || 'Untitled card'}
+            <h2 id="single-card-add-title" className={styles.title}>
+              Create new card
             </h2>
 
             <div className={styles.metaRow}>
               <span className={styles.metaPill}>State: {draft.state}</span>
+              <span className={styles.metaPill}>Deck: {draft.deckId}</span>
             </div>
           </div>
 
@@ -205,7 +187,7 @@ export default function SingleCardEditor({
                 className={styles.textareaLarge}
                 value={draft.front}
                 onChange={(event) => updateField('front', event.target.value)}
-                placeholder="Enter the card question"
+                placeholder="What should appear on the front of the card?"
               />
             </label>
 
@@ -215,7 +197,7 @@ export default function SingleCardEditor({
                 className={styles.textareaLarge}
                 value={draft.back}
                 onChange={(event) => updateField('back', event.target.value)}
-                placeholder="Enter the card answer"
+                placeholder="What is the correct answer?"
               />
             </label>
 
@@ -247,21 +229,51 @@ export default function SingleCardEditor({
             className={styles.secondaryButton}
             onClick={handleClose}
           >
-            Close
+            Cancel
           </button>
 
           <button
             type="button"
             className={`${styles.primaryButton} ${
-              hasUnsavedChanges ? styles.primaryButtonActive : ''
+              canCreate ? styles.primaryButtonActive : ''
             }`}
-            onClick={handleSave}
-            disabled={!hasUnsavedChanges}
+            onClick={handleCreate}
+            disabled={!canCreate}
           >
-            Save changes
+            Create card
           </button>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SingleCardAdd({
+  open,
+  deckId,
+  onClose,
+  onCreate,
+}: SingleCardAddProps) {
+  useEffect(() => {
+    if (!open) return;
+
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  if (!open) {
+    return null;
+  }
+
+  return (
+    <SingleCardAddContent
+      key={deckId}
+      deckId={deckId}
+      onClose={onClose}
+      onCreate={onCreate}
+    />
   );
 }
