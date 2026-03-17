@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Chart from "chart.js/auto";
 import type { Chart as ChartJS, Plugin, Element } from "chart.js";
-import styles from "../../(app)/statistic/page.module.css";
+import styles from "../app/(app)/statistic/page.module.css";
 
 
 interface CardCounts {
@@ -132,7 +132,7 @@ const ChartComponent: React.FC = () => {
         const easyData = values.map(v => v.easy);
         const mediumData = values.map(v => v.medium);
         const hardData = values.map(v => v.hard);
-        //dynamic y-axis
+        //y-axis
         const maxSum = values.reduce((max, v) => Math.max(max, v.easy + v.medium + v.hard), 0);
         const stepSize = view === "week" ? 5 : view === "month" ? 10 : 20;
         const yAxisMax = Math.ceil((maxSum + stepSize) / stepSize) * stepSize;
