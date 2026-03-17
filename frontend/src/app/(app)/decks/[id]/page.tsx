@@ -158,7 +158,7 @@ export default function Deck() {
         subtitle={currentDeck.description}
         isGridView={isGridView}
         onToggleViewAction={handleToggleView}
-        dropdownButtonLabel="Test"
+        dropdownButtonLabel="Actions"
         dropdownButtons={[
           {
             label: "Edit Cards",

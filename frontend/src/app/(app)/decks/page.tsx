@@ -101,7 +101,7 @@ export default function Decks() {
         subtitle="Select a deck to start studying"
         isGridView={isGridView}
         onToggleViewAction={handleToggleView}
-        dropdownButtonLabel="Test"
+        dropdownButtonLabel="Actions"
         dropdownButtons={[
           {
             label: "Add Deck",
