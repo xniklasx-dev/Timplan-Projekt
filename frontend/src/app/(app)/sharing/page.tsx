@@ -4,9 +4,10 @@ import { useState } from 'react';
 
 import styles from "./page.module.css";
 import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
+import SingleCardAdd from '@/app/ui/cards/singleCardAdd/SingleCardAdd';
 
 export default function Sharing() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   return (
     <div className={styles.page}>
@@ -16,16 +17,17 @@ export default function Sharing() {
         <button
           type="button"
           className={styles.testButton}
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsAddOpen(true)}
         >
-          Open single card edit
+          Open single card add
         </button>
       </main>
 
-      <SingleCardEditor
-        open={isModalOpen}
-        cardId="c1"
-        onClose={() => setIsModalOpen(false)}
+      <SingleCardAdd
+        open={isAddOpen}
+        deckId="1"
+        onClose={() => setIsAddOpen(false)}
+        onCreate={() => {}}
       />
     </div>
   );
