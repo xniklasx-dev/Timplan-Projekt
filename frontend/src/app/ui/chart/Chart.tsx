@@ -63,7 +63,7 @@ const dataLabelsPlugin: Plugin<"bar"> = {
     id: "dataLabels",
     afterDatasetsDraw(chart) {
         const ctx = chart.ctx;
-        //
+        
         const css = getComputedStyle(document.documentElement);
         const textColor = css.getPropertyValue("--color-text").trim();
 
