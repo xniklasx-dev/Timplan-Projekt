@@ -2,8 +2,9 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import Chart from "chart.js/auto";
-import type { Chart as ChartJS, Plugin } from "chart.js";
-import styles from "../../(app)/statistic/page.module.css";
+import type { Chart as ChartJS, Plugin, Element } from "chart.js";
+import styles from "../app/(app)/statistic/page.module.css";
+
 
 interface CardCounts {
     easy: number;
@@ -42,7 +43,7 @@ const monthlyYearData: CardCounts[] = [
     { easy: 100, medium: 60, hard: 20 },
     { easy: 120, medium: 70, hard: 10 }
 ];
- //gouping the daily data
+ //grouping the daily data
 function groupIntoWeeks(data: CardCounts[]): CardCounts[] {
     const weeks: CardCounts[] = [];
     for (let i = 0; i < data.length; i += 7) {
@@ -74,7 +75,7 @@ const dataLabelsPlugin: Plugin<"bar"> = {
         chart.data.datasets.forEach((dataset, i) => {
             const meta = chart.getDatasetMeta(i);
 
-            meta.data.forEach((bar: any, index: number) => {
+            meta.data.forEach((bar: Element & { x:number, y: number, base?: number}, index: number) => {
                 const value = dataset.data[index] as number;
                 //no bars for 0
                 if (value === 0) return;
@@ -118,20 +119,20 @@ const ChartComponent: React.FC = () => {
         let values: CardCounts[] = [];
 
         if (view === "week") {
-            labels = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+            labels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
             values = dailyWeekData;
         } else if (view === "month") {
             values = groupIntoWeeks(dailyMonthData);
             labels = values.map((_, i) => `Woche ${i + 1}`);
         } else {
-            labels = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+            labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             values = monthlyYearData;
         }
         //get data
         const easyData = values.map(v => v.easy);
         const mediumData = values.map(v => v.medium);
         const hardData = values.map(v => v.hard);
-        //dynamic y-axis
+        //y-axis
         const maxSum = values.reduce((max, v) => Math.max(max, v.easy + v.medium + v.hard), 0);
         const stepSize = view === "week" ? 5 : view === "month" ? 10 : 20;
         const yAxisMax = Math.ceil((maxSum + stepSize) / stepSize) * stepSize;
