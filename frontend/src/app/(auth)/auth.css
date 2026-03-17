@@ -1,5 +1,6 @@
 .authPage {
   min-height: 100svh;
+  height: 100svh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,7 +16,6 @@
   gap: clamp(2rem, 4vw, 6rem);
 }
 
-/* LEFT */
 .authLeft {
   flex: 1;
   display: flex;
@@ -39,7 +39,6 @@
   color: var(--color-text-muted);
 }
 
-/* RIGHT */
 .authRight {
   flex: 1;
   display: flex;
@@ -51,10 +50,25 @@
   max-width: 520px;
 }
 
-/* ============================= */
-/* TABLET (ab 786px) */
-/* ============================= */
-@media (min-width: 786px) {
+/* Tablet portrait */
+@media (min-width: 786px) and (orientation: portrait) {
+  .authContainer {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 8vh;
+  }
+
+  .authLeft {
+    flex: 0;
+  }
+
+  .brandTitle {
+    font-size: clamp(3rem, 8vw, 5rem);
+  }
+}
+
+/* Tablet landscape */
+@media (min-width: 786px) and (orientation: landscape) {
   .authContainer {
     flex-direction: row;
     align-items: center;
@@ -65,9 +79,7 @@
   }
 }
 
-/* ============================= */
-/* ULTRA WIDE (ab 1800px) */
-/* ============================= */
+/* Ultra wide */
 @media (min-width: 1800px) {
   .authContainer {
     max-width: 1800px;

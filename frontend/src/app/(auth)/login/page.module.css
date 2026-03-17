@@ -1,24 +1,4 @@
-.page {
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-background);
-  padding: 24px;
-}
-
-/* Grauer Container */
-.cards {
-  width: 100%;
-  max-width: 480px;
-  background: var(--color-surface);
-  padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 20px 40px var(--color-surface-shadow);
-  transition: all 0.3s ease;
-}
-
-/* Titel */
+/* ── Typography ────────────────────────────── */
 .title {
   margin-bottom: 1.8rem;
   font-size: 1.8rem;
@@ -26,7 +6,6 @@
   text-align: center;
 }
 
-/* Optional Untertitel */
 .subtitle {
   margin-bottom: 1.5rem;
   font-size: 1.2rem;
@@ -35,14 +14,13 @@
   color: var(--color-text-muted);
 }
 
-/* Formular */
+/* ── Form ──────────────────────────────────── */
 .form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* Inputs */
 .input {
   padding: 0.9rem;
   background: var(--color-surface-hover);
@@ -59,31 +37,44 @@
   box-shadow: 0 0 0 2px var(--color-accent-hover);
 }
 
-/* Buttons */
-.button {
-  margin-top: 0.8rem;
-  padding: 1rem;
-  background: var(--color-accent);
+/* ── Buttons ───────────────────────────────── */
+.forgotPassword {
+  margin-left: auto;
+  font-size: 0.85rem;
+  margin-top: -0.3rem;
+}
+
+.forgotPasswordButton {
+  background: none;
   border: none;
-  border-radius: 10px;
-  color: white;
-  font-weight: 500;
-  font-size: 1rem;
+  color: var(--color-text-muted);
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
 }
 
-.button:hover {
-  background: var(--color-accent-hover);
-  transform: translateY(-1px);
+.forgotPasswordButton:hover {
+  color: var(--color-text);
 }
 
-.button:disabled {
-  background: var(--color-disabled);
-  cursor: not-allowed;
+.linkButton {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: center;
+  text-decoration: underline;
+  padding: 0;
 }
 
-/* Error Meldung */
+.linkButton:hover {
+  color: var(--color-text);
+}
+
+/* ── Messages ──────────────────────────────── */
 .error {
   margin-top: 1rem;
   color: var(--color-error);
@@ -91,15 +82,13 @@
   text-align: center;
 }
 
-/* Success Meldung */
 .success {
   margin-top: 1rem;
-  color: #2e7d32; /* dunkelgrün */
+  color: #2e7d32;
   font-size: 0.9rem;
   text-align: center;
 }
 
-/* Allgemeine Nachricht */
 .message {
   margin-top: 0.8rem;
   color: var(--color-text-muted);
@@ -107,7 +96,6 @@
   text-align: center;
 }
 
-/* Link Text */
 .linkText {
   margin-top: 1.5rem;
   font-size: 0.95rem;
@@ -116,36 +104,52 @@
 }
 
 .linkText a {
-  color: var(--color-accent);
+  color: var(--color-focus);
   font-weight: 500;
 }
 
-/* ===================================== */
-/* TABLET (ab 786px) */
-/* ===================================== */
+/* ── Modal ─────────────────────────────────── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  z-index: 100;
+}
 
+.modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.modalText {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* ── Responsive: Tablet (786px+) ───────────── */
 @media (min-width: 786px) {
-  .cards {
-    max-width: 520px;
-    padding: 3rem;
-  }
-
   .title {
     font-size: 2rem;
   }
 }
 
-/* ===================================== */
-/* DESKTOP (ab 1200px) */
-/* ===================================== */
-
+/* ── Responsive: Desktop (1200px+) ─────────── */
 @media (min-width: 1200px) {
-  .cards {
-    max-width: 560px;
-    padding: 3.5rem;
-    border-radius: 24px;
-  }
-
   .title {
     font-size: 2.2rem;
   }
@@ -154,33 +158,15 @@
     font-size: 1.05rem;
     padding: 1rem;
   }
-
-  .button {
-    font-size: 1.05rem;
-    padding: 1.05rem;
-  }
 }
 
-/* ===================================== */
-/* ULTRA WIDE (ab 1800px) */
-/* ===================================== */
-
+/* ── Responsive: Ultra Wide (1800px+) ──────── */
 @media (min-width: 1800px) {
-  .cards {
-    max-width: 600px;
-    padding: 4rem;
-  }
-
   .title {
     font-size: 2.4rem;
   }
 
   .input {
-    padding: 1.1rem;
-    font-size: 1.1rem;
-  }
-
-  .button {
     padding: 1.1rem;
     font-size: 1.1rem;
   }
