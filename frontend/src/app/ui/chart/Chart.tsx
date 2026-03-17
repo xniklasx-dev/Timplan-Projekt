@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Chart from "chart.js/auto";
 import type { Chart as ChartJS, Plugin, Element } from "chart.js";
-import styles from "../app/(app)/statistic/page.module.css";
+import styles from "../../(app)/statistic/page.module.css";
 
 
 interface CardCounts {
@@ -63,7 +63,7 @@ const dataLabelsPlugin: Plugin<"bar"> = {
     id: "dataLabels",
     afterDatasetsDraw(chart) {
         const ctx = chart.ctx;
-        //
+        
         const css = getComputedStyle(document.documentElement);
         const textColor = css.getPropertyValue("--color-text").trim();
 
@@ -123,7 +123,7 @@ const ChartComponent: React.FC = () => {
             values = dailyWeekData;
         } else if (view === "month") {
             values = groupIntoWeeks(dailyMonthData);
-            labels = values.map((_, i) => `Woche ${i + 1}`);
+            labels = values.map((_, i) => `Week ${i + 1}`);
         } else {
             labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             values = monthlyYearData;
