@@ -43,7 +43,7 @@ const monthlyYearData: CardCounts[] = [
     { easy: 100, medium: 60, hard: 20 },
     { easy: 120, medium: 70, hard: 10 }
 ];
- //gouping the daily data
+ //grouping the daily data
 function groupIntoWeeks(data: CardCounts[]): CardCounts[] {
     const weeks: CardCounts[] = [];
     for (let i = 0; i < data.length; i += 7) {
