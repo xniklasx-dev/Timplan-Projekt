@@ -1,37 +1,67 @@
-# Deploys the Next.js backend (located in /backend) to Azure App Service.
-# Azure will build via Oryx during deployment.
-
-name: Deploy Backend (Azure App Service)
+name: Deploy Backend
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - "backend/**"
       - ".github/workflows/deploy-backend.yml"
+
   workflow_dispatch:
-    inputs:
-      ref:
-        description: "Branch to deploy"
-        required: true
-        default: "main"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 24.x
+  AZURE_WEBAPP_NAME: timplan-api
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+      - uses: actions/checkout@v4
 
-      - name: Deploy to Azure Web App (timplan-api)
-        uses: azure/webapps-deploy@v3
+      - uses: actions/setup-node@v4
         with:
-          app-name: "timplan-api"
-          slot-name: "Production"
-          package: "./backend"
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE_API }}
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm prune --omit=dev
+
+      - name: Prepare deploy package
+        run: |
+          rm -rf ../backend-deploy
+          mkdir -p ../backend-deploy
+          cp -R dist ../backend-deploy/dist
+          cp package.json ../backend-deploy/package.json
+          cp package-lock.json ../backend-deploy/package-lock.json
+          cp -R node_modules ../backend-deploy/node_modules
+          if [ -d mockData ]; then
+            cp -R mockData ../backend-deploy/mockData
+          fi
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID_BACKEND }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: backend-deploy
