@@ -6,10 +6,6 @@ const DeckIdParam = z.object({
   deckId: z.string().openapi({ example: "ts-basics" }),
 });
 
-const CardIdParam = z.object({
-  cardId: z.string().openapi({ example: "card-123" }),
-});
-
 registry.registerPath({
   method: "get",
   path: "/health",

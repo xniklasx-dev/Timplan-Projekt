@@ -1,4 +1,4 @@
-import { Card, Deck, DateData, StatsMap } from "./definitions";
+import { Card, Deck, StatsMap } from "./definitions";
 
 export function getDeckById(decks: Deck[], id: string): Deck | undefined {
   return decks.find((deck) => String(deck.id) === id);

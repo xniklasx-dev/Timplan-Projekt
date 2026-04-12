@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { json } from "stream/consumers";
 import { readFileSync } from "fs";
 
 const router = Router();

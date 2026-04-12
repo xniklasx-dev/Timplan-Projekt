@@ -12,7 +12,14 @@ import dateData from "@/app/lib/placeholder-dateData.json";
 import { Deck, Card, StatsMap } from "../../../lib/definitions";
 import { getDeckById, getCardsForDeck, rateCard } from "../../../lib/learning-service";
 
-function hydrateCard(raw: any): Card {
+type RawCard = Omit<Card, "due" | "createdAt" | "updatedAt" | "lastReview"> & {
+  due: string;
+  createdAt: string;
+  updatedAt: string;
+  lastReview?: string;
+};
+
+function hydrateCard(raw: RawCard): Card {
   return {
     ...raw,
     due: new Date(raw.due),
@@ -22,7 +29,13 @@ function hydrateCard(raw: any): Card {
   };
 }
 
-function hydrateDeck(raw: any): Deck {
+type RawDeck = Omit<Deck, "createdAt" | "updatedAt" | "lastStudied"> & {
+  createdAt: string;
+  updatedAt: string;
+  lastStudied?: string;
+};
+
+function hydrateDeck(raw: RawDeck): Deck {
   return {
     ...raw,
     createdAt: new Date(raw.createdAt),
@@ -33,8 +46,10 @@ function hydrateDeck(raw: any): Deck {
   };
 }
 
-const decks: Deck[] = decksData.map(hydrateDeck);
-const cards: Card[] = cardsData.map(hydrateCard);
+const rawDecks = decksData as RawDeck[];
+const decks: Deck[] = rawDecks.map(hydrateDeck);
+const rawCards = cardsData as RawCard[];
+const cards: Card[] = rawCards.map(hydrateCard);
 
 
 
@@ -43,10 +58,9 @@ export default function Learning() {
   const deckId = String(params.deckId);
 
   const selectedDeck = getDeckById(decks, deckId);
-  if (!selectedDeck) {
-    return <div>Deck nicht gefunden</div>;
-  }
-  const initialDeckCards = getCardsForDeck(selectedDeck, cards) .filter(card => card.due <= new Date());
+  const initialDeckCards: Card[] = selectedDeck
+    ? getCardsForDeck(selectedDeck, cards).filter((card) => card.due <= new Date())
+    : [];
 
   const [sessionCards, setSessionCards] = useState(initialDeckCards);
   const [resultCards, setResultCards] = useState<Card[]>([]);
@@ -54,6 +68,9 @@ export default function Learning() {
   const [learnedCount, setLearnedCount] = useState(0);
   const [stats, setStats]= useState<StatsMap>(dateData);
   const [isFinished, setIsFinished] = useState(false);
+  if (!selectedDeck) {
+    return <div>Deck not found</div>;
+  }
 
   const currentCard = sessionCards[currentIndex];
 

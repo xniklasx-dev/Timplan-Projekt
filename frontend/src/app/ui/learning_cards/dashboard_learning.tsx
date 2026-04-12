@@ -7,7 +7,30 @@ import cardsData from "@/app/lib/placeholder-cards.json";
 import { Deck, Card } from "../../lib/definitions";
 import { useRouter } from "next/navigation";
 
-function hydrateDeck(raw: any): Deck {
+type RawCard = Omit<Card, "due" | "createdAt" | "updatedAt" | "lastReview"> & {
+  due: string;
+  createdAt: string;
+  updatedAt: string;
+  lastReview?: string;
+};
+
+function hydrateCard(raw: RawCard): Card {
+  return {
+    ...raw,
+    due: new Date(raw.due),
+    createdAt: new Date(raw.createdAt),
+    updatedAt: new Date(raw.updatedAt),
+    lastReview: raw.lastReview ? new Date(raw.lastReview) : undefined,
+  };
+}
+
+type RawDeck = Omit<Deck, "createdAt" | "updatedAt" | "lastStudied"> & {
+  createdAt: string;
+  updatedAt: string;
+  lastStudied?: string;
+};
+
+function hydrateDeck(raw: RawDeck): Deck {
   return {
     ...raw,
     createdAt: new Date(raw.createdAt),
@@ -18,18 +41,10 @@ function hydrateDeck(raw: any): Deck {
   };
 }
 
-function hydrateCard(raw: any): Card {
-  return {
-    ...raw,
-    due: new Date(raw.due),
-    createdAt: new Date(raw.createdAt),
-    updatedAt: new Date(raw.updatedAt),
-    lastReview: raw.lastReview ? new Date(raw.lastReview) : undefined,
-  };
-}
-
-const decks: Deck[] = decksData.map(hydrateDeck);
-const cards: Card[] = cardsData.map(hydrateCard);
+const rawDecks = decksData as RawDeck[];
+const decks: Deck[] = rawDecks.map(hydrateDeck);
+const rawCards = cardsData as RawCard[];
+const cards: Card[] = rawCards.map(hydrateCard);
 
 
 

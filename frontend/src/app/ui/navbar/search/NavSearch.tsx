@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
@@ -12,6 +12,44 @@ import { search, type SearchResult } from '@/app/lib/search-function';
 
 import decksData from '@/app/lib/placeholder-decks.json';
 import cardsData from '@/app/lib/placeholder-cards.json';
+
+type RawCard = Omit<Card, 'due' | 'createdAt' | 'updatedAt' | 'lastReview'> & {
+  due: string;
+  createdAt: string;
+  updatedAt: string;
+  lastReview?: string;
+};
+
+function hydrateCard(raw: RawCard): Card {
+  return {
+    ...raw,
+    due: new Date(raw.due),
+    createdAt: new Date(raw.createdAt),
+    updatedAt: new Date(raw.updatedAt),
+    lastReview: raw.lastReview ? new Date(raw.lastReview) : undefined,
+  };
+}
+
+type RawDeck = Omit<Deck, 'createdAt' | 'updatedAt' | 'lastStudied'> & {
+  createdAt: string;
+  updatedAt: string;
+  lastStudied?: string;
+};
+
+function hydrateDeck(raw: RawDeck): Deck {
+  return {
+    ...raw,
+    createdAt: new Date(raw.createdAt),
+    updatedAt: new Date(raw.updatedAt),
+    lastStudied: raw.lastStudied ? new Date(raw.lastStudied) : undefined,
+  };
+}
+
+const rawDecks = decksData as RawDeck[];
+const decks: Deck[] = rawDecks.map(hydrateDeck);
+
+const rawCards = cardsData as RawCard[];
+const cards: Card[] = rawCards.map(hydrateCard);
 
 export default function NavSearch({
   open,
@@ -31,35 +69,13 @@ export default function NavSearch({
   const overlayRef = useRef<HTMLDivElement | null>(null);
 
   const urlQuery = useMemo(() => searchParams.get('q') ?? '', [searchParams]);
-  const [query, setQuery] = useState(urlQuery);
-
-  function hydrateCard(raw: any): Card {
-    return {
-      ...raw,
-      due: new Date(raw.due),
-      createdAt: new Date(raw.createdAt),
-      updatedAt: new Date(raw.updatedAt),
-      lastReview: raw.lastReview ? new Date(raw.lastReview) : undefined,
-    };
-  }
-
-  function hydrateDeck(raw: any): Deck {
-    return {
-      ...raw,
-      createdAt: new Date(raw.createdAt),
-      updatedAt: new Date(raw.updatedAt),
-      lastStudied: raw.lastStudied
-        ? new Date(raw.lastStudied)
-        : undefined,
-    };
-  }
-
-  const decks = useMemo(() => decksData.map(hydrateDeck), []);
-  const cards = useMemo(() => cardsData.map(hydrateCard), []);
-
+  const query = open ? urlQuery : '';
   const showResults = open && query.trim().length > 0;
 
-  const writeQueryToUrl = (nextQuery: string, mode: 'push' | 'replace' = 'replace') => {
+  const writeQueryToUrl = (
+    nextQuery: string,
+    mode: 'push' | 'replace' = 'replace'
+  ) => {
     const params = new URLSearchParams(searchParams.toString());
 
     const trimmed = nextQuery.trim();
@@ -75,13 +91,11 @@ export default function NavSearch({
 
   useEffect(() => {
     if (open) {
-      setQuery(urlQuery);
       requestAnimationFrame(() => inputRef.current?.focus());
     } else {
-      setQuery('');
       inputRef.current?.blur();
     }
-  }, [open, urlQuery]);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -104,7 +118,7 @@ export default function NavSearch({
   const items: SearchResult[] = useMemo(() => {
     if (!showResults) return [];
     return search(query, cards, decks);
-  }, [showResults, query, cards, decks]);
+  }, [showResults, query]);
 
   return (
     <>
@@ -130,9 +144,7 @@ export default function NavSearch({
           type="search"
           value={query}
           onChange={(evt) => {
-            const next = evt.target.value;
-            setQuery(next);
-            writeQueryToUrl(next, 'replace');
+            writeQueryToUrl(evt.target.value, 'replace');
           }}
           placeholder="Search..."
           autoComplete="off"
