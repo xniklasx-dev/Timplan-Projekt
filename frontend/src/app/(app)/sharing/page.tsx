@@ -7,7 +7,7 @@ export default function Sharing() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>Sharing Page</h1>
+        <h1>Sharing Page Test</h1>
       </main>
     </div>
   );
