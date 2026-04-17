@@ -11,19 +11,22 @@ type SingleCardProps = {
   registerRefAction?: (el: HTMLDivElement | null) => void;
 };
 
-export default function SingleCard({
-  card,
-  isGridView,
-  onEditAction,
-  registerRefAction: registerRef,
-}: SingleCardProps) {
+export default function SingleCard(props: SingleCardProps) {
+  const card = props.card;
+  const isGridView = props.isGridView;
+  const onEditAction = props.onEditAction;
+  const registerRefAction = props.registerRefAction;
+
+  let cardClassName = styles.deckCard;
+
+  if (isGridView) {
+    cardClassName += " " + styles.deckCardGrid;
+  } else {
+    cardClassName += " " + styles.deckCardLine;
+  }
+
   return (
-    <div
-      ref={registerRef}
-      className={`${styles.deckCard} ${
-        isGridView ? styles.deckCardGrid : styles.deckCardLine
-      }`}
-    >
+    <div ref={registerRefAction || null} className={cardClassName}>
       <div className={styles.startButtonWrapper}>
         <EditButton
           cardId={card.id}
