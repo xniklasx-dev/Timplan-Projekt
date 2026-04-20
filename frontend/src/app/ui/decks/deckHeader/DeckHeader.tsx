@@ -1,7 +1,5 @@
 "use client";
 
-import type { ChangeEvent } from "react";
-
 import styles from "@/app/(app)/decks/page.module.css";
 import DropdownButton from "../../buttons/dropdownButton/DropdownButton";
 

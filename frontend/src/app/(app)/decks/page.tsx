@@ -142,7 +142,7 @@ export default function Decks() {
         open={deckEditorState.open}
         deckId={deckEditorState.deckId}
         decks={decks}
-        onClose={closeDeckEditor}
+        onCloseAction={closeDeckEditor}
         onSaveAction={saveDeck}
       />
     </main>

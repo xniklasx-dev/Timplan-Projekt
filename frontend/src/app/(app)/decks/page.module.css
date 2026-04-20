@@ -31,6 +31,17 @@
   font-size: 14px;
 }
 
+.breadcrumbsNavigation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
 .deckGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

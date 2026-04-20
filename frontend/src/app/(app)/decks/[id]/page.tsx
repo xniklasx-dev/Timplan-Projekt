@@ -6,6 +6,7 @@ import type { Deck, Card } from "@/app/lib/definitions";
 import styles from "../page.module.css";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
 import placeholderCards from "@/app/lib/placeholder-cards.json";
+import DeckNavigator from "@/app/ui/decks/deckNavigator/DeckNavigator";
 import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
 import DeckGrid from "@/app/ui/decks/deckGrid/DeckGrid";
 import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
@@ -209,6 +210,8 @@ export default function Deck() {
 
   return (
     <main className={styles.page}>
+      <DeckNavigator decks={decks} />
+
       <DeckHeader
         title={currentDeck.name}
         subtitle={currentDeck.description}
@@ -259,7 +262,7 @@ export default function Deck() {
         deckId={deckEditorState.deckId}
         parentDeckId={deckEditorState.parentDeckId}
         decks={decks}
-        onClose={closeDeckEditor}
+        onCloseAction={closeDeckEditor}
         onSaveAction={saveDeck}
       />
     </main>
