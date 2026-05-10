@@ -33,7 +33,7 @@
 ### Infrastructure
 
 - Azure App Service
-- Azure PostgreSQL
+- Supabase Postgresql
 
 ---
 
@@ -99,4 +99,6 @@ www.timplan.app → Frontend (Next.js)\
 ↓\
 api.timplan.app → Backend (Express API)\
 ↓\
-Azure PostgreSQL → Database
+Drizzle → ORM
+↓\
+Supabase PostgreSQL → Database

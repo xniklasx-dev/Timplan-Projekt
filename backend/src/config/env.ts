@@ -25,6 +25,7 @@ export const env = {
   nodeEnv: process.env.NODE_ENV ?? (isAzure ? "production" : "development"),
   host: process.env.HOST ?? "0.0.0.0",
   port: parsePort(process.env.PORT, 3001),
+  DATABASE_URL: process.env.DATABASE_URL ?? "",
 
   allowedOrigins: (() => {
     const list = parseList(process.env.ALLOWED_ORIGINS);
