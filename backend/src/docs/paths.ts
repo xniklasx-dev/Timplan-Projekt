@@ -1,46 +1,34 @@
 import { z } from "zod";
 import { registry } from "./registry.js";
-import { CardSchema } from "./schemas.js";
+
 
 const DeckIdParam = z.object({
-  deckId: z.string().openapi({ example: "ts-basics" }),
+  id: z.string().openapi({ example: "5980c97c-e245-400a-b4c1-52b07feac04f" }),
+});
+
+const CardIdParam = z.object({
+  id: z.string().openapi({ example: "5980c97c-e245-400a-b4c1-52b07feac04f" }),
 });
 
 registry.registerPath({
   method: "get",
   path: "/health",
   tags: ["system"],
-  description: "Health check",
+  description: "Health check – returns backend and database status.",
   responses: {
     200: {
       description: "OK",
       content: {
         "application/json": {
-          schema: z.object({ status: z.string() }),
+          schema: z.object({
+            status: z.string(),
+            backend: z.string(),
+            database: z.string(),
+            durationMs: z.number(),
+            timestamp: z.string(),
+          }),
         },
       },
     },
   },
 });
-
-registry.registerPath({
-  method: "get",
-  path: "/decks/getAllCardsforDeck/{deckId}",
-  tags: ["decks"],
-  description: "Returns all cards belonging to a specific deck.",
-  request: {
-    params: DeckIdParam,
-  },
-  responses: {
-    200: {
-      description: "List of cards in the deck",
-      content: {
-        "application/json": {
-          schema: z.array(CardSchema),
-        },
-      },
-    },
-    500: { description: "Internal server error" },
-  },
-});
-

@@ -7,7 +7,6 @@ on:
       - ".github/workflows/build-backend.yml"
       - ".github/workflows/deploy-backend.yml"
   push:
-    branches: [main]
     paths:
       - "backend/**"
       - ".github/workflows/build-backend.yml"
