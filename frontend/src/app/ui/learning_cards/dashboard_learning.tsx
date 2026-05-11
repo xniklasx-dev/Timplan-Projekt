@@ -75,7 +75,7 @@ export default function DashboardLearning() {
                   },
                   { new: 0, easy: 0, medium: 0, hard: 0 }
                 );
-                const totalCards = cardCounts.easy + cardCounts.medium + cardCounts.hard;
+                const totalCards = cardCounts.new + cardCounts.easy + cardCounts.medium + cardCounts.hard;
 
                 return (
                   <div key={deck.id} className={styles.deck}>
