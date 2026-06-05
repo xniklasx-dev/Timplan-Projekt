@@ -6,13 +6,6 @@ on:
       - "frontend/**"
       - ".github/workflows/build-frontend.yml"
       - ".github/workflows/deploy-frontend.yml"
-  push:
-    branches-ignore:
-      - main
-    paths:
-      - "frontend/**"
-      - ".github/workflows/build-frontend.yml"
-      - ".github/workflows/deploy-frontend.yml"
 
 jobs:
   build:
@@ -23,9 +16,9 @@ jobs:
         working-directory: frontend
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.x
           cache: npm

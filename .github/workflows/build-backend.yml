@@ -6,13 +6,6 @@ on:
       - "backend/**"
       - ".github/workflows/build-backend.yml"
       - ".github/workflows/deploy-backend.yml"
-  push:
-    branches-ignore:
-      - main
-    paths:
-      - "backend/**"
-      - ".github/workflows/build-backend.yml"
-      - ".github/workflows/deploy-backend.yml"
 
 jobs:
   build:
@@ -23,9 +16,9 @@ jobs:
         working-directory: backend
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.x
           cache: npm
