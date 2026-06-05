@@ -200,3 +200,9 @@ export const DateDataSchema = z
     }),
   })
   .openapi("DateData");
+
+  export type CardData = z.output<typeof CardSchema>;
+  export type CreateCardData = z.input<typeof CreateCardSchema>;
+  export type CardUpdateData = z.input<typeof CardUpdateSchema>;
+  export type UpsertCardData = z.input<typeof UpsertCardSchema>;
+  export type BatchUpsertCardsData = z.input<typeof BatchUpsertCardsSchema>;
