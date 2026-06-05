@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import type { Ref } from 'react';
 
 import styles from './DeckCardsEditItem.module.css';
@@ -13,7 +14,7 @@ type DeckCardsEditItemProps = {
   itemRef?: Ref<HTMLElement>;
   onChange: (
     cardId: string,
-    field: 'front' | 'back' | 'hint' | 'extra',
+    field: 'front' | 'back' | 'hint' | 'tags',
     value: string
   ) => void;
 };
@@ -25,6 +26,13 @@ export default function DeckCardsEditItem({
   itemRef,
   onChange,
 }: DeckCardsEditItemProps) {
+  const [tagText, setTagText] = useState(card.tags.join(', '));
+
+  function handleTagsChange(value: string) {
+    setTagText(value);
+    onChange(card.id, 'tags', value);
+  }
+
   return (
     <article
       ref={itemRef}
@@ -50,7 +58,7 @@ export default function DeckCardsEditItem({
       </div>
 
       <div className={styles.fields}>
-        <label className={styles.field}>
+        <label className={`${styles.field} ${styles.fieldLarge}`}>
           <span className={styles.label}>Question</span>
           <textarea
             className={styles.textareaLarge}
@@ -62,7 +70,7 @@ export default function DeckCardsEditItem({
           />
         </label>
 
-        <label className={styles.field}>
+        <label className={`${styles.field} ${styles.fieldLarge}`}>
           <span className={styles.label}>Answer</span>
           <textarea
             className={styles.textareaLarge}
@@ -87,15 +95,27 @@ export default function DeckCardsEditItem({
         </label>
 
         <label className={styles.field}>
-          <span className={styles.label}>Extra</span>
-          <textarea
-            className={styles.textareaSmall}
-            value={card.extra ?? ''}
-            onChange={(event) =>
-              onChange(card.id, 'extra', event.target.value)
-            }
-            placeholder="Additional context or notes"
-          />
+          <span className={styles.label}>Tags</span>
+          <div className={styles.tagControl}>
+            <textarea
+              className={styles.textareaSmall}
+              value={tagText}
+              onChange={(event) =>
+                handleTagsChange(event.target.value)
+              }
+              onBlur={() => setTagText(card.tags.join(', '))}
+              placeholder="typescript, basics"
+            />
+            {card.tags.length > 0 && (
+              <div className={styles.tagPreview}>
+                {card.tags.map((tag) => (
+                  <span key={tag} className={styles.tag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
         </label>
       </div>
     </article>

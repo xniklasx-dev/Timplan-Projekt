@@ -1,28 +1,30 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import styles from './DeckCardsEditView.module.css';
 
 import type { Card, Deck } from '@/app/lib/definitions';
+import { normalizeTags, toCardDraft, upsertCards } from '@/app/lib/card-service';
 import DeckCardsEditItem from './DeckCardsEditItem';
 
 type DeckCardsEditViewProps = {
   deck: Deck;
   initialCards: Card[];
+  userId: string;
 };
 
 function normalizeCard(card: Card): Card {
   return {
     ...card,
     hint: card.hint ?? '',
-    extra: card.extra ?? '',
+    tags: normalizeTags(card.tags),
   };
 }
 
 function createEmptyCard(deckId: string, index: number): Card {
-  const now = new Date().toISOString();
+  const now = new Date();
 
   return {
     id: `new-${deckId}-${Date.now()}-${index}`,
@@ -30,16 +32,14 @@ function createEmptyCard(deckId: string, index: number): Card {
     front: '',
     back: '',
     hint: '',
-    extra: '',
     tags: [],
-    media: [],
     state: 'new',
-    due: now as unknown as Date,
-    rating: 0,
+    due: now,
+    rating: null,
     totalReviews: 0,
     correctReviews: 0,
-    createdAt: now as unknown as Date,
-    updatedAt: now as unknown as Date,
+    createdAt: now,
+    updatedAt: now,
     deleted: false,
     revision: 1,
   };
@@ -50,13 +50,14 @@ function isCardEmpty(card: Card): boolean {
     card.front.trim() === '' &&
     card.back.trim() === '' &&
     (card.hint ?? '').trim() === '' &&
-    (card.extra ?? '').trim() === ''
+    card.tags.length === 0
   );
 }
 
 export default function DeckCardsEditView({
   deck,
   initialCards,
+  userId,
 }: DeckCardsEditViewProps) {
   const normalizedInitialCards = useMemo(
     () => initialCards.map(normalizeCard),
@@ -67,9 +68,9 @@ export default function DeckCardsEditView({
     const baseCards = normalizedInitialCards.map((card) => ({ ...card }));
     return [...baseCards, createEmptyCard(deck.id, baseCards.length + 1)];
   });
-
-  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
-  const newCardRef = useRef<HTMLElement | null>(null);
+  const [savedCards, setSavedCards] = useState<Card[]>(normalizedInitialCards);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const stats = useMemo(() => {
     const realCards = localCards.filter((card) => !isCardEmpty(card));
@@ -78,26 +79,24 @@ export default function DeckCardsEditView({
     const cardsWithHint = realCards.filter(
       (card) => (card.hint ?? '').trim().length > 0
     ).length;
-    const cardsWithExtra = realCards.filter(
-      (card) => (card.extra ?? '').trim().length > 0
-    ).length;
+    const uniqueTags = new Set(realCards.flatMap((card) => card.tags));
 
     return {
       totalCards,
       cardsWithHint,
-      cardsWithExtra,
+      totalTags: uniqueTags.size,
     };
   }, [localCards]);
 
   const hasUnsavedChanges = useMemo(() => {
     const realCards = localCards.filter((card) => !isCardEmpty(card));
 
-    if (realCards.length !== normalizedInitialCards.length) {
+    if (realCards.length !== savedCards.length) {
       return true;
     }
 
     return realCards.some((card, index) => {
-      const initialCard = normalizedInitialCards[index];
+      const initialCard = savedCards[index];
 
       if (!initialCard) return true;
 
@@ -105,10 +104,10 @@ export default function DeckCardsEditView({
         card.front !== initialCard.front ||
         card.back !== initialCard.back ||
         (card.hint ?? '') !== (initialCard.hint ?? '') ||
-        (card.extra ?? '') !== (initialCard.extra ?? '')
+        card.tags.join('\u0000') !== initialCard.tags.join('\u0000')
       );
     });
-  }, [localCards, normalizedInitialCards]);
+  }, [localCards, savedCards]);
 
   function ensureTrailingEmptyCard(cards: Card[]) {
     if (cards.length === 0) {
@@ -126,7 +125,7 @@ export default function DeckCardsEditView({
 
   function updateCardField(
     cardId: string,
-    field: 'front' | 'back' | 'hint' | 'extra',
+    field: 'front' | 'back' | 'hint' | 'tags',
     value: string
   ) {
     setLocalCards((current) => {
@@ -134,13 +133,40 @@ export default function DeckCardsEditView({
         card.id === cardId
           ? {
               ...card,
-              [field]: value,
+              [field]: field === 'tags' ? normalizeTags(value) : value,
             }
           : card
       );
 
       return ensureTrailingEmptyCard(updated);
     });
+  }
+
+  async function handleSave() {
+    const realCards = localCards.filter((card) => !isCardEmpty(card));
+
+    if (realCards.some((card) => card.front.trim() === '' || card.back.trim() === '')) {
+      setError('Every saved card needs a question and an answer.');
+      return;
+    }
+
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      const payload = realCards.map((card) => ({
+        ...(card.id.startsWith('new-') ? {} : { id: card.id }),
+        ...toCardDraft(card),
+      }));
+      const saved = (await upsertCards(deck.id, payload, userId)).map(normalizeCard);
+
+      setSavedCards(saved);
+      setLocalCards(ensureTrailingEmptyCard(saved.map((card) => ({ ...card }))));
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Could not save cards.');
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   function handleBackToDeckClick(
@@ -159,20 +185,6 @@ export default function DeckCardsEditView({
     }
   }
 
-  function scrollToTop() {
-    scrollAreaRef.current?.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  }
-
-  function scrollToNewCard() {
-    newCardRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
-  }
-
   return (
     <section className={styles.wrapper}>
       <div className={styles.topBar}>
@@ -187,9 +199,10 @@ export default function DeckCardsEditView({
               {stats.cardsWithHint} with hint
             </span>
             <span className={styles.statPill}>
-              {stats.cardsWithExtra} with extra
+              {stats.totalTags} tags
             </span>
           </div>
+          {error && <p className={styles.errorText}>{error}</p>}
         </div>
 
         <div className={styles.actions}>
@@ -207,14 +220,15 @@ export default function DeckCardsEditView({
               hasUnsavedChanges ? styles.primaryButtonActive : ''
             }`}
             aria-label="Save changes"
-            disabled={!hasUnsavedChanges}
+            onClick={handleSave}
+            disabled={!hasUnsavedChanges || isSaving}
           >
-            Save changes
+            {isSaving ? 'Saving...' : 'Save changes'}
           </button>
         </div>
       </div>
 
-      <div ref={scrollAreaRef} className={styles.scrollArea}>
+      <div className={styles.scrollArea}>
         <div className={styles.list}>
           {localCards.map((card, index) => {
             const isNewCard =
@@ -226,7 +240,6 @@ export default function DeckCardsEditView({
                 card={card}
                 index={index}
                 isNewCard={isNewCard}
-                itemRef={isNewCard ? newCardRef : undefined}
                 onChange={updateCardField}
               />
             );
@@ -234,27 +247,6 @@ export default function DeckCardsEditView({
         </div>
       </div>
 
-      <div className={styles.floatingNav}>
-        <button
-          type="button"
-          className={styles.floatingButton}
-          onClick={scrollToTop}
-          aria-label="Scroll to top"
-          title="Scroll to top"
-        >
-          ↑
-        </button>
-
-        <button
-          type="button"
-          className={`${styles.floatingButton} ${styles.floatingButtonAccent}`}
-          onClick={scrollToNewCard}
-          aria-label="Jump to new card"
-          title="Jump to new card"
-        >
-          ↓
-        </button>
-      </div>
     </section>
   );
 }

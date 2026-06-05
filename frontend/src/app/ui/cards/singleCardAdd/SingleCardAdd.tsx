@@ -5,68 +5,54 @@ import { useEffect, useMemo, useState } from 'react';
 import styles from './SingleCardAdd.module.css';
 
 import type { Card } from '@/app/lib/definitions';
+import {
+  createCard,
+  normalizeTags,
+  type CreateCardPayload,
+} from '@/app/lib/card-service';
 
 type SingleCardAddProps = {
   open: boolean;
   deckId: string;
+  userId: string;
   onClose: () => void;
-  onCreate: (card: Card) => void;
+  onCreate?: (card: Card) => void;
 };
 
-function createNewCard(deckId: string): Card {
-  const now = new Date();
-
+function createNewCard(deckId: string): CreateCardPayload {
   return {
-    id:
-      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-        ? crypto.randomUUID()
-        : `card-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
     deckId,
-
     front: '',
     back: '',
     hint: '',
-    extra: '',
-
     tags: [],
-    media: [],
-
-    state: 'new',
-    due: now,
-    rating: 0,
-
-    lastReview: undefined,
-
-    totalReviews: 0,
-    correctReviews: 0,
-
-    createdAt: now,
-    updatedAt: now,
-    deleted: false,
-
-    revision: 1,
   };
 }
 
 type SingleCardAddContentProps = {
   deckId: string;
+  userId: string;
   onClose: () => void;
-  onCreate: (card: Card) => void;
+  onCreate?: (card: Card) => void;
 };
 
 function SingleCardAddContent({
   deckId,
+  userId,
   onClose,
   onCreate,
 }: SingleCardAddContentProps) {
-  const [draft, setDraft] = useState<Card>(() => createNewCard(deckId));
+  const [draft, setDraft] = useState<CreateCardPayload>(() => createNewCard(deckId));
+  const [tagText, setTagText] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const hasUnsavedChanges = useMemo(() => {
     return (
       draft.front.trim() !== '' ||
       draft.back.trim() !== '' ||
       (draft.hint ?? '').trim() !== '' ||
-      (draft.extra ?? '').trim() !== ''
+      draft.tags.length > 0
     );
   }, [draft]);
 
@@ -99,14 +85,18 @@ function SingleCardAddContent({
   }, [hasUnsavedChanges, onClose]);
 
   function updateField(
-    field: 'front' | 'back' | 'hint' | 'extra',
+    field: 'front' | 'back' | 'hint' | 'tags',
     value: string
   ) {
     setDraft((current) => ({
       ...current,
-      [field]: value,
-      updatedAt: new Date(),
+      [field]: field === 'tags' ? normalizeTags(value) : value,
     }));
+  }
+
+  function updateTags(value: string) {
+    setTagText(value);
+    updateField('tags', value);
   }
 
   function handleClose() {
@@ -127,23 +117,32 @@ function SingleCardAddContent({
     handleClose();
   }
 
-  function handleCreate() {
-    if (!canCreate) return;
+  async function handleCreate() {
+    if (!canCreate || isCreating) return;
 
-    const now = new Date();
-
-    const newCard: Card = {
+    const payload: CreateCardPayload = {
       ...draft,
       front: draft.front.trim(),
       back: draft.back.trim(),
-      hint: draft.hint?.trim() ?? '',
-      extra: draft.extra?.trim() ?? '',
-      createdAt: now,
-      updatedAt: now,
+      hint: draft.hint?.trim() || undefined,
+      tags: normalizeTags(draft.tags),
     };
 
-    onCreate(newCard);
-    onClose();
+    setIsCreating(true);
+    setError(null);
+
+    try {
+      const newCard = await createCard(payload, userId);
+
+      onCreate?.(newCard);
+      onClose();
+    } catch (createError) {
+      setError(
+        createError instanceof Error ? createError.message : 'Could not create card.'
+      );
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   return (
@@ -164,7 +163,7 @@ function SingleCardAddContent({
             </h2>
 
             <div className={styles.metaRow}>
-              <span className={styles.metaPill}>State: {draft.state}</span>
+              <span className={styles.metaPill}>State: new</span>
               <span className={styles.metaPill}>Deck: {draft.deckId}</span>
             </div>
           </div>
@@ -181,7 +180,7 @@ function SingleCardAddContent({
 
         <div className={styles.content}>
           <div className={styles.fieldGrid}>
-            <label className={styles.field}>
+            <label className={`${styles.field} ${styles.fieldLarge}`}>
               <span className={styles.label}>Question</span>
               <textarea
                 className={styles.textareaLarge}
@@ -191,7 +190,7 @@ function SingleCardAddContent({
               />
             </label>
 
-            <label className={styles.field}>
+            <label className={`${styles.field} ${styles.fieldLarge}`}>
               <span className={styles.label}>Answer</span>
               <textarea
                 className={styles.textareaLarge}
@@ -212,15 +211,28 @@ function SingleCardAddContent({
             </label>
 
             <label className={styles.field}>
-              <span className={styles.label}>Extra</span>
-              <textarea
-                className={styles.textareaSmall}
-                value={draft.extra ?? ''}
-                onChange={(event) => updateField('extra', event.target.value)}
-                placeholder="Additional context or notes"
-              />
+              <span className={styles.label}>Tags</span>
+              <div className={styles.tagControl}>
+                <textarea
+                  className={styles.textareaSmall}
+                  value={tagText}
+                  onChange={(event) => updateTags(event.target.value)}
+                  onBlur={() => setTagText(draft.tags.join(', '))}
+                  placeholder="typescript, basics"
+                />
+                {draft.tags.length > 0 && (
+                  <div className={styles.tagPreview}>
+                    {draft.tags.map((tag) => (
+                      <span key={tag} className={styles.tag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </label>
           </div>
+          {error && <p className={styles.errorText}>{error}</p>}
         </div>
 
         <div className={styles.footer}>
@@ -238,9 +250,9 @@ function SingleCardAddContent({
               canCreate ? styles.primaryButtonActive : ''
             }`}
             onClick={handleCreate}
-            disabled={!canCreate}
+            disabled={!canCreate || isCreating}
           >
-            Create card
+            {isCreating ? 'Creating...' : 'Create card'}
           </button>
         </div>
       </div>
@@ -251,6 +263,7 @@ function SingleCardAddContent({
 export default function SingleCardAdd({
   open,
   deckId,
+  userId,
   onClose,
   onCreate,
 }: SingleCardAddProps) {
@@ -272,6 +285,7 @@ export default function SingleCardAdd({
     <SingleCardAddContent
       key={deckId}
       deckId={deckId}
+      userId={userId}
       onClose={onClose}
       onCreate={onCreate}
     />
