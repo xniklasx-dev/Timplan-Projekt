@@ -1,31 +1,16 @@
 import { config as dotenvConfig } from "dotenv";
-
-const isAzure =
-  Boolean(process.env.WEBSITE_SITE_NAME) ||
-  Boolean(process.env.WEBSITE_INSTANCE_ID) ||
-  Boolean(process.env.WEBSITE_HOSTNAME);
+import { parsePort, parseList, isAzure, parseDataSource } from "./envParser.js";
 
 if (!isAzure) {
   dotenvConfig();
-}
-
-function parseList(raw: string | undefined): string[] {
-  return (raw ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
-function parsePort(raw: string | undefined, fallback: number): number {
-  const n = Number(raw);
-  return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
 export const env = {
   nodeEnv: process.env.NODE_ENV ?? (isAzure ? "production" : "development"),
   host: process.env.HOST ?? "0.0.0.0",
   port: parsePort(process.env.PORT, 3001),
-  DATABASE_URL: process.env.DATABASE_URL ?? "",
+  databaseUrl: process.env.DATABASE_URL ?? "",
+  dataSource: parseDataSource(process.env.DATA_SOURCE),
 
   allowedOrigins: (() => {
     const list = parseList(process.env.ALLOWED_ORIGINS);

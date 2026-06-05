@@ -1,42 +1,58 @@
 import { Router } from "express";
-import { eq, sql } from "drizzle-orm";
-import { db } from "../db/client.js";
-import { cards, NewCard } from "../db/schema.js";
+
 import { BatchUpsertCardsSchema, CardUpdateSchema, CreateCardSchema } from "../docs/schemas.js";
-import { parseUUID, requireDeckOwnership, requireCardOwnership, requireCardsOwnership } from "../utils/apiUtils.js";
+import { parseUUID } from "../utils/apiUtils.js";
 import { ApiError } from "../middleware/errorHandler.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
+import { CardsRepository } from "../repositories/cards/cardsRepository.js";
+import { env } from "../config/env.js";
+import { drizzleCardsRepository } from "../repositories/cards/drizzleRepository.js";
+import { loadMockCards } from "../repositories/cards/loadMockCards.js";
+import { memoryCardsRepository } from "../repositories/cards/memoryRepository.js";
 
 const router = Router();
+const cardsRepository: CardsRepository =
+  env.dataSource === "memory" ? loadMockCards(memoryCardsRepository) : drizzleCardsRepository;
+
+async function requireDeckAccess(deckId: string, userId: string): Promise<void> {
+  if (!await cardsRepository.hasDeckAccess(deckId, userId)) {
+    throw new ApiError(403, "You do not have access to this deck");
+  }
+}
+
+async function requireCardAccess(cardId: string, userId: string): Promise<void> {
+  if (!await cardsRepository.hasCardAccess(cardId, userId)) {
+    throw new ApiError(403, "You do not have access to this card");
+  }
+}
+
+async function requireCardsAccess(cardIds: string[], userId: string): Promise<void> {
+  if (!await cardsRepository.hasCardsAccess(cardIds, userId)) {
+    throw new ApiError(403, "You do not have access to one or more cards");
+  }
+}
 
 // GET /cards?deckId=...
 router.get("/cards", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
   const deckId = parseUUID(req.query.deckId as string);
 
-  await requireDeckOwnership(deckId, userId);
+  await requireDeckAccess(deckId, userId);
 
-  const cardsList = await db
-  .select()
-  .from(cards)
-  .where(eq(cards.deckId, deckId));
+  const cardsList = await cardsRepository.getCardsByDeckId(deckId, userId);
 
   return res.json(cardsList);
 }),
 );
 
-// GET /cards/:id:userId
+// GET /cards/:id
 router.get("/cards/:id", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
   const cardId = parseUUID(req.params.id);
 
-  await requireCardOwnership(cardId, userId);
+  await requireCardAccess(cardId, userId);
 
-  const [card] = await db
-  .select()
-  .from(cards)
-  .where(eq(cards.id, req.params.id))
-  .limit(1);
+  const card = await cardsRepository.getCardById(cardId, userId);
 
   if (!card) {
     throw new ApiError(404, "Card not found");
@@ -48,20 +64,14 @@ router.get("/cards/:id", asyncHandler(async (req, res) => {
 
 // POST /cards
 router.post("/cards", asyncHandler(async (req, res) => {
-  const { deckId, front, back, hint, tags } = CreateCardSchema.parse(req.body);
+  const deckId = parseUUID(req.body.deckId);
   const userId = parseUUID(req.header("userId") as string);
 
-  await requireDeckOwnership(deckId, userId);
+  await requireDeckAccess(deckId, userId);
 
-  const newCardData: NewCard = {
-    deckId:deckId,
-    front:front,
-    back:back,
-    hint:hint,
-    tags:tags,
-  };
+  const newCardData = CreateCardSchema.parse(req.body);
 
-  const [newCard] = await db.insert(cards).values(newCardData).returning();
+  const newCard = await cardsRepository.createCard(newCardData);
 
   return res.status(201).json(newCard);
 }),
@@ -72,11 +82,11 @@ router.patch("/cards/:id", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
   const cardId = parseUUID(req.params.id);
 
-  await requireCardOwnership(cardId, userId);
+  await requireCardAccess(cardId, userId);
   
   const updateData = CardUpdateSchema.parse(req.body);
 
-  const [updatedCard] = await db.update(cards).set(updateData).where(eq(cards.id, req.params.id)).returning();
+  const updatedCard = await cardsRepository.updateCard(cardId, updateData);
 
   if (!updatedCard) {
     throw new ApiError(404, "Card not found");
@@ -94,49 +104,25 @@ router.put("/cards", asyncHandler(async (req, res) => {
       .filter((id): id is string => id !== undefined);
 
 
-  await requireDeckOwnership(body.deckId, userId);
-  await requireCardsOwnership(existingCardIds, userId);
+  await requireDeckAccess(body.deckId, userId);
+  await requireCardsAccess(existingCardIds, userId);
 
-  const values = body.cards.map((card) => ({
-    id: card.id,
-    deckId: body.deckId,
-    front: card.front,
-    back: card.back,
-    hint: card.hint,
-    tags: card.tags,
-  }));
-
-  const upsertedCards = await db
-    .insert(cards)
-    .values(values)
-    .onConflictDoUpdate({
-      target: cards.id,
-      set: {
-        front: sql`EXCLUDED.front`,
-        back: sql`EXCLUDED.back`,
-        hint: sql`EXCLUDED.hint`,
-        tags: sql`EXCLUDED.tags`,
-      }
-    })
-    .returning();
+  const upsertedCards = await cardsRepository.upsertManyCards(body);
 
     res.status(200).json(upsertedCards);
 }));
 
 // DELETE /cards/:id
-router.delete("/cards/:id", asyncHandler(async (req, res, next) => {
+router.delete("/cards/:id", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
   const cardId = parseUUID(req.params.id);
 
-  await requireCardOwnership(cardId, userId);
+  await requireCardAccess(cardId, userId);
 
-  const deleteResult = await db.delete(cards).where(eq(cards.id, req.params.id)).returning();
-  if (deleteResult.length === 0) {
-      return next(new ApiError(404, "Card not found"));
-    }
-    return res.json({ message: "Card deleted successfully" }).status(200);
+  await cardsRepository.deleteCard(cardId);
+
+  return res.status(200).json({ message: "Card deleted successfully" });
   }),
 );
 
 export default router;
-
