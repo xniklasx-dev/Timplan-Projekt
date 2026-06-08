@@ -3,35 +3,42 @@
 import styles from "@/app/(app)/decks/page.module.css";
 import DropdownButton from "../../buttons/dropdownButton/DropdownButton";
 
+type DropdownItem = {
+  label: string;
+  onClick: () => void;
+};
+
 type DeckHeaderProps = {
   title?: string;
   subtitle?: string;
   isGridView: boolean;
   onToggleViewAction: (event: React.ChangeEvent<HTMLInputElement>) => void;
   dropdownButtonLabel?: string;
-  dropdownButtons?: { label: string; onClick: () => void }[];
+  dropdownButtons?: DropdownItem[];
 };
 
-export default function DeckHeader({
-  title = "",
-  subtitle = "",
-  isGridView,
-  onToggleViewAction,
-  dropdownButtonLabel = "",
-  dropdownButtons = [],
-}: DeckHeaderProps) {
+export default function DeckHeader(props: DeckHeaderProps) {
+  const title = props.title ?? "";
+  const subtitle = props.subtitle ?? "";
+  const isGridView = props.isGridView;
+  const onToggleViewAction = props.onToggleViewAction;
+  const dropdownButtonLabel = props.dropdownButtonLabel ?? "";
+  const dropdownButtons = props.dropdownButtons ?? [];
+
+  const showDropdown = dropdownButtons.length > 0;
+
   return (
     <header className={styles.header}>
       <div className={styles.titleRow}>
         <h1 className={styles.title}>{title}</h1>
 
         <div className={styles.headerControls}>
-          {dropdownButtons.length > 0 && (
+          {showDropdown ? (
             <DropdownButton
               label={dropdownButtonLabel}
               items={dropdownButtons}
             />
-          )}
+          ) : null}
           <label className={styles.viewToggle}>
             <input
               type="checkbox"

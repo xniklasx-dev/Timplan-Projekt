@@ -1,6 +1,6 @@
 "use client";
 
-import React, { JSX } from "react";
+import React from "react";
 import Image from "next/image";
 import styles from "../buttons.module.css";
 
@@ -9,17 +9,23 @@ type StartLessonButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   fullWidth?: boolean;
 };
 
-export default function StartLessonButton({
-  fullWidth,
-  children,
-  className,
-  ...props
-}: StartLessonButtonProps): JSX.Element {
+export default function StartLessonButton(props: StartLessonButtonProps) {
+  const children = props.children;
+  const fullWidth = props.fullWidth;
+  const className = props.className;
+
+  let buttonClassName = styles.base + " " + styles.iconButton;
+
+  if (fullWidth) {
+    buttonClassName += " " + styles.fullWidth;
+  }
+
+  if (className) {
+    buttonClassName += " " + className;
+  }
+
   return (
-    <button
-      className={`${styles.base} ${styles.iconButton} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
-      {...props}
-    >
+    <button {...props} className={buttonClassName}>
       <Image
         src="/play_lesson_icon.svg"
         alt="Start Lesson"
@@ -27,7 +33,9 @@ export default function StartLessonButton({
         height={20}
       />
 
-      {children && <span className={styles.buttonText}>{children}</span>}
+      {children ? (
+        <span className={styles.buttonText}>{children}</span>
+      ) : null}
     </button>
   );
 }

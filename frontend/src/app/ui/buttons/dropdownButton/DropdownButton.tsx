@@ -28,29 +28,30 @@ function isLinkItem(item: DropdownItem): item is DropdownLinkItem {
   return "href" in item;
 }
 
-export default function DropdownButton({
-  label,
-  items,
-  align = "right",
-}: DropdownButtonProps) {
+export default function DropdownButton(props: DropdownButtonProps) {
+  const label = props.label;
+  const items = props.items;
+  const align = props.align ?? "right";
+
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handlePointerDown(event: MouseEvent) {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
-      ) {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!wrapperRef.current) {
+        return;
+      }
+
+      if (!wrapperRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
-    }
+    };
 
-    function handleEscape(event: KeyboardEvent) {
+    const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
       }
-    }
+    };
 
     document.addEventListener("mousedown", handlePointerDown);
     document.addEventListener("keydown", handleEscape);
@@ -65,18 +66,16 @@ export default function DropdownButton({
     <div className={styles.dropdown} ref={wrapperRef}>
       <button
         type="button"
-        className={`${styles.base} ${styles.dropdownTrigger} ${
-          open ? styles.dropdownTriggerOpen : ""
-        }`}
+        className={`${styles.base} ${styles.dropdownTrigger} ${open ? styles.dropdownTriggerOpen : ""
+          }`}
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="menu"
         aria-expanded={open}
       >
         <span className={styles.dropdownLabel}>{label}</span>
         <span
-          className={`${styles.dropdownChevron} ${
-            open ? styles.dropdownChevronOpen : ""
-          }`}
+          className={`${styles.dropdownChevron} ${open ? styles.dropdownChevronOpen : ""
+            }`}
         >
           ▾
         </span>
@@ -84,11 +83,10 @@ export default function DropdownButton({
 
       {open && (
         <div
-          className={`${styles.dropdownMenu} ${
-            align === "left"
-              ? styles.dropdownMenuLeft
-              : styles.dropdownMenuRight
-          }`}
+          className={`${styles.dropdownMenu} ${align === "left"
+            ? styles.dropdownMenuLeft
+            : styles.dropdownMenuRight
+            }`}
           role="menu"
         >
           {items.map((item, index) => {

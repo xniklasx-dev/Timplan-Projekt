@@ -1,6 +1,6 @@
 "use client";
 
-import React, { JSX } from "react";
+import React from "react";
 import styles from "../buttons.module.css";
 
 type AccentButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -8,17 +8,23 @@ type AccentButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   fullWidth?: boolean;
 };
 
-export default function AccentButton({
-  children,
-  fullWidth,
-  className,
-  ...props
-}: AccentButtonProps): JSX.Element {
+export default function AccentButton(props: AccentButtonProps) {
+  const children = props.children;
+  const fullWidth = props.fullWidth;
+  const className = props.className;
+
+  let buttonClassName = styles.base + " " + styles.accent;
+
+  if (fullWidth) {
+    buttonClassName += " " + styles.fullWidth;
+  }
+
+  if (className) {
+    buttonClassName += " " + className;
+  }
+
   return (
-    <button
-      className={`${styles.base} ${styles.accent} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
-      {...props}
-    >
+    <button {...props} className={buttonClassName}>
       {children}
     </button>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { JSX } from "react";
+import React, { MouseEvent } from "react";
 import Image from "next/image";
 import styles from "../buttons.module.css";
 
@@ -11,32 +11,50 @@ type EditButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   onEditAction: (cardId: string) => void;
 };
 
-export default function EditButton({
-  fullWidth,
-  children,
-  className,
-  cardId,
-  onEditAction,
-  onClick,
-  ...props
-}: EditButtonProps): JSX.Element {
+export default function EditButton(props: EditButtonProps) {
+  const {
+    children,
+    fullWidth,
+    className,
+    cardId,
+    onEditAction,
+    onClick,
+    ...buttonProps
+  } = props;
+
+  let buttonClassName = styles.base + " " + styles.iconButton;
+
+  if (fullWidth) {
+    buttonClassName += " " + styles.fullWidth;
+  }
+
+  if (className) {
+    buttonClassName += " " + className;
+  }
+
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (onClick) {
+      onClick(event);
+    }
+
+    onEditAction(cardId);
+  };
+
   return (
     <button
       type="button"
-      className={`${styles.base} ${styles.iconButton} ${
-        fullWidth ? styles.fullWidth : ""
-      } ${className || ""}`}
-      {...props}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        onClick?.(e);
-        onEditAction(cardId);
-      }}
+      {...buttonProps}
+      className={buttonClassName}
+      onClick={handleClick}
     >
       <Image src="/edit_icon.svg" alt="Edit" width={20} height={20} />
-      {children && <span className={styles.buttonText}>{children}</span>}
+
+      {children ? (
+        <span className={styles.buttonText}>{children}</span>
+      ) : null}
     </button>
   );
 }
