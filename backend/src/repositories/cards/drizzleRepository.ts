@@ -110,6 +110,10 @@ export class DrizzleCardsRepository implements CardsRepository {
   async deleteCard(cardId: string): Promise<void> {
     await db.delete(cards).where(eq(cards.id, cardId));
   }
+
+  async batchDeleteCard(deckId: string): Promise<void> {
+    await db.delete(cards).where(eq(cards.deckId, deckId));
+  }
 }
 
 export const drizzleCardsRepository = new DrizzleCardsRepository();

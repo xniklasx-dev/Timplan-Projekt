@@ -13,11 +13,7 @@ export class ApiError extends Error {
     }
 }
 
-export function errorHandler(
-    err: unknown,
-    _req: Request,
-    res: Response,
-    _next: NextFunction): void {
+export function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction): void {
     if (err instanceof ZodError) {
         res.status(400).json({ 
             status: "error",
@@ -26,21 +22,21 @@ export function errorHandler(
                 path: issue.path.join("."),
                 message: issue.message,
             })),
-         });
-         return;
+        });
+        return;
     }
     
     if (err instanceof ApiError) {
         res.status(err.statusCode).json({ 
             status: "error",
             message: err.exposed ? err.message : "An unexpected error occurred",
-         });
-         return;
+        });
+        return;
     }
     console.error(err);
 
     res.status(500).json({ 
         status: "error",
         message: "An unexpected error occurred",
-     });
+    });
 }

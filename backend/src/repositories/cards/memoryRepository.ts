@@ -51,18 +51,10 @@ export class MemoryCardsRepository implements CardsRepository {
   }
 
   async getCardsByDeckId(deckId: string, userId: string): Promise<Card[]> {
-    if (!await this.hasDeckAccess(deckId, userId)) {
-      return [];
-    }
-
     return Array.from(this.cards.values()).filter((card) => card.deckId === deckId);
   }
 
   async getCardById(cardId: string, userId: string): Promise<Card | null> {
-    if (!await this.hasCardAccess(cardId, userId)) {
-      return null;
-    }
-
     return this.cards.get(cardId) ?? null;
   }
 
@@ -135,6 +127,14 @@ export class MemoryCardsRepository implements CardsRepository {
 
   async deleteCard(cardId: string): Promise<void> {
     this.cards.delete(cardId);
+  }
+
+  async batchDeleteCard(deckId: string): Promise<void> {
+    for (const card of this.cards.values()) {
+      if (card.deckId === deckId) {
+        this.cards.delete(card.id);
+      }
+    }
   }
 }
 

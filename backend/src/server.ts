@@ -1,11 +1,7 @@
 import os from "os";
 import { createApp } from "./app.js";
 import { env } from "./config/env.js";
-
-const isAzure =
-  Boolean(process.env.WEBSITE_SITE_NAME) ||
-  Boolean(process.env.WEBSITE_INSTANCE_ID) ||
-  Boolean(process.env.WEBSITE_HOSTNAME);
+import { isAzure } from "./config/envParser.js"
 
 function start() {
   const app = createApp();
