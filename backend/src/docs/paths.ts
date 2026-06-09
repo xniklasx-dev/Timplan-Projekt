@@ -30,9 +30,9 @@ const DeckIdParam = z.object({
 });
 
 const CardIdParam = z.object({
-  id: z.string().openapi({
+  cardId: z.string().openapi({
     param: {
-      name: "id",
+      name: "cardId",
       in: "path",
       required: true,
     },
@@ -120,7 +120,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "get",
-  path: "/cards/{id}",
+  path: "/cards/{cardId}",
   tags: ["cards"],
   description: "Get a single card owned by the current user.",
   request: {
@@ -208,7 +208,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "patch",
-  path: "/cards/{id}",
+  path: "/cards/{cardId}",
   tags: ["cards"],
   description: "Update a card owned by the current user.",
   request: {
@@ -303,7 +303,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "delete",
-  path: "/cards/{id}",
+  path: "/cards/{cardId}",
   tags: ["cards"],
   description: "Delete a card owned by the current user.",
   request: {

@@ -45,10 +45,10 @@ router.get("/cards/getAllCards/:deckId", asyncHandler(async (req, res) => {
 }),
 );
 
-// GET /cards/:id
-router.get("/cards/:id", asyncHandler(async (req, res) => {
+// GET /cards/:cardId
+router.get("/cards/:cardId", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
-  const cardId = parseUUID(req.params.id);
+  const cardId = parseUUID(req.params.cardId);
 
   await requireCardAccess(cardId, userId);
 
@@ -77,10 +77,10 @@ router.post("/cards", asyncHandler(async (req, res) => {
 }),
 );
 
-// PATCH /cards/:id
-router.patch("/cards/:id", asyncHandler(async (req, res) => {
+// PATCH /cards/:cardId
+router.patch("/cards/:cardId", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
-  const cardId = parseUUID(req.params.id);
+  const cardId = parseUUID(req.params.cardId);
 
   await requireCardAccess(cardId, userId);
   
@@ -112,10 +112,10 @@ router.put("/cards", asyncHandler(async (req, res) => {
     res.status(200).json(upsertedCards);
 }));
 
-// DELETE /cards/:id
-router.delete("/cards/:id", asyncHandler(async (req, res) => {
+// DELETE /cards/:cardId
+router.delete("/cards/:cardId", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
-  const cardId = parseUUID(req.params.id);
+  const cardId = parseUUID(req.params.cardId);
 
   await requireCardAccess(cardId, userId);
 
@@ -125,7 +125,7 @@ router.delete("/cards/:id", asyncHandler(async (req, res) => {
   }),
 );
 
-// DELETE /cards/batchDelete/deckId
+// DELETE /cards/batchDelete/:deckId
 router.delete("/cards/batchDelete/:deckId", asyncHandler(async (req,res) => {
   const userId = parseUUID(req.header("userId") as string);
   const deckId = parseUUID(req.params.deckId);
