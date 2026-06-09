@@ -169,9 +169,9 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
         >
           <div className={styles.header}>
             <div className={styles.headerMain}>
-              <span className={styles.eyebrow}>Single Card Edit</span>
+              <span className={styles.eyebrow}>Card Edit</span>
               <h2 id="single-card-edit-title" className={styles.title}>
-                {isLoading ? 'Loading card' : 'Card unavailable'}
+                {isLoading ? "Loading card..." : "Card unavailable"}
               </h2>
             </div>
 
@@ -186,9 +186,7 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
           </div>
 
           <p className={styles.notFoundText}>
-            {isLoading ? (
-              "Loading card data..."
-            ) : error ?? (
+            {isLoading ? ("Loading card data...") : error ?? (
               <>
                 No card was found for id: <strong>{cardId}</strong>
               </>
@@ -220,10 +218,10 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
       >
         <div className={styles.header}>
           <div className={styles.headerMain}>
-            <span className={styles.eyebrow}>Single Card Edit</span>
+            <span className={styles.eyebrow}>Card Edit</span>
 
             <h2 id="single-card-edit-title" className={styles.title}>
-              {draftCard.front.trim() || 'Untitled card'}
+              {draftCard.front.trim() || "Untitled card"}
             </h2>
 
             <div className={styles.metaRow}>
@@ -249,7 +247,7 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
               <textarea
                 className={styles.textareaLarge}
                 value={draftCard.front}
-                onChange={(event) => updateField('front', event.target.value)}
+                onChange={(event) => updateField("front", event.target.value)}
                 placeholder="Enter the card question"
               />
             </label>
@@ -259,7 +257,7 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
               <textarea
                 className={styles.textareaLarge}
                 value={draftCard.back}
-                onChange={(event) => updateField('back', event.target.value)}
+                onChange={(event) => updateField("back", event.target.value)}
                 placeholder="Enter the card answer"
               />
             </label>
@@ -268,8 +266,8 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
               <span className={styles.label}>Hint</span>
               <textarea
                 className={styles.textareaSmall}
-                value={draftCard.hint ?? ''}
-                onChange={(event) => updateField('hint', event.target.value)}
+                value={draftCard.hint ?? ""}
+                onChange={(event) => updateField("hint", event.target.value)}
                 placeholder="Optional hint"
               />
             </label>
@@ -281,8 +279,8 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
                   className={styles.textareaSmall}
                   value={tagsInput}
                   onChange={(event) => updateTagsInput(event.target.value)}
-                  onBlur={() => setTagsInput(draftCard.tags.join(', '))}
-                  placeholder="typescript, basics"
+                  onBlur={() => setTagsInput(draftCard.tags.join(", "))}
+                  placeholder="Enter tags separated by commas"
                 />
                 {draftCard.tags.length > 0 && (
                   <div className={styles.tagPreview}>
@@ -310,13 +308,11 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
 
           <button
             type="button"
-            className={`${styles.primaryButton} ${
-              hasUnsavedChanges ? styles.primaryButtonActive : ''
-            }`}
+            className={`${styles.primaryButton} ${hasUnsavedChanges ? styles.primaryButtonActive : ""}`}
             onClick={handleSave}
             disabled={!hasUnsavedChanges || isSaving}
           >
-            {isSaving ? 'Saving...' : 'Save changes'}
+            {isSaving ? "Saving..." : "Save changes"}
           </button>
         </div>
       </div>
