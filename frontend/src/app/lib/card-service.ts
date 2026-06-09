@@ -1,6 +1,6 @@
 import type { Card } from "./definitions";
 
-const apiBaseUrl = process.env.API_BASE_URL || "http://localhost:3001";
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
 
 export type cardFormat = Pick<Card, "front" | "back" | "hint" | "tags">;
 
