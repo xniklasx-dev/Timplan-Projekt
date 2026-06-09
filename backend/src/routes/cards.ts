@@ -32,10 +32,10 @@ async function requireCardsAccess(cardIds: string[], userId: string): Promise<vo
   }
 }
 
-// GET /cards?deckId=...
-router.get("/cards", asyncHandler(async (req, res) => {
+// GET /cards/getAllCards/:deckId
+router.get("/cards/getAllCards/:deckId", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
-  const deckId = parseUUID(req.query.deckId as string);
+  const deckId = parseUUID(req.params.deckId);
 
   await requireDeckAccess(deckId, userId);
 
@@ -123,6 +123,19 @@ router.delete("/cards/:id", asyncHandler(async (req, res) => {
 
   return res.status(200).json({ message: "Card deleted successfully" });
   }),
+);
+
+// DELETE /cards/batchDelete/deckId
+router.delete("/cards/batchDelete/:deckId", asyncHandler(async (req,res) => {
+  const userId = parseUUID(req.header("userId") as string);
+  const deckId = parseUUID(req.params.deckId);
+
+  await requireDeckAccess(deckId, userId);
+
+  await cardsRepository.batchDeleteCard(deckId);
+
+  return res.status(200).json({ message: "Cards deleted Sucessfully" });
+}),
 );
 
 export default router;

@@ -18,8 +18,13 @@ const UserIdHeader = z.object({
   }),
 });
 
-const DeckIdQuery = z.object({
+const DeckIdParam = z.object({
   deckId: z.string().openapi({
+    param: {
+      name: "deckId",
+      in: "path",
+      required: true,
+    },
     example: "9f3049bb-97fe-489e-bff9-207dc7cf4a4f",
   }),
 });
@@ -44,6 +49,12 @@ const ErrorResponseSchema = z.object({
 const DeleteCardResponseSchema = z.object({
   message: z.string().openapi({
     example: "Card deleted successfully",
+  }),
+});
+
+const BatchDeleteCardsResponseSchema = z.object({
+  message: z.string().openapi({
+    example: "Cards deleted Sucessfully",
   }),
 });
 
@@ -72,12 +83,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "get",
-  path: "/cards",
+  path: "/cards/getAllCards/{deckId}",
   tags: ["cards"],
   description: "List cards in a deck owned by the current user.",
   request: {
     headers: UserIdHeader,
-    query: DeckIdQuery,
+    params: DeckIdParam,
   },
   responses: {
     200: {
@@ -326,6 +337,43 @@ registry.registerPath({
     },
     404: {
       description: "Card not found.",
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: "delete",
+  path: "/cards/batchDelete/{deckId}",
+  tags: ["cards"],
+  description: "Delete all cards in a deck owned by the current user.",
+  request: {
+    headers: UserIdHeader,
+    params: DeckIdParam,
+  },
+  responses: {
+    200: {
+      description: "Cards deleted.",
+      content: {
+        "application/json": {
+          schema: BatchDeleteCardsResponseSchema,
+        },
+      },
+    },
+    400: {
+      description: "Invalid user or deck id.",
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+    },
+    403: {
+      description: "The user does not own the deck.",
       content: {
         "application/json": {
           schema: ErrorResponseSchema,

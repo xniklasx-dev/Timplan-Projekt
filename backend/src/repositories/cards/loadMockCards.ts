@@ -1,4 +1,4 @@
-import { Card } from "../../db/schema.js";
+import type { Card } from "../../db/schema.js";
 import { MemoryCardsRepository, memoryCardsRepository } from "./memoryRepository.js";
 import mockCardsJson from "../../../mockData/mockCards.json" with { type: "json" };
 
@@ -10,9 +10,7 @@ type MockCard = Omit<Card, "due" | "createdAt" | "updatedAt"> & {
 
 const loadedRepositories = new WeakSet<MemoryCardsRepository>();
 
-export function loadMockCards(
-  repository: MemoryCardsRepository = memoryCardsRepository,
-): MemoryCardsRepository {
+export function loadMockCards(repository: MemoryCardsRepository = memoryCardsRepository): MemoryCardsRepository {
   if (loadedRepositories.has(repository)) {
     return repository;
   }
