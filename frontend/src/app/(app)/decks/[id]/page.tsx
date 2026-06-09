@@ -252,8 +252,10 @@ export default function Deck() {
       <SingleCardEditor
         key={activeEditorCardId ?? "closed"}
         open={activeEditorCardId !== null}
-        cardId={activeEditorCardId}
+        cardId="05efd9c5-9084-4833-b21c-2ef22a9fef9a"
+        userId="1fd42610-2b25-48cb-8f5c-0b567a7bf612"
         onClose={closeCardEditor}
+        onSaved={closeCardEditor}
       />
 
       <DeckEditor

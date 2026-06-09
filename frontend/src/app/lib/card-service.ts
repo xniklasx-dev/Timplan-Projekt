@@ -1,6 +1,5 @@
 import type { Card } from "./definitions";
-
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
+import { apiBaseUrl } from "./definitions";
 
 export type cardFormat = Pick<Card, "front" | "back" | "hint" | "tags">;
 
@@ -106,6 +105,15 @@ export function normalizeTags(value: string | string[] | null | undefined): stri
         .filter(Boolean),
     ),
   );
+}
+
+export function toCardFormat(card: Pick<Card, "front" | "back" | "hint" | "tags">): cardFormat {
+  return {
+    front: card.front.trim(),
+    back: card.back.trim(),
+    hint: card.hint?.trim() || undefined,
+    tags: normalizeTags(card.tags),
+  };
 }
 
 function hydrateCard(card: backendCardFormat): Card {

@@ -1,110 +1,128 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 
-import styles from './SingleCardEditor.module.css';
+import styles from "./SingleCardEditor.module.css";
 
-import type { Card } from '@/app/lib/definitions';
-import cardsData from '@/app/lib/placeholder-cards.json';
+import type { Card } from "@/app/lib/definitions";
+import { getCardById, normalizeTags, toCardFormat, updateCard } from "@/app/lib/card-service";
 
-type SingleCardEditorProps = {
+type SingleCardEditorProperties = {
   open: boolean;
-  cardId: string | null;
+  cardId: string;
+  userId: string;
   onClose: () => void;
-};
-
-const allCards = cardsData as unknown as Card[];
-
-function normalizeCard(card: Card): Card {
-  return {
-    ...card,
-    hint: card.hint ?? '',
-    extra: card.extra ?? '',
-  };
+  onSaved?: (updatedCard: Card) => void;
 }
 
-export default function SingleCardEditor({
-  open,
-  cardId,
-  onClose,
-}: SingleCardEditorProps) {
-  const baseCard = useMemo(() => {
-    if (!cardId) return null;
-    return allCards.find((card) => card.id === cardId) ?? null;
-  }, [cardId]);
+export default function SingleCardEditor({ open, cardId, userId, onClose, onSaved }: SingleCardEditorProperties) {
+  const [originalCard, setOriginalCard] = useState<Card | null>(null);
+  const [draftCard, setDraftCard] = useState<Card | null>(null);
+  const [tagsInput, setTagsInput] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const normalizedBaseCard = useMemo(() => {
-    return baseCard ? normalizeCard(baseCard) : null;
-  }, [baseCard]);
+  useEffect(() => {
+    if (!open || !cardId) return;
 
-  const [draft, setDraft] = useState<Card | null>(
-    normalizedBaseCard ? { ...normalizedBaseCard } : null
-  );
+    if (!userId) {
+      setIsLoading(false);
+      setError("User not authenticated");
+      setOriginalCard(null);
+      setDraftCard(null);
+      return;
+    }
+    
+    let ignore = false;
+
+    async function fetchCard() {
+      setIsLoading(true);
+      setError(null);
+      setOriginalCard(null);
+      setDraftCard(null);
+
+      try {
+          const card = await getCardById(cardId, userId);
+          if (!ignore) {
+            setOriginalCard(card);
+            setDraftCard(card);
+            setTagsInput(card.tags.join(", "));
+          }
+      } catch (e) {
+        if (!ignore) {
+          setError(e instanceof Error ? e.message : "Could not fetch card");
+        }
+      } finally {
+        if (!ignore) {
+        setIsLoading(false);
+        }
+      }
+    }
+
+    fetchCard();
+
+    return () => {
+      ignore = true;
+    };
+  }, [open, cardId, userId]);
 
   const hasUnsavedChanges = useMemo(() => {
-    if (!normalizedBaseCard || !draft) return false;
-
+    if (!originalCard || !draftCard) return false;
     return (
-      draft.front !== normalizedBaseCard.front ||
-      draft.back !== normalizedBaseCard.back ||
-      (draft.hint ?? '') !== (normalizedBaseCard.hint ?? '') ||
-      (draft.extra ?? '') !== (normalizedBaseCard.extra ?? '')
+      draftCard.front !== originalCard.front ||
+      draftCard.back !== originalCard.back ||
+      (draftCard.hint ?? "") !== originalCard.hint ||
+      normalizeTags(draftCard.tags).join('\u0000') !== normalizeTags(originalCard.tags).join('\u0000')
     );
-  }, [normalizedBaseCard, draft]);
+  } , [originalCard, draftCard]);
 
   useEffect(() => {
     if (!open) return;
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         if (hasUnsavedChanges) {
-          const shouldClose = window.confirm(
-            'You have unsaved changes. Do you really want to close this editor?'
-          );
-
-          if (!shouldClose) {
+          const confirmClose = window.confirm("You have unsaved changes. Are you sure you want to close?");
+          if (!confirmClose) {
             return;
           }
         }
-
         onClose();
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown);
-    document.body.style.overflow = 'hidden';
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
     };
-  }, [open, onClose, hasUnsavedChanges]);
+  }, [open, hasUnsavedChanges, onClose]);
 
-  function updateField(
-    field: 'front' | 'back' | 'hint' | 'extra',
-    value: string
-  ) {
-    setDraft((current) =>
-      current
-        ? {
-            ...current,
-            [field]: value,
-          }
-        : current
-    );
+  function updateField(field: "front" | "back" | "hint" | "tags", value: string) {
+    setDraftCard((current) => {
+      if (!current) return current;
+      return { 
+        ...current, 
+        [field]: field === "tags" ? normalizeTags(value) : value
+      };
+    });
+  }
+
+  function updateTagsInput(value: string) {
+    setTagsInput(value);
+    updateField("tags", value);
   }
 
   function handleClose() {
     if (hasUnsavedChanges) {
-      const shouldClose = window.confirm(
-        'You have unsaved changes. Do you really want to close this editor?'
-      );
-
-      if (!shouldClose) {
+      const confirmClose = window.confirm("You have unsaved changes. Are you sure you want to close?");
+      if (!confirmClose) {
         return;
       }
     }
-
     onClose();
   }
 
@@ -112,14 +130,34 @@ export default function SingleCardEditor({
     handleClose();
   }
 
-  function handleSave() {
+  async function handleSave() {
+    if (!cardId || !draftCard || !userId || !hasUnsavedChanges || isSaving) return;
+
+    if (draftCard.front.trim() === "" || draftCard.back.trim() === "") {
+      setError("Front and back fields are required");
+      return;
+    }
+
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      const saved = await updateCard(cardId, toCardFormat(draftCard), userId);
+
+      setOriginalCard(saved);
+      setDraftCard({...saved});
+      onSaved?.(saved);
+      onClose();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not save card");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
-  if (!open || !cardId) {
-    return null;
-  }
+  if (!open || !cardId) return null;
 
-  if (!draft) {
+  if (isLoading || !draftCard) {
     return (
       <div className={styles.overlay} onClick={handleOverlayClick}>
         <div
@@ -133,7 +171,7 @@ export default function SingleCardEditor({
             <div className={styles.headerMain}>
               <span className={styles.eyebrow}>Single Card Edit</span>
               <h2 id="single-card-edit-title" className={styles.title}>
-                2  Card not found
+                {isLoading ? 'Loading card' : 'Card unavailable'}
               </h2>
             </div>
 
@@ -148,7 +186,13 @@ export default function SingleCardEditor({
           </div>
 
           <p className={styles.notFoundText}>
-            No card was found for id: <strong>{cardId}</strong>
+            {isLoading ? (
+              "Loading card data..."
+            ) : error ?? (
+              <>
+                No card was found for id: <strong>{cardId}</strong>
+              </>
+            )}
           </p>
 
           <div className={styles.footer}>
@@ -179,11 +223,12 @@ export default function SingleCardEditor({
             <span className={styles.eyebrow}>Single Card Edit</span>
 
             <h2 id="single-card-edit-title" className={styles.title}>
-              {draft.front.trim() || 'Untitled card'}
+              {draftCard.front.trim() || 'Untitled card'}
             </h2>
 
             <div className={styles.metaRow}>
-              <span className={styles.metaPill}>State: {draft.state}</span>
+              <span className={styles.metaPill}>State: {draftCard.state}</span>
+              <span className={styles.metaPill}>{draftCard.tags.length} tags</span>
             </div>
           </div>
 
@@ -199,21 +244,21 @@ export default function SingleCardEditor({
 
         <div className={styles.content}>
           <div className={styles.fieldGrid}>
-            <label className={styles.field}>
+            <label className={`${styles.field} ${styles.fieldLarge}`}>
               <span className={styles.label}>Question</span>
               <textarea
                 className={styles.textareaLarge}
-                value={draft.front}
+                value={draftCard.front}
                 onChange={(event) => updateField('front', event.target.value)}
                 placeholder="Enter the card question"
               />
             </label>
 
-            <label className={styles.field}>
+            <label className={`${styles.field} ${styles.fieldLarge}`}>
               <span className={styles.label}>Answer</span>
               <textarea
                 className={styles.textareaLarge}
-                value={draft.back}
+                value={draftCard.back}
                 onChange={(event) => updateField('back', event.target.value)}
                 placeholder="Enter the card answer"
               />
@@ -223,22 +268,35 @@ export default function SingleCardEditor({
               <span className={styles.label}>Hint</span>
               <textarea
                 className={styles.textareaSmall}
-                value={draft.hint ?? ''}
+                value={draftCard.hint ?? ''}
                 onChange={(event) => updateField('hint', event.target.value)}
                 placeholder="Optional hint"
               />
             </label>
 
             <label className={styles.field}>
-              <span className={styles.label}>Extra</span>
-              <textarea
-                className={styles.textareaSmall}
-                value={draft.extra ?? ''}
-                onChange={(event) => updateField('extra', event.target.value)}
-                placeholder="Additional context or notes"
-              />
+              <span className={styles.label}>Tags</span>
+              <div className={styles.tagControl}>
+                <textarea
+                  className={styles.textareaSmall}
+                  value={tagsInput}
+                  onChange={(event) => updateTagsInput(event.target.value)}
+                  onBlur={() => setTagsInput(draftCard.tags.join(', '))}
+                  placeholder="typescript, basics"
+                />
+                {draftCard.tags.length > 0 && (
+                  <div className={styles.tagPreview}>
+                    {draftCard.tags.map((tag) => (
+                      <span key={tag} className={styles.tag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </label>
           </div>
+          {error && <p className={styles.errorText}>{error}</p>}
         </div>
 
         <div className={styles.footer}>
@@ -256,9 +314,9 @@ export default function SingleCardEditor({
               hasUnsavedChanges ? styles.primaryButtonActive : ''
             }`}
             onClick={handleSave}
-            disabled={!hasUnsavedChanges}
+            disabled={!hasUnsavedChanges || isSaving}
           >
-            Save changes
+            {isSaving ? 'Saving...' : 'Save changes'}
           </button>
         </div>
       </div>

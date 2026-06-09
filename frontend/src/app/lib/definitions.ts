@@ -1,4 +1,5 @@
 //This file contains type defitions
+export const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
 
 export type User = {
   id: number;
