@@ -11,6 +11,6 @@ router.use(healthRouter);
 router.use(cardsRouter);
 router.use(decksRouter);
 router.use(authRouter);
-router.use("/docs", docsRouter);
+router.use(docsRouter);
 
 export default router;

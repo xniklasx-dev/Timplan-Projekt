@@ -25,7 +25,6 @@ function hydrateCard(raw: RawCard): Card {
     due: new Date(raw.due),
     createdAt: new Date(raw.createdAt),
     updatedAt: new Date(raw.updatedAt),
-    lastReview: raw.lastReview ? new Date(raw.lastReview) : undefined,
   };
 }
 

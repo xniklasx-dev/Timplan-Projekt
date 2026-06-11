@@ -1,4 +1,5 @@
 //This file contains type defitions
+export const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
 
 export type User = {
   id: number;
@@ -15,31 +16,19 @@ export type Card = {
 
   front: string;
   back: string;
-  hint?: string;
-  extra?: string;
+  hint?: string | null;
 
   tags: string[];
-  media: {
-    id: string;
-    type: "image" | "audio" | "video";
-    url: string;
-  }[];
 
   state: "new" | "learning" | "review" | "suspended";
 
-  due: Date;              // timestamp
-  rating: 0 | 1 | 2 | 3;  // again hard good easy
-
-  lastReview?: Date;
+  due: Date;
+  rating: "again" | "hard" | "good" | "easy" | 0 | 1 | 2 | 3 | null;
 
   totalReviews: number;
-  correctReviews: number;
 
   createdAt: Date;
   updatedAt: Date;
-  deleted: boolean;
-
-  revision: number;
 };
 
 export type Deck = {
