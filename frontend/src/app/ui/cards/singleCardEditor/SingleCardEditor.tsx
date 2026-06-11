@@ -1,137 +1,130 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-
-import styles from "./SingleCardEditor.module.css";
+import { useEffect, useState } from "react";
 
 import type { Card } from "@/app/lib/definitions";
 import { getCardById, normalizeTags, toCardFormat, updateCard } from "@/app/lib/card-service";
 
-type SingleCardEditorProperties = {
+import styles from "./SingleCardEditor.module.css";
+
+type SingleCardEditorProps = {
   open: boolean;
+  deckId: string;
   cardId: string;
   userId: string;
   onClose: () => void;
   onSaved?: (updatedCard: Card) => void;
-}
+};
 
-export default function SingleCardEditor({ open, cardId, userId, onClose, onSaved }: SingleCardEditorProperties) {
+type EditableField = "front" | "back" | "hint";
+
+export default function SingleCardEditor({ open, deckId, cardId, userId, onClose, onSaved }: SingleCardEditorProps) {
   const [originalCard, setOriginalCard] = useState<Card | null>(null);
   const [draftCard, setDraftCard] = useState<Card | null>(null);
-  const [tagsInput, setTagsInput] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [tagsInput, setTagsInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const hasChanges = cardWasChanged(originalCard, draftCard);
+
   useEffect(() => {
-    if (!open || !cardId) return;
+    if (!open || !deckId || !cardId) return;
 
     if (!userId) {
-      setIsLoading(false);
       setError("User not authenticated");
       setOriginalCard(null);
       setDraftCard(null);
+      setIsLoading(false);
       return;
     }
-    
-    let ignore = false;
 
-    async function fetchCard() {
+    let ignoreResult = false;
+
+    async function loadCard() {
       setIsLoading(true);
       setError(null);
       setOriginalCard(null);
       setDraftCard(null);
 
       try {
-          const card = await getCardById(cardId, userId);
-          if (!ignore) {
-            setOriginalCard(card);
-            setDraftCard(card);
-            setTagsInput(card.tags.join(", "));
-          }
-      } catch (e) {
-        if (!ignore) {
-          setError(e instanceof Error ? e.message : "Could not fetch card");
+        const card = await getCardById(deckId, cardId, userId);
+
+        if (ignoreResult) return;
+
+        setOriginalCard(card);
+        setDraftCard(card);
+        setTagsInput(card.tags.join(", "));
+      } catch (caughtError) {
+        if (!ignoreResult) {
+          setError(caughtError instanceof Error ? caughtError.message : "Could not fetch card");
         }
       } finally {
-        if (!ignore) {
-        setIsLoading(false);
+        if (!ignoreResult) {
+          setIsLoading(false);
         }
       }
     }
 
-    fetchCard();
+    void loadCard();
 
     return () => {
-      ignore = true;
+      ignoreResult = true;
     };
-  }, [open, cardId, userId]);
-
-  const hasUnsavedChanges = useMemo(() => {
-    if (!originalCard || !draftCard) return false;
-    return (
-      draftCard.front !== originalCard.front ||
-      draftCard.back !== originalCard.back ||
-      (draftCard.hint ?? "") !== originalCard.hint ||
-      normalizeTags(draftCard.tags).join('\u0000') !== normalizeTags(originalCard.tags).join('\u0000')
-    );
-  } , [originalCard, draftCard]);
+  }, [open, deckId, cardId, userId]);
 
   useEffect(() => {
     if (!open) return;
 
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        if (hasUnsavedChanges) {
-          const confirmClose = window.confirm("You have unsaved changes. Are you sure you want to close?");
-          if (!confirmClose) {
-            return;
-          }
-        }
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+
+      if (canClose(hasChanges)) {
         onClose();
       }
     }
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", closeOnEscape);
     document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", closeOnEscape);
       document.body.style.overflow = "";
     };
-  }, [open, hasUnsavedChanges, onClose]);
+  }, [open, hasChanges, onClose]);
 
-  function updateField(field: "front" | "back" | "hint" | "tags", value: string) {
-    setDraftCard((current) => {
-      if (!current) return current;
-      return { 
-        ...current, 
-        [field]: field === "tags" ? normalizeTags(value) : value
+  function handleClose() {
+    if (canClose(hasChanges)) {
+      onClose();
+    }
+  }
+
+  function changeField(field: EditableField, value: string) {
+    setDraftCard((card) => {
+      if (!card) return card;
+
+      return {
+        ...card,
+        [field]: value,
       };
     });
   }
 
-  function updateTagsInput(value: string) {
+  function changeTags(value: string) {
     setTagsInput(value);
-    updateField("tags", value);
+
+    setDraftCard((card) => {
+      if (!card) return card;
+
+      return {
+        ...card,
+        tags: normalizeTags(value),
+      };
+    });
   }
 
-  function handleClose() {
-    if (hasUnsavedChanges) {
-      const confirmClose = window.confirm("You have unsaved changes. Are you sure you want to close?");
-      if (!confirmClose) {
-        return;
-      }
-    }
-    onClose();
-  }
-
-  function handleOverlayClick() {
-    handleClose();
-  }
-
-  async function handleSave() {
-    if (!cardId || !draftCard || !userId || !hasUnsavedChanges || isSaving) return;
+  async function saveCard() {
+    if (!draftCard || !userId || !hasChanges || isSaving) return;
 
     if (draftCard.front.trim() === "" || draftCard.back.trim() === "") {
       setError("Front and back fields are required");
@@ -142,63 +135,53 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
     setError(null);
 
     try {
-      const saved = await updateCard(cardId, toCardFormat(draftCard), userId);
+      const savedCard = await updateCard(deckId, cardId, toCardFormat(draftCard), userId);
 
-      setOriginalCard(saved);
-      setDraftCard({...saved});
-      onSaved?.(saved);
+      setOriginalCard(savedCard);
+      setDraftCard(savedCard);
+      setTagsInput(savedCard.tags.join(", "));
+      onSaved?.(savedCard);
       onClose();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not save card");
+    } catch (caughtError) {
+      setError(caughtError instanceof Error ? caughtError.message : "Could not save card");
     } finally {
       setIsSaving(false);
     }
   }
 
-  if (!open || !cardId) return null;
+  if (!open || !deckId || !cardId) return null;
 
   if (isLoading || !draftCard) {
     return (
-      <div className={styles.overlay} onClick={handleOverlayClick}>
-        <div
-          className={styles.modal}
-          onClick={(event) => event.stopPropagation()}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="single-card-edit-title"
-        >
+      <div className={styles.overlay}>
+        <div className={styles.modal} role="dialog" aria-modal="true">
           <div className={styles.header}>
             <div className={styles.headerMain}>
               <span className={styles.eyebrow}>Card Edit</span>
-              <h2 id="single-card-edit-title" className={styles.title}>
-                {isLoading ? "Loading card..." : "Card unavailable"}
-              </h2>
+              <h2 className={styles.title}>{isLoading ? "Loading card..." : "Card unavailable"}</h2>
             </div>
 
-            <button
-              type="button"
-              className={styles.closeButton}
-              onClick={handleClose}
-              aria-label="Close modal"
-            >
-              ×
+            <button type="button" className={styles.closeButton} onClick={handleClose} aria-label="Close modal">
+              x
             </button>
           </div>
 
-          <p className={styles.notFoundText}>
-            {isLoading ? ("Loading card data...") : error ?? (
-              <>
-                No card was found for id: <strong>{cardId}</strong>
-              </>
-            )}
-          </p>
+          <div className={styles.content}>
+            <p className={styles.notFoundText}>
+              {isLoading ? (
+                "Loading card data..."
+              ) : error ? (
+                error
+              ) : (
+                <>
+                  No card was found for id: <strong>{cardId}</strong>
+                </>
+              )}
+            </p>
+          </div>
 
           <div className={styles.footer}>
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              onClick={handleClose}
-            >
+            <button type="button" className={styles.secondaryButton} onClick={handleClose}>
               Close
             </button>
           </div>
@@ -208,10 +191,9 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
   }
 
   return (
-    <div className={styles.overlay} onClick={handleOverlayClick}>
+    <div className={styles.overlay}>
       <div
         className={styles.modal}
-        onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="single-card-edit-title"
@@ -223,20 +205,10 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
             <h2 id="single-card-edit-title" className={styles.title}>
               {draftCard.front.trim() || "Untitled card"}
             </h2>
-
-            <div className={styles.metaRow}>
-              <span className={styles.metaPill}>State: {draftCard.state}</span>
-              <span className={styles.metaPill}>{draftCard.tags.length} tags</span>
-            </div>
           </div>
 
-          <button
-            type="button"
-            className={styles.closeButton}
-            onClick={handleClose}
-            aria-label="Close modal"
-          >
-            ×
+          <button type="button" className={styles.closeButton} onClick={handleClose} aria-label="Close modal">
+            x
           </button>
         </div>
 
@@ -247,7 +219,7 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
               <textarea
                 className={styles.textareaLarge}
                 value={draftCard.front}
-                onChange={(event) => updateField("front", event.target.value)}
+                onChange={(event) => changeField("front", event.target.value)}
                 placeholder="Enter the card question"
               />
             </label>
@@ -257,7 +229,7 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
               <textarea
                 className={styles.textareaLarge}
                 value={draftCard.back}
-                onChange={(event) => updateField("back", event.target.value)}
+                onChange={(event) => changeField("back", event.target.value)}
                 placeholder="Enter the card answer"
               />
             </label>
@@ -267,7 +239,7 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
               <textarea
                 className={styles.textareaSmall}
                 value={draftCard.hint ?? ""}
-                onChange={(event) => updateField("hint", event.target.value)}
+                onChange={(event) => changeField("hint", event.target.value)}
                 placeholder="Optional hint"
               />
             </label>
@@ -278,10 +250,11 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
                 <textarea
                   className={styles.textareaSmall}
                   value={tagsInput}
-                  onChange={(event) => updateTagsInput(event.target.value)}
+                  onChange={(event) => changeTags(event.target.value)}
                   onBlur={() => setTagsInput(draftCard.tags.join(", "))}
                   placeholder="Enter tags separated by commas"
                 />
+
                 {draftCard.tags.length > 0 && (
                   <div className={styles.tagPreview}>
                     {draftCard.tags.map((tag) => (
@@ -294,23 +267,20 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
               </div>
             </label>
           </div>
+
           {error && <p className={styles.errorText}>{error}</p>}
         </div>
 
         <div className={styles.footer}>
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={handleClose}
-          >
+          <button type="button" className={styles.secondaryButton} onClick={handleClose}>
             Close
           </button>
 
           <button
             type="button"
-            className={`${styles.primaryButton} ${hasUnsavedChanges ? styles.primaryButtonActive : ""}`}
-            onClick={handleSave}
-            disabled={!hasUnsavedChanges || isSaving}
+            className={`${styles.primaryButton} ${hasChanges ? styles.primaryButtonActive : ""}`}
+            onClick={saveCard}
+            disabled={!hasChanges || isSaving}
           >
             {isSaving ? "Saving..." : "Save changes"}
           </button>
@@ -318,4 +288,23 @@ export default function SingleCardEditor({ open, cardId, userId, onClose, onSave
       </div>
     </div>
   );
+}
+
+function canClose(hasChanges: boolean) {
+  return !hasChanges || window.confirm("You have unsaved changes. Are you sure you want to close?");
+}
+
+function cardWasChanged(originalCard: Card | null, draftCard: Card | null) {
+  if (!originalCard || !draftCard) return false;
+
+  return (
+    draftCard.front !== originalCard.front ||
+    draftCard.back !== originalCard.back ||
+    (draftCard.hint ?? "") !== originalCard.hint ||
+    tagsKey(draftCard.tags) !== tagsKey(originalCard.tags)
+  );
+}
+
+function tagsKey(tags: string[]) {
+  return normalizeTags(tags).join("\u0000");
 }
