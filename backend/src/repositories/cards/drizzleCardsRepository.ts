@@ -1,7 +1,7 @@
 import { and, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../../db/client.js";
 import { Card, cards, decks } from "../../db/schema.js";
-import { BatchUpsertCardsData, CardUpdateData, CreateCardData } from "../../docs/schemas.js";
+import { BatchUpsertCardsData, CardUpdateData, CreateCardData } from "../../validation/cardSchemas.js";
 import { CardsRepository } from "./cardsRepository.js";
 
 const cardColumns = getTableColumns(cards);
@@ -42,14 +42,14 @@ export class DrizzleCardsRepository implements CardsRepository {
     return newCard;
   }
 
-  async updateCard(cardId: string, cardData: CardUpdateData): Promise<Card | null> {
+  async updateCard(cardId: string, deckId: string, cardData: CardUpdateData): Promise<Card | null> {
     const [updatedCard] = await db
       .update(cards)
       .set({
         ...cardData,
         updatedAt: new Date(),
       })
-      .where(eq(cards.id, cardId))
+      .where(and(eq(cards.id, cardId), eq(cards.deckId, deckId)))
       .returning();
 
     return updatedCard ?? null;
@@ -57,7 +57,7 @@ export class DrizzleCardsRepository implements CardsRepository {
 
   async upsertManyCards(cardsData: BatchUpsertCardsData): Promise<Card[]> {
     const values = cardsData.cards.map((card) => ({
-      id: card.id,
+      id: card.cardId,
       deckId: cardsData.deckId,
       front: card.front,
       back: card.back,
@@ -81,8 +81,13 @@ export class DrizzleCardsRepository implements CardsRepository {
       .returning();
   }
 
-  async deleteCard(cardId: string): Promise<void> {
-    await db.delete(cards).where(eq(cards.id, cardId));
+  async deleteCard(cardId: string, deckId: string): Promise<boolean> {
+    const deletedCards = await db
+      .delete(cards)
+      .where(and(eq(cards.id, cardId), eq(cards.deckId, deckId)))
+      .returning({ id: cards.id });
+
+    return deletedCards.length > 0;
   }
 
   async batchDeleteCard(deckId: string): Promise<void> {

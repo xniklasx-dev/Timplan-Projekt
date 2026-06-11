@@ -4,7 +4,7 @@ import { env } from "./config/env.js";
 function start() {
   const app = createApp();
 
-  app.listen(env.port, env.host, () => {
+  app.listen(env.port, () => {
     const port = env.port;
     const localUrl = `http://localhost:${port}`;
     const publicUrl = process.env.WEBSITE_HOSTNAME ? `https://${process.env.WEBSITE_HOSTNAME}` : null;

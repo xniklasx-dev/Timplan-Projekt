@@ -1,5 +1,5 @@
 import { Card } from "../../db/schema.js";
-import { BatchUpsertCardsData, CreateCardData, CardUpdateData } from "../../docs/schemas.js";
+import { BatchUpsertCardsData, CreateCardData, CardUpdateData } from "../../validation/cardSchemas.js";
 
 export interface CardsRepository {
   hasDeckAccess(deckId: string, userId: string): Promise<boolean>;
@@ -10,11 +10,11 @@ export interface CardsRepository {
 
   createCard(cardData: CreateCardData): Promise<Card>;
 
-  updateCard(cardId: string, cardData: CardUpdateData): Promise<Card | null>;
+  updateCard(cardId: string, deckId: string, cardData: CardUpdateData): Promise<Card | null>;
 
   upsertManyCards(cardsData: BatchUpsertCardsData): Promise<Card[]>;
 
-  deleteCard(cardId: string): Promise<void>;
+  deleteCard(cardId: string, deckId: string): Promise<boolean>;
 
   batchDeleteCard(deckId: string): Promise<void>;
 }

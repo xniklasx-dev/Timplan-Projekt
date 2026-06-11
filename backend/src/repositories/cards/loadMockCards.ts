@@ -3,32 +3,22 @@
 ////////////////////////////////////////////////////////
 
 import type { Card } from "../../db/schema.js";
-import { MemoryCardsRepository, memoryCardsRepository } from "./memoryCardsRepository.js";
 import mockCardsJson from "../../../mockData/mockCards.json" with { type: "json" };
+import { memoryCardsRepository } from "./memoryCardsRepository.js";
 
-type MockCard = Omit<Card, "due" | "createdAt" | "updatedAt"> & {
-  due: string;
+type MockCard = Omit<Card, "createdAt" | "updatedAt"> & {
   createdAt: string;
   updatedAt: string;
 };
 
-const loadedRepositories = new WeakSet<MemoryCardsRepository>();
+memoryCardsRepository.loadCards((mockCardsJson as MockCard[]).map(toCard));
 
-export function loadMockCards(repository: MemoryCardsRepository = memoryCardsRepository): MemoryCardsRepository {
-  if (loadedRepositories.has(repository)) {
-    return repository;
-  }
-
-  repository.loadCards((mockCardsJson as MockCard[]).map(toCard));
-  loadedRepositories.add(repository);
-
-  return repository;
-}
+export const mockCardsRepository = memoryCardsRepository;
 
 function toCard(mockCard: MockCard): Card {
+
   return {
     ...mockCard,
-    due: new Date(mockCard.due),
     createdAt: new Date(mockCard.createdAt),
     updatedAt: new Date(mockCard.updatedAt),
   };

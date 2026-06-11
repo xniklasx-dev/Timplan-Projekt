@@ -4,6 +4,7 @@ import {
   bigint,
   date,
   index,
+  integer,
   pgEnum,
   pgTable,
   text,
@@ -82,26 +83,64 @@ export const decks = pgTable("decks",
   }),
 );
 
-export const cards = pgTable("cards",
+export const cards = pgTable(
+  "cards",
   {
     id: uuid("id").primaryKey().defaultRandom(),
 
     deckId: uuid("deck_id")
       .notNull()
-      .references(() => decks.id, { onDelete: "cascade", onUpdate: "cascade" }),
+      .references(() => decks.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
 
     front: text("front").notNull(),
     back: text("back").notNull(),
     hint: text("hint"),
-    tags: text("tags").array(),
 
-    state: cardStateEnum("state").notNull().default("new"),
+    tags: text("tags")
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
 
-    due: timestamp("due", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
 
-    rating: cardRatingEnum("rating"),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    deckCreatedAtIndex: index("cards_deck_id_created_at_idx").on(
+      table.deckId,
+      table.createdAt,
+    ),
 
-    totalReviews: bigint("total_reviews", { mode: "number" })
+    tagsIndex: index("cards_tags_idx").using("gin", table.tags),
+  }),
+);
+
+export const cardProgress = pgTable(
+  "card_progress",
+  {
+    cardId: uuid("card_id")
+      .primaryKey()
+      .references(() => cards.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+
+    state: cardStateEnum("state")
+      .notNull()
+      .default("new"),
+
+    due: timestamp("due", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+
+    totalReviews: integer("total_reviews")
       .notNull()
       .default(0),
 
@@ -114,15 +153,9 @@ export const cards = pgTable("cards",
       .defaultNow(),
   },
   (table) => ({
-    deckIdIndex: index("cards_deck_id_idx").on(table.deckId),
+    dueIndex: index("card_progress_due_idx").on(table.due),
 
-    deckDueIndex: index("cards_deck_id_due_idx").on(
-      table.deckId,
-      table.due,
-    ),
-
-    deckStateDueIndex: index("cards_deck_id_state_due_idx").on(
-      table.deckId,
+    stateDueIndex: index("card_progress_state_due_idx").on(
       table.state,
       table.due,
     ),
@@ -199,6 +232,9 @@ export type NewDeck = typeof decks.$inferInsert;
 
 export type Card = typeof cards.$inferSelect;
 export type NewCard = typeof cards.$inferInsert;
+
+export type CardProgress = typeof cardProgress.$inferSelect;
+export type NewCardProgress = typeof cardProgress.$inferInsert;
 
 export type DateData = typeof dateData.$inferSelect;
 export type NewDateData = typeof dateData.$inferInsert;
