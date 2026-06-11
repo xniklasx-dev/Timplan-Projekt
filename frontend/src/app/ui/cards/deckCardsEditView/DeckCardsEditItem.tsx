@@ -90,7 +90,7 @@ export default function DeckCardsEditItem({
           <span className={styles.label}>Extra</span>
           <textarea
             className={styles.textareaSmall}
-            value={card.extra ?? ''}
+            value={''}
             onChange={(event) =>
               onChange(card.id, 'extra', event.target.value)
             }

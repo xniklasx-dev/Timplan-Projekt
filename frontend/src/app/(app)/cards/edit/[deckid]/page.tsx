@@ -26,7 +26,7 @@ export default function EditDeckCardsPage() {
   const deckCards = useMemo(
     () =>
       cards.filter(
-        (card) => card.deckId === deckId && !card.deleted
+        (card) => card.deckId === deckId
       ),
     [deckId]
   );

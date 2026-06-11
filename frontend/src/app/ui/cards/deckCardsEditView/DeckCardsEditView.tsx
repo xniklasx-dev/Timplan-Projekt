@@ -17,7 +17,7 @@ function normalizeCard(card: Card): Card {
   return {
     ...card,
     hint: card.hint ?? '',
-    extra: card.extra ?? '',
+    tags: card.tags ?? [],
   };
 }
 
@@ -30,18 +30,13 @@ function createEmptyCard(deckId: string, index: number): Card {
     front: '',
     back: '',
     hint: '',
-    extra: '',
     tags: [],
-    media: [],
     state: 'new',
     due: now as unknown as Date,
     rating: 0,
     totalReviews: 0,
-    correctReviews: 0,
     createdAt: now as unknown as Date,
     updatedAt: now as unknown as Date,
-    deleted: false,
-    revision: 1,
   };
 }
 
@@ -50,7 +45,7 @@ function isCardEmpty(card: Card): boolean {
     card.front.trim() === '' &&
     card.back.trim() === '' &&
     (card.hint ?? '').trim() === '' &&
-    (card.extra ?? '').trim() === ''
+    (card.tags ?? []).length === 0
   );
 }
 
@@ -79,7 +74,7 @@ export default function DeckCardsEditView({
       (card) => (card.hint ?? '').trim().length > 0
     ).length;
     const cardsWithExtra = realCards.filter(
-      (card) => (card.extra ?? '').trim().length > 0
+      (card) => (card.tags ?? []).length > 0
     ).length;
 
     return {
@@ -105,7 +100,7 @@ export default function DeckCardsEditView({
         card.front !== initialCard.front ||
         card.back !== initialCard.back ||
         (card.hint ?? '') !== (initialCard.hint ?? '') ||
-        (card.extra ?? '') !== (initialCard.extra ?? '')
+        (card.tags ?? []).length !== (initialCard.tags ?? []).length
       );
     });
   }, [localCards, normalizedInitialCards]);

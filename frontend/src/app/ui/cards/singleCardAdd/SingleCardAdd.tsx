@@ -26,25 +26,18 @@ function createNewCard(deckId: string): Card {
     front: '',
     back: '',
     hint: '',
-    extra: '',
 
     tags: [],
-    media: [],
 
     state: 'new',
     due: now,
     rating: 0,
 
-    lastReview: undefined,
 
     totalReviews: 0,
-    correctReviews: 0,
 
     createdAt: now,
     updatedAt: now,
-    deleted: false,
-
-    revision: 1,
   };
 }
 
@@ -66,7 +59,7 @@ function SingleCardAddContent({
       draft.front.trim() !== '' ||
       draft.back.trim() !== '' ||
       (draft.hint ?? '').trim() !== '' ||
-      (draft.extra ?? '').trim() !== ''
+      (draft.tags ?? []).length !== 0
     );
   }, [draft]);
 
@@ -99,7 +92,7 @@ function SingleCardAddContent({
   }, [hasUnsavedChanges, onClose]);
 
   function updateField(
-    field: 'front' | 'back' | 'hint' | 'extra',
+    field: 'front' | 'back' | 'hint' | 'tags',
     value: string
   ) {
     setDraft((current) => ({
@@ -137,7 +130,7 @@ function SingleCardAddContent({
       front: draft.front.trim(),
       back: draft.back.trim(),
       hint: draft.hint?.trim() ?? '',
-      extra: draft.extra?.trim() ?? '',
+      tags: draft.tags ?? [],
       createdAt: now,
       updatedAt: now,
     };
@@ -215,8 +208,8 @@ function SingleCardAddContent({
               <span className={styles.label}>Extra</span>
               <textarea
                 className={styles.textareaSmall}
-                value={draft.extra ?? ''}
-                onChange={(event) => updateField('extra', event.target.value)}
+                value={draft.tags?.join(', ') ?? ''}
+                onChange={(event) => updateField('tags', event.target.value)}
                 placeholder="Additional context or notes"
               />
             </label>
