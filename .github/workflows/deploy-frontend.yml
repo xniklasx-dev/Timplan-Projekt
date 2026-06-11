@@ -42,7 +42,21 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run lint
+      - name: Check frontend env
+        run: |
+          echo "NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE"
+          test "$NEXT_PUBLIC_API_BASE" = "https://api.timplan.app"
+
       - run: npm run build
+
+      - name: Verify built API URL
+        run: |
+          if grep -R --text "localhost:3001" .next; then
+            echo "Found localhost:3001 in build output"
+            exit 1
+          fi
+
+          grep -R --text "api.timplan.app" .next | head
 
       - name: Prepare deploy package
         run: |
