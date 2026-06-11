@@ -20,6 +20,7 @@ concurrency:
 env:
   NODE_VERSION: 24.x
   AZURE_WEBAPP_NAME: timplan
+  NEXT_PUBLIC_API_BASE: https://api.timplan.app
 
 jobs:
   deploy:
