@@ -1,5 +1,4 @@
-import { and, eq, getTableColumns, inArray, sql } from "drizzle-orm";
-
+import { and, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../../db/client.js";
 import { Card, cards, decks } from "../../db/schema.js";
 import { BatchUpsertCardsData, CardUpdateData, CreateCardData } from "../../docs/schemas.js";
@@ -18,31 +17,6 @@ export class DrizzleCardsRepository implements CardsRepository {
     return result.length > 0;
   }
 
-  async hasCardAccess(cardId: string, userId: string): Promise<boolean> {
-    const result = await db
-      .select({ id: cards.id })
-      .from(cards)
-      .innerJoin(decks, eq(decks.id, cards.deckId))
-      .where(and(eq(cards.id, cardId), eq(decks.userId, userId)))
-      .limit(1);
-
-    return result.length > 0;
-  }
-
-  async hasCardsAccess(cardIds: string[], userId: string): Promise<boolean> {
-    if (cardIds.length === 0) {
-      return true;
-    }
-
-    const ownedCards = await db
-      .select({ id: cards.id })
-      .from(cards)
-      .innerJoin(decks, eq(decks.id, cards.deckId))
-      .where(and(inArray(cards.id, cardIds), eq(decks.userId, userId)));
-
-    return ownedCards.length === cardIds.length;
-  }
-
   async getCardsByDeckId(deckId: string, userId: string): Promise<Card[]> {
     return db
       .select(cardColumns)
@@ -56,7 +30,7 @@ export class DrizzleCardsRepository implements CardsRepository {
       .select(cardColumns)
       .from(cards)
       .innerJoin(decks, eq(decks.id, cards.deckId))
-      .where(and(eq(cards.id, cardId), eq(decks.userId, userId)))
+      .where(and(eq(cards.id, cardId), eq(decks.userId, userId), eq(cards.deckId, decks.id)))
       .limit(1);
 
     return card ?? null;

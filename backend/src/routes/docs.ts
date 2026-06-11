@@ -10,6 +10,6 @@ router.get("/openapi.json", (_req, res) => {
   res.json(doc);
 });
 
-router.use("/", swaggerUi.serve, swaggerUi.setup(doc));
+router.use("/docs", swaggerUi.serve, swaggerUi.setup(doc));
 
 export default router;

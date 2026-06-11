@@ -3,10 +3,6 @@ import { BatchUpsertCardsData, CreateCardData, CardUpdateData } from "../../docs
 
 export interface CardsRepository {
   hasDeckAccess(deckId: string, userId: string): Promise<boolean>;
-  
-  hasCardAccess(cardId: string, userId: string): Promise<boolean>;
-
-  hasCardsAccess(cardIds: string[], userId: string): Promise<boolean>;
 
   getCardsByDeckId(deckId: string, userId: string): Promise<Card[]>;
 

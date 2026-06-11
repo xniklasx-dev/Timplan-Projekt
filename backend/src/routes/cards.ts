@@ -6,13 +6,12 @@ import { ApiError } from "../middleware/errorHandler.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
 import { CardsRepository } from "../repositories/cards/cardsRepository.js";
 import { env } from "../config/env.js";
-import { drizzleCardsRepository } from "../repositories/cards/drizzleRepository.js";
+import { drizzleCardsRepository } from "../repositories/cards/drizzleCardsRepository.js";
 import { loadMockCards } from "../repositories/cards/loadMockCards.js";
-import { memoryCardsRepository } from "../repositories/cards/memoryRepository.js";
+import { memoryCardsRepository } from "../repositories/cards/memoryCardsRepository.js";
 
 const router = Router();
-const cardsRepository: CardsRepository =
-  env.dataSource === "memory" ? loadMockCards(memoryCardsRepository) : drizzleCardsRepository;
+const cardsRepository: CardsRepository = env.dataSource === "memory" ? loadMockCards(memoryCardsRepository) : drizzleCardsRepository;
 
 async function requireDeckAccess(deckId: string, userId: string): Promise<void> {
   if (!await cardsRepository.hasDeckAccess(deckId, userId)) {
@@ -20,20 +19,8 @@ async function requireDeckAccess(deckId: string, userId: string): Promise<void> 
   }
 }
 
-async function requireCardAccess(cardId: string, userId: string): Promise<void> {
-  if (!await cardsRepository.hasCardAccess(cardId, userId)) {
-    throw new ApiError(403, "You do not have access to this card");
-  }
-}
-
-async function requireCardsAccess(cardIds: string[], userId: string): Promise<void> {
-  if (!await cardsRepository.hasCardsAccess(cardIds, userId)) {
-    throw new ApiError(403, "You do not have access to one or more cards");
-  }
-}
-
-// GET /cards/getAllCards/:deckId
-router.get("/cards/getAllCards/:deckId", asyncHandler(async (req, res) => {
+// GET /decks/:deckId/cards
+router.get("/decks/:deckId/cards", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
   const deckId = parseUUID(req.params.deckId);
 
@@ -45,12 +32,13 @@ router.get("/cards/getAllCards/:deckId", asyncHandler(async (req, res) => {
 }),
 );
 
-// GET /cards/:cardId
-router.get("/cards/:cardId", asyncHandler(async (req, res) => {
+// GET /decks/:deckId/cards/:cardId
+router.get("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
   const cardId = parseUUID(req.params.cardId);
+  const deckId = parseUUID(req.params.deckId);
 
-  await requireCardAccess(cardId, userId);
+  await requireDeckAccess(deckId, userId);
 
   const card = await cardsRepository.getCardById(cardId, userId);
 
@@ -62,8 +50,8 @@ router.get("/cards/:cardId", asyncHandler(async (req, res) => {
 }),
 );
 
-// POST /cards
-router.post("/cards", asyncHandler(async (req, res) => {
+// POST /decks/:deckId/cards
+router.post("/decks/:deckId/cards", asyncHandler(async (req, res) => {
   const deckId = parseUUID(req.body.deckId);
   const userId = parseUUID(req.header("userId") as string);
 
@@ -77,12 +65,13 @@ router.post("/cards", asyncHandler(async (req, res) => {
 }),
 );
 
-// PATCH /cards/:cardId
-router.patch("/cards/:cardId", asyncHandler(async (req, res) => {
+// PATCH /decks/:deckId/cards/:cardId
+router.patch("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
   const cardId = parseUUID(req.params.cardId);
+  const deckId = parseUUID(req.params.deckId);
 
-  await requireCardAccess(cardId, userId);
+  await requireDeckAccess(deckId, userId);
   
   const updateData = CardUpdateSchema.parse(req.body);
 
@@ -95,47 +84,32 @@ router.patch("/cards/:cardId", asyncHandler(async (req, res) => {
   return res.json(updatedCard);
 }));
 
-// PUT /cards
-router.put("/cards", asyncHandler(async (req, res) => {
-  const userId = parseUUID(req.header("userId") as string);
-  const body = BatchUpsertCardsSchema.parse(req.body);
-  const existingCardIds = body.cards
-      .map((card) => card.id)
-      .filter((id): id is string => id !== undefined);
-
-
-  await requireDeckAccess(body.deckId, userId);
-  await requireCardsAccess(existingCardIds, userId);
-
-  const upsertedCards = await cardsRepository.upsertManyCards(body);
-
-    res.status(200).json(upsertedCards);
-}));
-
-// DELETE /cards/:cardId
-router.delete("/cards/:cardId", asyncHandler(async (req, res) => {
-  const userId = parseUUID(req.header("userId") as string);
-  const cardId = parseUUID(req.params.cardId);
-
-  await requireCardAccess(cardId, userId);
-
-  await cardsRepository.deleteCard(cardId);
-
-  return res.status(200).json({ message: "Card deleted successfully" });
-  }),
-);
-
-// DELETE /cards/batchDelete/:deckId
-router.delete("/cards/batchDelete/:deckId", asyncHandler(async (req,res) => {
+// PUT /decks/:deckId/cards
+router.put("/decks/:deckId/cards", asyncHandler(async (req, res) => {
   const userId = parseUUID(req.header("userId") as string);
   const deckId = parseUUID(req.params.deckId);
 
   await requireDeckAccess(deckId, userId);
 
-  await cardsRepository.batchDeleteCard(deckId);
+  const cardListData = BatchUpsertCardsSchema.parse(req.body);
 
-  return res.status(200).json({ message: "Cards deleted Sucessfully" });
-}),
+  const upsertedCards = await cardsRepository.upsertManyCards(cardListData);
+
+  res.json(upsertedCards);
+}));
+
+// DELETE /decks/:deckId/cards/:cardId
+router.delete("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
+  const userId = parseUUID(req.header("userId") as string);
+  const cardId = parseUUID(req.params.cardId);
+  const deckId = parseUUID(req.params.deckId);
+
+  await requireDeckAccess(deckId, userId);
+
+  await cardsRepository.deleteCard(cardId);
+
+  return res.json({ message: "Card deleted successfully" });
+  }),
 );
 
 export default router;

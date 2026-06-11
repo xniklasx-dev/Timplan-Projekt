@@ -1,5 +1,9 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+
 import type { Card } from "../../db/schema.js";
-import { MemoryCardsRepository, memoryCardsRepository } from "./memoryRepository.js";
+import { MemoryCardsRepository, memoryCardsRepository } from "./memoryCardsRepository.js";
 import mockCardsJson from "../../../mockData/mockCards.json" with { type: "json" };
 
 type MockCard = Omit<Card, "due" | "createdAt" | "updatedAt"> & {

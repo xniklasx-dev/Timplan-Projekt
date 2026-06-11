@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+
 import { randomUUID } from "node:crypto";
 
 import { Card } from "../../db/schema.js";
@@ -26,28 +30,6 @@ export class MemoryCardsRepository implements CardsRepository {
 
     return ownerId === userId;*/
     return true
-  }
-
-  async hasCardAccess(cardId: string, userId: string): Promise<boolean> {
-    const card = this.cards.get(cardId);
-
-    if (!card) {
-      return false;
-    }
-
-    return this.hasDeckAccess(card.deckId, userId);
-  }
-
-  async hasCardsAccess(cardIds: string[], userId: string): Promise<boolean> {
-    if (cardIds.length === 0) {
-      return true;
-    }
-
-    const ownedCards = await Promise.all(
-      cardIds.map((cardId) => this.hasCardAccess(cardId, userId)),
-    );
-
-    return ownedCards.every(Boolean);
   }
 
   async getCardsByDeckId(deckId: string, userId: string): Promise<Card[]> {
