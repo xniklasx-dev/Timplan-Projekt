@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { User } from "../../db/schema.js";
-import { UpdateUserData } from "../../docs/schemas.js";
+import { UpdateProfileData } from "../../docs/schemas.js";
 import { UsersRepository } from "./usersRepository.js";
 
 export class MemoryUsersRepository implements UsersRepository {
@@ -38,7 +38,7 @@ export class MemoryUsersRepository implements UsersRepository {
         return userData;
     }
 
-    async updateUser(id: string, data: UpdateUserData): Promise<User | null> {
+    async updateUser(id: string, data: UpdateProfileData): Promise<User | null> {
         const existingUser = this.users.get(id);
 
         if(!existingUser) {
