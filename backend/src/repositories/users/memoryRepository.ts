@@ -28,14 +28,14 @@ export class MemoryUsersRepository implements UsersRepository {
 
     async createUser(user: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<User> {
         const now = new Date();
-        const user:  User = {
+        const userData:  User = {
             id: randomUUID(),
-            ...userData,
+            ...user,
             createdAt: now,
             updatedAt: now,
         };
-        this.users.set(user.id, user);
-        return user;
+        this.users.set(userData.id, userData);
+        return userData;
     }
 
     async updateUser(id: string, data: UpdateUserData): Promise<User | null> {
