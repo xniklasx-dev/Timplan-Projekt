@@ -29,7 +29,7 @@ export default function AccountSettingsPage() {
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    // Later: API-Call to upload avatar and get URL, for now just convert to base64
+    // Later: API-Call to upload avatar and get URL, for now just with base64
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
       setProfileError("Image size must be less than 2MB.");
@@ -218,18 +218,18 @@ export default function AccountSettingsPage() {
           </div>
         </section>
 
-        {/* Danger Zone */}
+        {/* Delete Account */}
         <section className={styles.section}>
-          <div className={styles.dangerCard}>
-            <div className={styles.dangerInfo}>
-              <span className={styles.dangerTitle}>Delete Account</span>
-              <span className={styles.dangerSub}>
+          <div className={styles.deleteCard}>
+            <div className={styles.deleteInfo}>
+              <span className={styles.deleteTitle}>Delete Account</span>
+              <span className={styles.deleteSub}>
                 This action cannot be undone. All your data will be permanently deleted.
               </span>
             </div>
             {!showDeleteConfirm ? (
               <button
-                className={styles.dangerButton}
+                className={styles.deleteButton}
                 onClick={() => setShowDeleteConfirm(true)}
               >
                 Delete Account
@@ -238,13 +238,13 @@ export default function AccountSettingsPage() {
               <div className={styles.confirmRow}>
                 <span className={styles.confirmText}>Are you sure?</span>
                 <button
-                  className={styles.dangerButton}
+                  className={styles.deleteButton}
                   onClick={() => setShowDeleteConfirm(false)}
                 >
                   Cancel
                 </button>
                 <button
-                  className={styles.dangerButtonConfirm}
+                  className={styles.deleteButtonConfirm}
                   onClick={() => alert("Account deletion not yet implemented.")}
                 >
                   Yes, delete

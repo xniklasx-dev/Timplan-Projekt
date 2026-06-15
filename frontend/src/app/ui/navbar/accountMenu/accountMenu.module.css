@@ -106,7 +106,7 @@
 .menuItemLogout {
   color: var(--color-accent);
   font-weight: 600;
-  background: var(--color-surface-hover);
+  background: var(--color-text-muted);
 }
 .menuItemLogout:hover {
   background: var(--color-accent);
