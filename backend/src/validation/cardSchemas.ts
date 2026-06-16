@@ -46,34 +46,6 @@ export const CardSchema = z
   })
   .openapi("Card");
 
-export const CardProgressSchema = z
-  .object({
-    cardId: UUIDSchema.openapi({
-      example: "5980c97c-e245-400a-b4c1-52b07feac04f",
-    }),
-
-    state: CardStateSchema.default("new").openapi({
-      example: "new",
-    }),
-
-    due: DateTimeSchema.openapi({
-      example: "2026-05-06T18:53:54.378Z",
-    }),
-
-    totalReviews: z.number().int().nonnegative().default(0).openapi({
-      example: 10,
-    }),
-
-    createdAt: DateTimeSchema.openapi({
-      example: "2026-05-06T18:53:54.378Z",
-    }),
-
-    updatedAt: DateTimeSchema.openapi({
-      example: "2026-05-06T18:53:54.378Z",
-    }),
-  })
-  .openapi("CardProgress");
-
 export const CreateCardSchema = CardSchema.pick({
   front: true,
   back: true,
@@ -157,7 +129,6 @@ export const BatchUpsertCardsSchema = z
   .openapi("BatchUpsertCards");
 
 export type CardData = z.output<typeof CardSchema>;
-export type CardProgressData = z.output<typeof CardProgressSchema>;
 export type CreateCardData = z.input<typeof CreateCardSchema> & { deckId: string };
 export type CardUpdateData = z.input<typeof CardUpdateSchema>;
 export type UpsertCardData = z.input<typeof UpsertCardSchema>;
