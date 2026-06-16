@@ -28,7 +28,7 @@ registry.register("DateData", DateDataSchema);
 
 registry.register("User", UserSchema);
 registry.register("RegisterUser", RegisterSchema);
-registry.register("LoginUser", LoginSchema),
+registry.register("LoginUser", LoginSchema);
 registry.register("ForgotUserPassword", ForgotPasswordSchema);
 registry.register("ResetUserPassword", ResetPasswordSchema);
 registry.register("UpdateProfile", UpdateProfileSchema);
