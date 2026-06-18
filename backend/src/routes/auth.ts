@@ -25,12 +25,10 @@ router.get("/auth/me", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing")
     }
 
-    /* token and decoding coming soon
-    const token =
-    const decoded = 
-    */
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, env.jwtSecret) as { userId: string };
 
-    const user = await usersRepository.getUserById(/*decoded.userId*/authHeader)
+    const user = await usersRepository.getUserById(decoded.userId);
     
     if (!user) {
       throw new ApiError(404, "User not found");
@@ -87,7 +85,7 @@ router.post("/auth/login", asyncHandler(async(req, res) => {
   }
   const token = jwt.sign(
     { userId: user.id },
-    process.env.JWT_SECRET!,
+    env.jwtSecret,
     { expiresIn: "7d" }
   );
 
@@ -142,12 +140,11 @@ router.patch("/auth/me", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing");
     }
 
-    /* token and decoding coming soon
-    const token =
-    const decoded =
-    */
+    
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, env.jwtSecret) as { userId: string };
 
-    const user = await usersRepository.getUserById(/* decoded.userId */ authHeader);
+    const user = await usersRepository.getUserById(decoded.userId);
 
     if (!user) {
       throw new ApiError(404, "User not found");
@@ -159,7 +156,7 @@ router.patch("/auth/me", asyncHandler(async(req, res) => {
       throw new ApiError(400, "invalid input");
     }
 
-    const updateUser = await usersRepository.updateUser(/* decodes.userId */ user.id, result.data);
+    const updateUser = await usersRepository.updateUser(decoded.userId, result.data);
 
     
     const { passwordHash: _, ...safeUser } = updateUser;
@@ -199,18 +196,17 @@ router.delete("/auth/me", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing");
     }
 
-    /* token and decoding coming soon
-    const token =
-    const decoded =
-    */
+    
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, env.jwtSecret) as { userId: string };
 
-    const user = await usersRepository.getUserById(/* decoded.userId */ authHeader);
+    const user = await usersRepository.getUserById(decoded.userId);
 
     if(!user) {
       throw new ApiError(404, "User not found");
     }
 
-    await usersRepository.deleteUser(/* decoded.userid */ authHeader);
+    await usersRepository.deleteUser(decoded.userId);
 
     res.status(204).send();
 }));
