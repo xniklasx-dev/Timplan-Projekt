@@ -11,6 +11,7 @@ export const env = {
   port: parsePort(process.env.PORT, 3001),
   databaseUrl: process.env.DATABASE_URL ?? "",
   dataSource: parseDataSource(process.env.DATA_SOURCE),
+  jwtSecret: process.env.JWT_SECRET ?? "dev-secret",
 
   allowedOrigins: (() => {
     const list = parseList(process.env.ALLOWED_ORIGINS);

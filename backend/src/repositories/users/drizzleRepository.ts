@@ -1,9 +1,10 @@
-import { and, eq, getTableColumns, inArray, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 import { db } from "../../db/client.js";
-import { Card, User, users } from "../../db/schema.js";
-import { CardUpdateData, UpdateUserData } from "../../docs/schemas.js";
+import { User, users } from "../../db/schema.js";
+import { UpdateProfileData } from "../../docs/schemas.js";
 import { UsersRepository } from "./usersRepository.js";
+import { ApiError } from "../../middleware/errorHandler.js";
 
 export class DrizzleUsersRepository implements UsersRepository {
     async getUserById(id: string): Promise<User | null> {
@@ -26,6 +27,16 @@ export class DrizzleUsersRepository implements UsersRepository {
         return user ?? null;
     }
 
+    async getUserByUsername(username: string): Promise<User | null> {
+        const [user] = await db
+            .select()
+            .from(users)
+            .where(eq(users.username, username))
+            .limit(1);
+
+        return user ?? null;
+    }
+
     async createUser(userData: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<User> {
         const [newUser] = await db
             .insert(users)
@@ -35,7 +46,7 @@ export class DrizzleUsersRepository implements UsersRepository {
         return newUser;
     }
 
-    async updateUser(id: string, updates: UpdateUserData): Promise<User | null> {
+    async updateUser(id: string, updates: UpdateProfileData): Promise<User> {
         const [updatedUser] = await db
             .update(users)
             .set({
@@ -45,7 +56,10 @@ export class DrizzleUsersRepository implements UsersRepository {
             .where(eq(users.id, id))
             .returning();
 
-        return updatedUser ?? null;
+        if (!updatedUser) {
+        throw new ApiError(404, "User not found");
+        }
+        return updatedUser;
     }
 
     async deleteUser(id: string): Promise<void> {

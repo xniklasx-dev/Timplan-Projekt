@@ -1,14 +1,16 @@
 import { User } from "../../db/schema.js";
-import { UserData, UpdateUserData } from "../../docs/schemas.js";
+import { UpdateProfileData } from "../../docs/schemas.js";
 
 export interface UsersRepository {
-    getUserById(id: string): Promise<UserData | null>;
+    getUserById(id: string): Promise<User | null>;
 
-    getUserByEmail(email: string): Promise<UserData | null>;
+    getUserByEmail(email: string): Promise<User | null>;
 
-    createUser(user: Omit<UserData, "id" | "createdAt" | "updatedAt">): Promise<UserData>;
+    getUserByUsername(username: string): Promise<User | null>;
 
-    updateUser(id: string, updates: UpdateUserData): Promise<UserData>;
+    createUser(user: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<User>;
+
+    updateUser(id: string, updates: UpdateProfileData): Promise<User>;
 
     deleteUser(id: string): Promise<void>;
 }

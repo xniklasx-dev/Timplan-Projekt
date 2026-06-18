@@ -18,13 +18,12 @@ export class MemoryUsersRepository implements UsersRepository {
     }
 
     async getUserByEmail(email: string): Promise<User | null> {
-        for (const user of this.users.values()) {
-            if (user.email === email) {
-                return user;
-            }
-        }
-        return null;
-    }
+        return Array.from(this.users.values()).find((u) => u.email === email) ?? null;  
+    }                
+
+    async getUserByUsername(username: string): Promise<User | null> {
+        return Array.from(this.users.values()).find((u) => u.username === username) ?? null;  
+    }    
 
     async createUser(user: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<User> {
         const now = new Date();
@@ -38,16 +37,15 @@ export class MemoryUsersRepository implements UsersRepository {
         return userData;
     }
 
-    async updateUser(id: string, data: UpdateProfileData): Promise<User | null> {
+    async updateUser(id: string, updates: UpdateProfileData): Promise<User> {
         const existingUser = this.users.get(id);
 
         if(!existingUser) {
-            // return null;
             throw Error('User ${id} not found');
         } 
         const updatedUser: User = {
             ...existingUser,
-            ...withoutUndefined(data),
+            ...withoutUndefined(updates),
             updatedAt: new Date(),
         };
         this.users.set(id, updatedUser);

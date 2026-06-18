@@ -254,7 +254,7 @@ export const DateDataSchema = z
             example: "testuser@example.com",
         }),
         
-        passwordHash: z.string().min(12).openapi({
+        password: z.string().min(12).openapi({
             example: "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3mS0i8"
         })
     })
@@ -263,15 +263,11 @@ export const DateDataSchema = z
 
     export const LoginSchema = z
     .object({
-        username: z.string().min(2).max(10).openapi({
-            example: "testuser",
-        }),
-
-        email: z.string().email().openapi({
-            example: "testuser@example.com",
+        emailOrUsername: z.string().min(1).openapi({
+            example: "testuser or testuser@example.com",
         }),
         
-        passwordHash: z.string().min(12).openapi({
+        password: z.string().min(12).openapi({
             example: "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3mS0i8"
         })
     })
@@ -293,16 +289,15 @@ export const DateDataSchema = z
             example: "reset-token-123",
         }),
 
-        newPasswordHash: z.string().min(12).openapi({
+        newPassword: z.string().min(12).openapi({
             example: "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3mS0i8"
         })
     })
     .strict()
     .openapi("ResetUserPassword");
 
-    export const UpdateProfileSchema = z
-    .object({
-        displayname: true,
+    export const UpdateProfileSchema = UserSchema.pick({
+        displayName: true,
         avatarUrl: true,
     })
     .partial()
