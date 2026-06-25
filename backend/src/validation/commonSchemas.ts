@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 

@@ -43,9 +43,9 @@ export const users = pgTable("users",
       .notNull()
       .defaultNow(),
   },
-  (table) => ({
-    emailUnique: uniqueIndex("users_email_unique").on(table.email),
-  }),
+  (table) => [
+    uniqueIndex("users_email_unique").on(table.email),
+  ],
 );
 
 export const decks = pgTable("decks",
@@ -75,12 +75,12 @@ export const decks = pgTable("decks",
       .notNull()
       .defaultNow(),
   },
-  (table) => ({
-    userIdIndex: index("decks_user_id_idx").on(table.userId),
-    parentDeckIdIndex: index("decks_parent_deck_id_idx").on(
+  (table) => [
+    index("decks_user_id_idx").on(table.userId),
+    index("decks_parent_deck_id_idx").on(
       table.parentDeckId,
     ),
-  }),
+  ],
 );
 
 export const cards = pgTable(
@@ -112,14 +112,14 @@ export const cards = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => ({
-    deckCreatedAtIndex: index("cards_deck_id_created_at_idx").on(
+  (table) => [
+    index("cards_deck_id_created_at_idx").on(
       table.deckId,
       table.createdAt,
     ),
 
-    tagsIndex: index("cards_tags_idx").using("gin", table.tags),
-  }),
+    index("cards_tags_idx").using("gin", table.tags),
+  ],
 );
 
 export const cardProgress = pgTable(
@@ -135,6 +135,8 @@ export const cardProgress = pgTable(
     state: cardStateEnum("state")
       .notNull()
       .default("new"),
+
+    rating: cardRatingEnum("rating"),
 
     due: timestamp("due", { withTimezone: true })
       .notNull()
@@ -152,14 +154,14 @@ export const cardProgress = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => ({
-    dueIndex: index("card_progress_due_idx").on(table.due),
+  (table) => [
+    index("card_progress_due_idx").on(table.due),
 
-    stateDueIndex: index("card_progress_state_due_idx").on(
+    index("card_progress_state_due_idx").on(
       table.state,
       table.due,
     ),
-  }),
+  ],
 );
 
 export const dateData = pgTable("date_data",
@@ -176,14 +178,14 @@ export const dateData = pgTable("date_data",
     medium: bigint("medium", { mode: "number" }).notNull().default(0),
     hard: bigint("hard", { mode: "number" }).notNull().default(0),
   },
-  (table) => ({
-    userDateUnique: uniqueIndex("date_data_user_id_date_unique").on(
+  (table) => [
+    uniqueIndex("date_data_user_id_date_unique").on(
       table.userId,
       table.date,
     ),
 
-    userIdIndex: index("date_data_user_id_idx").on(table.userId),
-  }),
+    index("date_data_user_id_idx").on(table.userId),
+  ],
 );
 
 export const usersRelations = relations(users, ({ many }) => ({

@@ -15,7 +15,7 @@ const cardsRepository: CardsRepository = env.dataSource === "memory" ? mockCards
 
 async function requireDeckAccess(deckId: string, userId: string): Promise<void> {
   if (!await cardsRepository.hasDeckAccess(deckId, userId)) {
-    throw new ApiError(403, "You do not have access to this deck");
+    throw new ApiError(403, "You do not have access to this deck", true, "forbidden");
   }
 }
 
@@ -43,7 +43,7 @@ router.get("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
   const card = await cardsRepository.getCardById(cardId, userId);
 
   if (!card) {
-    throw new ApiError(404, "Card not found");
+    throw new ApiError(404, "Card not found", true, "not_found");
   }
 
   return res.json(card);
@@ -81,7 +81,7 @@ router.patch("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
   const updatedCard = await cardsRepository.updateCard(cardId, deckId, updateData);
 
   if (!updatedCard) {
-    throw new ApiError(404, "Card not found");
+    throw new ApiError(404, "Card not found", true, "not_found");
   }
 
   return res.json(updatedCard);
@@ -115,7 +115,7 @@ router.delete("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
   const deleted = await cardsRepository.deleteCard(cardId, deckId);
 
   if (!deleted) {
-    throw new ApiError(404, "Card not found");
+    throw new ApiError(404, "Card not found", true, "not_found");
   }
 
   return res.json({ message: "Card deleted successfully" });
