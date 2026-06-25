@@ -130,7 +130,6 @@ router.delete("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
   }
 
   return res.json({ message: "Card deleted successfully" });
-  }),
-);
+}));
 
 export default router;
