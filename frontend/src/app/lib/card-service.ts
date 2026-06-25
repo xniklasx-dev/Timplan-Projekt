@@ -120,7 +120,7 @@ export function toCardFormat(card: CardFormData): CardFormData {
   return {
     front: card.front.trim(),
     back: card.back.trim(),
-    hint: card.hint?.trim() || undefined,
+    hint: card.hint?.trim() || null,
     tags: normalizeTags(card.tags),
   };
 }

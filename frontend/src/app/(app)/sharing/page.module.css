@@ -1,4 +1,13 @@
+.testButtonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .testButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 16px;
   min-height: 46px;
   padding: 0 18px;
@@ -7,6 +16,7 @@
   background: var(--color-accent);
   color: var(--color-text);
   font-weight: 700;
+  text-decoration: none;
   cursor: pointer;
 
   transition:
