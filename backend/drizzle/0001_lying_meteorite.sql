@@ -1,0 +1,1 @@
+ALTER TABLE "card_progress" ADD COLUMN "rating" "card_rating";
