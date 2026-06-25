@@ -92,7 +92,7 @@ export async function deleteCard(deckId: string, cardId: string, userId: string)
 function cardHeaders(userId: string): HeadersInit {
   return {
     "Content-Type": "application/json",
-    userId,
+    Authorization: `Bearer ${userId}`,
   };
 }
 

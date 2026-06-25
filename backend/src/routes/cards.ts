@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, type Request } from "express";
 import { env } from "../config/env.js";
 
 import { BatchUpsertCardsSchema, CardUpdateSchema, CreateCardSchema } from "../validation/cardSchemas.js";
@@ -13,6 +13,17 @@ import { drizzleCardsRepository } from "../repositories/cards/drizzleCardsReposi
 const router = Router();
 const cardsRepository: CardsRepository = env.dataSource === "memory" ? mockCardsRepository : drizzleCardsRepository;
 
+function getUserId(req: Request): string {
+  const authHeader = req.header("authorization");
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    throw new ApiError(401, "Missing bearer token", true, "unauthorized");
+  }
+
+  const token = authHeader.replace("Bearer ", "");
+  return parseUUID(token);
+}
+
 async function requireDeckAccess(deckId: string, userId: string): Promise<void> {
   if (!await cardsRepository.hasDeckAccess(deckId, userId)) {
     throw new ApiError(403, "You do not have access to this deck", true, "forbidden");
@@ -21,7 +32,7 @@ async function requireDeckAccess(deckId: string, userId: string): Promise<void> 
 
 // GET /decks/:deckId/cards
 router.get("/decks/:deckId/cards", asyncHandler(async (req, res) => {
-  const userId = parseUUID(req.header("userId") as string);
+  const userId = getUserId(req);
   const deckId = parseUUID(req.params.deckId);
 
   await requireDeckAccess(deckId, userId);
@@ -34,7 +45,7 @@ router.get("/decks/:deckId/cards", asyncHandler(async (req, res) => {
 
 // GET /decks/:deckId/cards/:cardId
 router.get("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
-  const userId = parseUUID(req.header("userId") as string);
+  const userId = getUserId(req);
   const cardId = parseUUID(req.params.cardId);
   const deckId = parseUUID(req.params.deckId);
 
@@ -53,7 +64,7 @@ router.get("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
 // POST /decks/:deckId/cards
 router.post("/decks/:deckId/cards", asyncHandler(async (req, res) => {
   const deckId = parseUUID(req.params.deckId);
-  const userId = parseUUID(req.header("userId") as string);
+  const userId = getUserId(req);
 
   await requireDeckAccess(deckId, userId);
 
@@ -70,7 +81,7 @@ router.post("/decks/:deckId/cards", asyncHandler(async (req, res) => {
 
 // PATCH /decks/:deckId/cards/:cardId
 router.patch("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
-  const userId = parseUUID(req.header("userId") as string);
+  const userId = getUserId(req);
   const cardId = parseUUID(req.params.cardId);
   const deckId = parseUUID(req.params.deckId);
 
@@ -89,7 +100,7 @@ router.patch("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
 
 // PUT /decks/:deckId/cards
 router.put("/decks/:deckId/cards", asyncHandler(async (req, res) => {
-  const userId = parseUUID(req.header("userId") as string);
+  const userId = getUserId(req);
   const deckId = parseUUID(req.params.deckId);
 
   await requireDeckAccess(deckId, userId);
@@ -106,7 +117,7 @@ router.put("/decks/:deckId/cards", asyncHandler(async (req, res) => {
 
 // DELETE /decks/:deckId/cards/:cardId
 router.delete("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
-  const userId = parseUUID(req.header("userId") as string);
+  const userId = getUserId(req);
   const cardId = parseUUID(req.params.cardId);
   const deckId = parseUUID(req.params.deckId);
 
