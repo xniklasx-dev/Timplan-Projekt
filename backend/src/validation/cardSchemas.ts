@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////
 
 import { z } from "zod";
-import { cardStateEnum } from "../db/schema.js";
+import { cardRatingEnum, cardStateEnum } from "../db/schema.js";
 import {
   DateTimeSchema,
   NullableStringSchema,
@@ -13,6 +13,7 @@ import {
 } from "./commonSchemas.js";
 
 const CardStateSchema = z.enum(cardStateEnum.enumValues);
+const CardRatingSchema = z.enum(cardRatingEnum.enumValues);
 
 export const CardSchema = z
   .object({
@@ -58,6 +59,10 @@ export const CardProgressSchema = z
 
     state: CardStateSchema.default("new").openapi({
       example: "new",
+    }),
+
+    rating: CardRatingSchema.nullable().openapi({
+      example: "good",
     }),
 
     due: DateTimeSchema.openapi({

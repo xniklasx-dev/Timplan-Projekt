@@ -217,6 +217,15 @@ export const cardsRelations = relations(cards, ({ one }) => ({
     fields: [cards.deckId],
     references: [decks.id],
   }),
+
+  progress: one(cardProgress),
+}));
+
+export const cardProgressRelations = relations(cardProgress, ({ one }) => ({
+  card: one(cards, {
+    fields: [cardProgress.cardId],
+    references: [cards.id],
+  }),
 }));
 
 export const dateDataRelations = relations(dateData, ({ one }) => ({
