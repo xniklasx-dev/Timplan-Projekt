@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 
 import styles from "./deckEditor.module.css";
 
@@ -248,7 +249,7 @@ export default function DeckEditor({
             onClick={handleClose}
             aria-label="Close modal"
           >
-            ×
+            <Image src="/close_icon.svg" alt="" width={20} height={20} />
           </button>
         </div>
 
