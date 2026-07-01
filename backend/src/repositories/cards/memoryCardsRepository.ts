@@ -18,6 +18,10 @@ export class MemoryCardsRepository implements CardsRepository {
     }
   }
 
+  getAllCards(): Card[] {
+    return Array.from(this.cards.values());
+  }
+
   // TODO: implement sobald nik die decks gemacht hat
   async hasDeckAccess(_deckId: string, _userId: string): Promise<boolean> {
     
@@ -123,5 +127,3 @@ function withoutUndefined<T extends Record<string, unknown>>(data: T): Partial<T
     Object.entries(data).filter(([, value]) => value !== undefined),
   ) as Partial<T>;
 }
-
-export const memoryCardsRepository = new MemoryCardsRepository();
