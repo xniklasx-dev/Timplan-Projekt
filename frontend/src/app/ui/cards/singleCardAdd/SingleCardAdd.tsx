@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 import type { Card } from "@/app/lib/definitions";
 import { createCard, normalizeTags } from "@/app/lib/card-service";
@@ -128,12 +129,7 @@ export default function SingleCardAdd({ open, deckId, userId, onClose, onCreated
 
       {open && deckId && (
         <div className={styles.overlay}>
-          <div
-            className={styles.modal}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="single-card-add-title"
-          >
+          <div className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="single-card-add-title">
             <div className={styles.header}>
               <div className={styles.headerMain}>
                 <span className={styles.eyebrow}>Card Add</span>
@@ -144,7 +140,7 @@ export default function SingleCardAdd({ open, deckId, userId, onClose, onCreated
               </div>
 
               <button type="button" className={styles.closeButton} onClick={requestClose} aria-label="Close modal">
-                ×
+                <Image src="/close_icon.svg" alt="" width={20} height={20} />
               </button>
             </div>
 

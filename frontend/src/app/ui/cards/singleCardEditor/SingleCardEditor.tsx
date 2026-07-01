@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 import type { Card } from "@/app/lib/definitions";
 import { getCardById, normalizeTags, toCardFormat, updateCard } from "@/app/lib/card-service";
@@ -191,7 +192,7 @@ export default function SingleCardEditor({ open, deckId, cardId, userId, onClose
               </div>
 
               <button type="button" className={styles.closeButton} onClick={handleClose} aria-label="Close modal">
-                ×
+                <Image src="/close_icon.svg" alt="" width={20} height={20} />
               </button>
             </div>
 
@@ -234,12 +235,7 @@ export default function SingleCardEditor({ open, deckId, cardId, userId, onClose
 
       {open && deckId && cardId && (
         <div className={styles.overlay}>
-          <div
-            className={styles.modal}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="single-card-edit-title"
-          >
+          <div className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="single-card-edit-title">
             <div className={styles.header}>
               <div className={styles.headerMain}>
                 <span className={styles.eyebrow}>Card Edit</span>
@@ -250,7 +246,7 @@ export default function SingleCardEditor({ open, deckId, cardId, userId, onClose
               </div>
 
               <button type="button" className={styles.closeButton} onClick={handleClose} aria-label="Close modal">
-                ×
+                <Image src="/close_icon.svg" alt="" width={20} height={20} />
               </button>
             </div>
 

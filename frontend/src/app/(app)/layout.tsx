@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { isLoading } = useAuth();
 
   if (isLoading) return <Spinner />;
-  
+
   return (
     <div className={styles.shell}>
       <Suspense fallback={null}>

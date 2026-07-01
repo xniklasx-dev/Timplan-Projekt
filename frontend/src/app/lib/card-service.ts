@@ -53,12 +53,7 @@ export async function createCard(cardData: CreateCardData, userId: string): Prom
   return toFrontendCard(card);
 }
 
-export async function updateCard(
-  deckId: string,
-  cardId: string,
-  cardData: CardFormData,
-  userId: string,
-): Promise<Card> {
+export async function updateCard(deckId: string, cardId: string, cardData: CardFormData, userId: string): Promise<Card> {
   const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards/${cardId}`, {
     method: "PATCH",
     headers: cardHeaders(userId),

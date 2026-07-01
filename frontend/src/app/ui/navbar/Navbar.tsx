@@ -21,7 +21,7 @@ export default function Navbar() {
     { href: '/decks', label: 'Decks' },
     { href: '/learning', label: 'Learning' },
     { href: '/statistic', label: 'Stats' },
-    { href: '/sharing', label: 'Sharing' },
+    { href: '/testing', label: 'Testing' },
   ];
 
   return (
@@ -31,11 +31,7 @@ export default function Navbar() {
           Timplan
         </Link>
 
-        <nav
-          className={`${styles.nav} ${
-            searchOpen ? styles.navSearchOpen : ''
-          }`}
-        >
+        <nav className={`${styles.nav} ${searchOpen ? styles.navSearchOpen : ''}`}>
           <div className={styles.navLinks}>
             {links.map((link) => {
               const active = isActive(pathname, link.href);
@@ -44,9 +40,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`${styles.navLink} ${
-                    active ? styles.navLinkActive : ''
-                  }`}
+                  className={`${styles.navLink} ${active ? styles.navLinkActive : ''}`}
                 >
                   {link.label}
                 </Link>
@@ -54,11 +48,7 @@ export default function Navbar() {
             })}
           </div>
 
-          <NavSearch
-            open={searchOpen}
-            onOpen={() => setSearchOpen(true)}
-            onClose={() => setSearchOpen(false)}
-          />
+          <NavSearch open={searchOpen} onOpen={() => setSearchOpen(true)} onClose={() => setSearchOpen(false)} />
         </nav>
 
         <div className={styles.right}>

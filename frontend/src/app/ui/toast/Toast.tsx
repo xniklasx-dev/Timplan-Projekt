@@ -5,6 +5,7 @@
 "use client";
 
 import { useEffect, type CSSProperties } from "react";
+import Image from "next/image";
 
 import styles from "./Toast.module.css";
 
@@ -43,7 +44,7 @@ export default function Toast({ message, title = "Saved", durationMs = 3000, onC
 
       {onClose && (
         <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Close notification">
-          ×
+          <Image src="/close_icon.svg" alt="" width={18} height={18} />
         </button>
       )}
 
