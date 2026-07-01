@@ -94,5 +94,3 @@ export class DrizzleCardsRepository implements CardsRepository {
     await db.delete(cards).where(eq(cards.deckId, deckId));
   }
 }
-
-export const drizzleCardsRepository = new DrizzleCardsRepository();

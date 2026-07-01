@@ -1,28 +1,13 @@
-import { Router, type Request } from "express";
-import { env } from "../config/env.js";
+import { Router} from "express";
 
 import { BatchUpsertCardsSchema, CardUpdateSchema, CreateCardSchema } from "../validation/cardSchemas.js";
-import { parseUUID } from "../utils/apiUtils.js";
+import { parseUUID, getUserId } from "../utils/apiUtils.js";
 import { ApiError } from "../middleware/errorHandler.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
 
-import { CardsRepository } from "../repositories/cards/cardsRepository.js";
-import { mockCardsRepository } from "../repositories/cards/loadMockCards.js";
-import { drizzleCardsRepository } from "../repositories/cards/drizzleCardsRepository.js";
+import { cardsRepository } from "../repositories/repositories.js";
 
 const router = Router();
-const cardsRepository: CardsRepository = env.dataSource === "memory" ? mockCardsRepository : drizzleCardsRepository;
-
-function getUserId(req: Request): string {
-  const authHeader = req.header("authorization");
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new ApiError(401, "Missing bearer token", true, "unauthorized");
-  }
-
-  const token = authHeader.replace("Bearer ", "");
-  return parseUUID(token);
-}
 
 async function requireDeckAccess(deckId: string, userId: string): Promise<void> {
   if (!await cardsRepository.hasDeckAccess(deckId, userId)) {
