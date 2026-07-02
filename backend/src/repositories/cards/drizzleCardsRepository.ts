@@ -25,12 +25,12 @@ export class DrizzleCardsRepository implements CardsRepository {
       .where(and(eq(cards.deckId, deckId), eq(decks.userId, userId)));
   }
 
-  async getCardById(cardId: string, userId: string): Promise<Card | null> {
+  async getCardById(cardId: string, deckId: string, userId: string): Promise<Card | null> {
     const [card] = await db
       .select(cardColumns)
       .from(cards)
       .innerJoin(decks, eq(decks.id, cards.deckId))
-      .where(and(eq(cards.id, cardId), eq(decks.userId, userId), eq(cards.deckId, decks.id)))
+      .where(and(eq(cards.id, cardId), eq(decks.userId, userId), eq(cards.deckId, deckId)))
       .limit(1);
 
     return card ?? null;
@@ -77,6 +77,7 @@ export class DrizzleCardsRepository implements CardsRepository {
           tags: sql`EXCLUDED.tags`,
           updatedAt: new Date(),
         },
+        setWhere: eq(cards.deckId, cardsData.deckId),
       })
       .returning();
   }

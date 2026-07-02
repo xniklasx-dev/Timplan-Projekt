@@ -6,7 +6,7 @@ export interface CardsRepository {
 
   getCardsByDeckId(deckId: string, userId: string): Promise<Card[]>;
 
-  getCardById(cardId: string, userId: string): Promise<Card | null>;
+  getCardById(cardId: string, deckId: string, userId: string): Promise<Card | null>;
 
   createCard(cardData: CreateCardData): Promise<Card>;
 

@@ -36,7 +36,7 @@ router.get("/decks/:deckId/cards/:cardId", asyncHandler(async (req, res) => {
 
   await requireDeckAccess(deckId, userId);
 
-  const card = await cardsRepository.getCardById(cardId, userId);
+  const card = await cardsRepository.getCardById(cardId, deckId, userId);
 
   if (!card) {
     throw new ApiError(404, "Card not found", true, "not_found");

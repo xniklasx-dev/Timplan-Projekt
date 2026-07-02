@@ -40,7 +40,7 @@ export class MemoryCardsRepository implements CardsRepository {
     return Array.from(this.cards.values()).filter((card) => card.deckId === deckId);
   }
 
-  async getCardById(cardId: string, _userId: string): Promise<Card | null> {
+  async getCardById(cardId: string, _deckId: string, _userId: string): Promise<Card | null> {
     return this.cards.get(cardId) ?? null;
   }
 
