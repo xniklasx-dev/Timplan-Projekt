@@ -6,16 +6,17 @@ import type { Deck, Card } from "@/app/lib/definitions";
 import styles from "../page.module.css";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
 import placeholderCards from "@/app/lib/placeholder-cards.json";
+import DeckNavigator from "@/app/ui/decks/deckNavigator/DeckNavigator";
 import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
 import DeckGrid from "@/app/ui/decks/deckGrid/DeckGrid";
 import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
 import DeckEditor from "@/app/ui/decks/deckEditor/DeckEditor";
 
-const initialDecksData: Deck[] = placeholderDecks as unknown as Deck[];
-const cardsData: Card[] = placeholderCards as unknown as Card[];
+const startDecks: Deck[] = placeholderDecks as unknown as Deck[];
+const startCards: Card[] = placeholderCards as unknown as Card[];
 
 const NEW_CARD_ID = "c0";
-const DECKS_STORAGE_KEY = "timplan-decks";
+const STORAGE_KEY = "timplan-decks";
 
 type DeckEditorState = {
   open: boolean;
@@ -23,25 +24,31 @@ type DeckEditorState = {
   parentDeckId?: string;
 };
 
+type SaveDeckOptions = {
+  isNew: boolean;
+}
+
 function loadDecks(): Deck[] {
   if (typeof window === "undefined") {
-    return initialDecksData;
+    return startDecks;
   }
 
   try {
-    const storedDecks = window.localStorage.getItem(DECKS_STORAGE_KEY);
+    const savedDecks = localStorage.getItem(STORAGE_KEY);
 
-    if (!storedDecks) {
-      return initialDecksData;
+    if (savedDecks === null) {
+      return startDecks;
     }
 
-    const parsedDecks = JSON.parse(storedDecks) as Deck[];
+    const parsedDecks = JSON.parse(savedDecks) as Deck[];
 
-    return Array.isArray(parsedDecks) && parsedDecks.length > 0
-      ? parsedDecks
-      : initialDecksData;
+    if (!Array.isArray(parsedDecks) || parsedDecks.length === 0) {
+      return startDecks;
+    }
+
+    return parsedDecks;
   } catch {
-    return initialDecksData;
+    return startDecks;
   }
 }
 
@@ -52,9 +59,7 @@ export default function Deck() {
 
   const [decks, setDecks] = useState<Deck[]>(loadDecks);
   const [isGridView, setIsGridView] = useState(false);
-  const [activeEditorCardId, setActiveEditorCardId] = useState<string | null>(
-    null,
-  );
+  const [activeEditorCardId, setActiveEditorCardId] = useState<string | null>(null);
   const [deckEditorState, setDeckEditorState] = useState<DeckEditorState>({
     open: false,
     deckId: null,
@@ -62,39 +67,54 @@ export default function Deck() {
   });
 
   useEffect(() => {
-    window.localStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(decks));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(decks));
   }, [decks]);
 
-  const currentDeck = decks.find((d) => d.id === deckId);
-  if (!currentDeck) return <main className={styles.page}>Deck not found</main>;
+  const currentDeck = decks.find((deck) => deck.id === deckId);
 
-  const childDecks: Deck[] =
-    currentDeck.childDeckIds
-      ?.map((id) => decks.find((d) => d.id === id))
-      .filter((d): d is Deck => !!d) ?? [];
+  if (!currentDeck) {
+    return <main className={styles.page}>Deck not found</main>;
+  }
 
-  const cards: Card[] =
-    currentDeck.cardIds
-      ?.map((id) => cardsData.find((c) => c.id === id))
-      .filter((c): c is Card => !!c) ?? [];
+  const childDecks: Deck[] = [];
+  if (currentDeck.childDeckIds) {
+    for (const childDeckId of currentDeck.childDeckIds) {
+      const foundDeck = decks.find((deck) => deck.id === childDeckId);
 
-  const handleToggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (foundDeck) {
+        childDecks.push(foundDeck);
+      }
+    }
+  }
+
+  const cards: Card[] = [];
+  if (currentDeck.cardIds) {
+    for (const cardId of currentDeck.cardIds) {
+      const foundCard = startCards.find((card) => card.id === cardId);
+
+      if (foundCard) {
+        cards.push(foundCard);
+      }
+    }
+  }
+
+  const toggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsGridView(event.target.checked);
   };
 
-  const handleOpenNewCardEditor = () => {
+  const openNewCardEditor = () => {
     setActiveEditorCardId(NEW_CARD_ID);
   };
 
-  const handleOpenExistingCardEditor = (cardId: string) => {
+  const openExistingCardEditor = (cardId: string) => {
     setActiveEditorCardId(cardId);
   };
 
-  const handleCloseEditor = () => {
+  const closeCardEditor = () => {
     setActiveEditorCardId(null);
   };
 
-  const handleOpenDeckEditor = () => {
+  const openDeckEditor = () => {
     setDeckEditorState({
       open: true,
       deckId: currentDeck.id,
@@ -102,7 +122,7 @@ export default function Deck() {
     });
   };
 
-  const handleOpenAddDeckEditor = () => {
+  const openAddDeckEditor = () => {
     setDeckEditorState({
       open: true,
       deckId: null,
@@ -110,7 +130,7 @@ export default function Deck() {
     });
   };
 
-  const handleCloseDeckEditor = () => {
+  const closeDeckEditor = () => {
     setDeckEditorState({
       open: false,
       deckId: null,
@@ -118,32 +138,39 @@ export default function Deck() {
     });
   };
 
-  const handleSaveDeck = (savedDeck: Deck, options: { isNew: boolean }) => {
+  const saveDeck = (savedDeck: Deck, options: SaveDeckOptions) => {
     setDecks((currentDecks) => {
       if (options.isNew) {
-        const updatedParentDecks = currentDecks.map((deck) => {
-          if (deck.id !== currentDeck.id) {
-            return deck;
+        const updatedDecks = currentDecks.map((deck) => {
+          if (deck.id === currentDeck.id) {
+            const oldChildDeckIds = deck.childDeckIds ?? [];
+            let newChildDeckIds = oldChildDeckIds;
+
+            if (!oldChildDeckIds.includes(savedDeck.id)) {
+              newChildDeckIds = oldChildDeckIds.concat(savedDeck.id);
+            }
+
+            return {
+              ...deck,
+              childDeckIds: newChildDeckIds,
+              updatedAt: new Date(),
+              revision: deck.revision + 1,
+            };
           }
 
-          const currentChildDeckIds = deck.childDeckIds ?? [];
-
-          return {
-            ...deck,
-            childDeckIds: currentChildDeckIds.includes(savedDeck.id)
-              ? currentChildDeckIds
-              : [...currentChildDeckIds, savedDeck.id],
-            updatedAt: new Date(),
-            revision: deck.revision + 1,
-          };
+          return deck;
         });
 
-        return [...updatedParentDecks, savedDeck];
+        return updatedDecks.concat(savedDeck);
       }
 
-      return currentDecks.map((deck) =>
-        deck.id === savedDeck.id ? savedDeck : deck,
-      );
+      return currentDecks.map((deck) => {
+        if (deck.id === savedDeck.id) {
+          return savedDeck;
+        }
+
+        return deck;
+      });
     });
 
     if (options.isNew) {
@@ -151,13 +178,45 @@ export default function Deck() {
     }
   };
 
+  const deleteDeck = () => {
+    const confirmed = window.confirm("Are you sure you want to delete this deck?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDecks((currentDecks) => {
+      return currentDecks.filter((deck) => deck.id !== currentDeck.id);
+    });
+
+    router.push("/decks");
+  };
+
+  let deckEditorKey = "";
+
+  if (deckEditorState.deckId !== null) {
+    deckEditorKey = deckEditorState.deckId;
+  } else if (deckEditorState.parentDeckId) {
+    deckEditorKey = `new-${deckEditorState.parentDeckId}`;
+  } else {
+    deckEditorKey = "new-root";
+  }
+
+  if (deckEditorState.open) {
+    deckEditorKey += "-open";
+  } else {
+    deckEditorKey += "-closed";
+  }
+
   return (
     <main className={styles.page}>
+      <DeckNavigator decks={decks} />
+
       <DeckHeader
         title={currentDeck.name}
         subtitle={currentDeck.description}
         isGridView={isGridView}
-        onToggleViewAction={handleToggleView}
+        onToggleViewAction={toggleView}
         dropdownButtonLabel="Test"
         dropdownButtons={[
           {
@@ -166,28 +225,19 @@ export default function Deck() {
           },
           {
             label: "Add Card",
-            onClick: handleOpenNewCardEditor,
+            onClick: openNewCardEditor,
           },
           {
             label: "Edit Deck",
-            onClick: handleOpenDeckEditor,
+            onClick: openDeckEditor,
           },
           {
             label: "Add Deck",
-            onClick: handleOpenAddDeckEditor,
+            onClick: openAddDeckEditor,
           },
           {
             label: "Delete Deck",
-            onClick: () => {
-              if (
-                window.confirm("Are you sure you want to delete this deck?")
-              ) {
-                setDecks((currentDecks) =>
-                  currentDecks.filter((deck) => deck.id !== currentDeck.id),
-                );
-                router.push("/decks");
-              }
-            },
+            onClick: deleteDeck,
           },
         ]}
       />
@@ -196,26 +246,27 @@ export default function Deck() {
         decks={childDecks}
         cards={cards}
         isGridView={isGridView}
-        onEditCardAction={handleOpenExistingCardEditor}
+        onEditCardAction={openExistingCardEditor}
       />
 
       <SingleCardEditor
         key={activeEditorCardId ?? "closed"}
         open={activeEditorCardId !== null}
-        cardId={activeEditorCardId}
-        onClose={handleCloseEditor}
+        deckId="4992f5a6-2220-48a1-ac6c-1c762526bd45"
+        cardId="c83705d2-dcd5-4fc5-8a03-12cf90b386f2"
+        userId="833cfb77-79b1-4f23-bfb0-51c1cbecd7ae"
+        onClose={closeCardEditor}
+        onSaved={closeCardEditor}
       />
 
       <DeckEditor
-        key={`${deckEditorState.deckId ?? `new-${deckEditorState.parentDeckId ?? "root"}`}-${
-          deckEditorState.open ? "open" : "closed"
-        }`}
+        key={deckEditorKey}
         open={deckEditorState.open}
         deckId={deckEditorState.deckId}
         parentDeckId={deckEditorState.parentDeckId}
         decks={decks}
-        onClose={handleCloseDeckEditor}
-        onSaveAction={handleSaveDeck}
+        onCloseAction={closeDeckEditor}
+        onSaveAction={saveDeck}
       />
     </main>
   );

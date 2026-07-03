@@ -1,259 +1,293 @@
-'use client';
+"use client";
 
-import { useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
+import { useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import styles from './DeckCardsEditView.module.css';
+import type { Card, Deck } from "@/app/lib/definitions";
+import { deleteCard, normalizeTags, upsertCards, type UpsertCardData } from "@/app/lib/card-service";
+import ConfirmDialog from "@/app/ui/confirmDialog/ConfirmDialog";
+import Toast from "@/app/ui/toast/Toast";
 
-import type { Card, Deck } from '@/app/lib/definitions';
-import DeckCardsEditItem from './DeckCardsEditItem';
+import DeckCardsEditItem, { type CardEditField } from "./DeckCardsEditItem";
+import styles from "./DeckCardsEditView.module.css";
 
 type DeckCardsEditViewProps = {
   deck: Deck;
   initialCards: Card[];
+  userId: string;
 };
 
 function normalizeCard(card: Card): Card {
   return {
     ...card,
-    hint: card.hint ?? '',
-    extra: card.extra ?? '',
+    hint: card.hint ?? "",
+    tags: normalizeTags(card.tags),
   };
 }
 
 function createEmptyCard(deckId: string, index: number): Card {
-  const now = new Date().toISOString();
+  const now = new Date();
 
   return {
     id: `new-${deckId}-${Date.now()}-${index}`,
     deckId,
-    front: '',
-    back: '',
-    hint: '',
-    extra: '',
+    front: "",
+    back: "",
+    hint: "",
     tags: [],
-    media: [],
-    state: 'new',
-    due: now as unknown as Date,
-    rating: 0,
+    state: "new",
+    due: now,
+    rating: null,
     totalReviews: 0,
-    correctReviews: 0,
-    createdAt: now as unknown as Date,
-    updatedAt: now as unknown as Date,
-    deleted: false,
-    revision: 1,
+    createdAt: now,
+    updatedAt: now,
   };
+}
+
+function isNewCard(card: Card): boolean {
+  return card.id.startsWith("new-");
 }
 
 function isCardEmpty(card: Card): boolean {
   return (
-    card.front.trim() === '' &&
-    card.back.trim() === '' &&
-    (card.hint ?? '').trim() === '' &&
-    (card.extra ?? '').trim() === ''
+    card.front.trim() === "" &&
+    card.back.trim() === "" &&
+    (card.hint ?? "").trim() === "" &&
+    card.tags.length === 0
   );
 }
 
-export default function DeckCardsEditView({
-  deck,
-  initialCards,
-}: DeckCardsEditViewProps) {
-  const normalizedInitialCards = useMemo(
-    () => initialCards.map(normalizeCard),
-    [initialCards]
-  );
+function cardKey(card: Card): string {
+  return [
+    card.id,
+    card.front.trim(),
+    card.back.trim(),
+    (card.hint ?? "").trim(),
+    normalizeTags(card.tags).join(","),
+  ].join("|");
+}
 
-  const [localCards, setLocalCards] = useState<Card[]>(() => {
-    const baseCards = normalizedInitialCards.map((card) => ({ ...card }));
-    return [...baseCards, createEmptyCard(deck.id, baseCards.length + 1)];
-  });
+function ensureTrailingEmptyCard(cards: Card[], deckId: string): Card[] {
+  if (cards.length === 0) {
+    return [createEmptyCard(deckId, 1)];
+  }
 
-  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const lastCard = cards[cards.length - 1];
+
+  if (lastCard && isCardEmpty(lastCard)) {
+    return cards;
+  }
+
+  return [...cards, createEmptyCard(deckId, cards.length + 1)];
+}
+
+export default function DeckCardsEditView({ deck, initialCards, userId }: DeckCardsEditViewProps) {
+  const router = useRouter();
+  const baseCards = initialCards.map(normalizeCard);
+
+  const [savedCards, setSavedCards] = useState<Card[]>(baseCards);
+  const [cards, setCards] = useState<Card[]>(() => ensureTrailingEmptyCard(baseCards, deck.id));
+  const [deletedCardIds, setDeletedCardIds] = useState<string[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+
   const newCardRef = useRef<HTMLElement | null>(null);
 
-  const stats = useMemo(() => {
-    const realCards = localCards.filter((card) => !isCardEmpty(card));
+  const realCards = cards.filter((card) => !isCardEmpty(card));
+  const savedKeys = savedCards.map(cardKey);
+  const currentKeys = realCards.map(cardKey);
+  const hasUnsavedChanges =
+    deletedCardIds.length > 0 ||
+    savedKeys.length !== currentKeys.length ||
+    currentKeys.some((key, index) => key !== savedKeys[index]);
 
-    const totalCards = realCards.length;
-    const cardsWithHint = realCards.filter(
-      (card) => (card.hint ?? '').trim().length > 0
-    ).length;
-    const cardsWithExtra = realCards.filter(
-      (card) => (card.extra ?? '').trim().length > 0
-    ).length;
+  const cardsWithHint = realCards.filter((card) => (card.hint ?? "").trim() !== "").length;
+  const cardsWithTags = realCards.filter((card) => card.tags.length > 0).length;
 
-    return {
-      totalCards,
-      cardsWithHint,
-      cardsWithExtra,
-    };
-  }, [localCards]);
+  function changeCard(cardId: string, field: CardEditField, value: string) {
+    setCards((currentCards) => {
+      const updatedCards = currentCards.map((card) => {
+        if (card.id !== cardId) {
+          return card;
+        }
 
-  const hasUnsavedChanges = useMemo(() => {
-    const realCards = localCards.filter((card) => !isCardEmpty(card));
+        if (field === "tags") {
+          return {
+            ...card,
+            tags: normalizeTags(value),
+          };
+        }
 
-    if (realCards.length !== normalizedInitialCards.length) {
-      return true;
-    }
+        return {
+          ...card,
+          [field]: value,
+        };
+      });
 
-    return realCards.some((card, index) => {
-      const initialCard = normalizedInitialCards[index];
-
-      if (!initialCard) return true;
-
-      return (
-        card.front !== initialCard.front ||
-        card.back !== initialCard.back ||
-        (card.hint ?? '') !== (initialCard.hint ?? '') ||
-        (card.extra ?? '') !== (initialCard.extra ?? '')
-      );
-    });
-  }, [localCards, normalizedInitialCards]);
-
-  function ensureTrailingEmptyCard(cards: Card[]) {
-    if (cards.length === 0) {
-      return [createEmptyCard(deck.id, 1)];
-    }
-
-    const lastCard = cards[cards.length - 1];
-
-    if (lastCard && isCardEmpty(lastCard)) {
-      return cards;
-    }
-
-    return [...cards, createEmptyCard(deck.id, cards.length + 1)];
-  }
-
-  function updateCardField(
-    cardId: string,
-    field: 'front' | 'back' | 'hint' | 'extra',
-    value: string
-  ) {
-    setLocalCards((current) => {
-      const updated = current.map((card) =>
-        card.id === cardId
-          ? {
-              ...card,
-              [field]: value,
-            }
-          : card
-      );
-
-      return ensureTrailingEmptyCard(updated);
+      return ensureTrailingEmptyCard(updatedCards, deck.id);
     });
   }
 
-  function handleBackToDeckClick(
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) {
-    if (!hasUnsavedChanges) {
-      return;
+  function removeCard(card: Card) {
+    if (isCardEmpty(card)) return;
+
+    if (!isNewCard(card)) {
+      setDeletedCardIds((currentIds) => {
+        if (currentIds.includes(card.id)) {
+          return currentIds;
+        }
+
+        return [...currentIds, card.id];
+      });
     }
 
-    const shouldLeave = window.confirm(
-      'You have unsaved changes. Do you really want to leave this page?'
-    );
+    setError(null);
+    setCards((currentCards) => {
+      const updatedCards = currentCards.filter((entry) => entry.id !== card.id);
+      return ensureTrailingEmptyCard(updatedCards, deck.id);
+    });
+  }
 
-    if (!shouldLeave) {
-      event.preventDefault();
+  function validateCards(): boolean {
+    const incompleteCard = realCards.find((card) => card.front.trim() === "" || card.back.trim() === "");
+
+    if (incompleteCard) {
+      setError("Every card needs a question and an answer before saving.");
+      return false;
+    }
+
+    setError(null);
+    return true;
+  }
+
+  async function saveCards() {
+    if (!hasUnsavedChanges || isSaving || !validateCards()) return;
+
+    const cardsToSave: UpsertCardData[] = realCards.map((card) => ({
+      cardId: isNewCard(card) ? undefined : card.id,
+      front: card.front,
+      back: card.back,
+      hint: card.hint,
+      tags: card.tags,
+    }));
+
+    setIsSaving(true);
+
+    try {
+      for (const cardId of deletedCardIds) {
+        try {
+          await deleteCard(deck.id, cardId, userId);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "";
+
+          if (!message.includes("404")) {
+            throw error;
+          }
+        }
+      }
+
+      const saved = cardsToSave.length > 0 ? await upsertCards(deck.id, cardsToSave, userId) : [];
+      const normalizedSavedCards = saved.map(normalizeCard);
+
+      setSavedCards(normalizedSavedCards);
+      setDeletedCardIds([]);
+      setCards(ensureTrailingEmptyCard(normalizedSavedCards, deck.id));
+      setToastMessage("Cards saved successfully.");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Could not save cards.");
+    } finally {
+      setIsSaving(false);
     }
   }
 
-  function scrollToTop() {
-    scrollAreaRef.current?.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+  function handleBackToDeckClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (!hasUnsavedChanges) return;
+
+    event.preventDefault();
+    setShowLeaveConfirm(true);
+  }
+
+  function leaveWithoutSaving() {
+    setShowLeaveConfirm(false);
+    router.push(`/decks/${deck.id}`);
   }
 
   function scrollToNewCard() {
     newCardRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
+      behavior: "smooth",
+      block: "center",
     });
   }
 
   return (
     <section className={styles.wrapper}>
+      <Toast title="Saved" message={toastMessage} onClose={() => setToastMessage(null)} />
+      <ConfirmDialog
+        open={showLeaveConfirm}
+        title="Leave without saving?"
+        message="Your bulk card changes are not saved yet. If you leave now, the editor changes will be lost."
+        confirmLabel="Leave page"
+        onConfirm={leaveWithoutSaving}
+        onCancel={() => setShowLeaveConfirm(false)}
+      />
+
       <div className={styles.topBar}>
         <div className={styles.topBarContent}>
-          <h1 className={styles.title}>Edit {deck.name} Cards</h1>
+          <span className={styles.eyebrow}>Bulk card editor</span>
+          <h1 className={styles.title}>{deck.name}</h1>
 
           <div className={styles.statsRow}>
             <span className={styles.statPill}>
-              {stats.totalCards} {stats.totalCards === 1 ? 'card' : 'cards'}
+              {realCards.length} {realCards.length === 1 ? "card" : "cards"}
             </span>
-            <span className={styles.statPill}>
-              {stats.cardsWithHint} with hint
-            </span>
-            <span className={styles.statPill}>
-              {stats.cardsWithExtra} with extra
-            </span>
+            <span className={styles.statPill}>{cardsWithHint} with hint</span>
+            <span className={styles.statPill}>{cardsWithTags} with tags</span>
+            {deletedCardIds.length > 0 && <span className={styles.statPill}>{deletedCardIds.length} removed</span>}
           </div>
         </div>
 
         <div className={styles.actions}>
-          <Link
-            href={`/decks/${deck.id}`}
-            className={styles.secondaryButton}
-            onClick={handleBackToDeckClick}
-          >
-            Back to deck
+          <Link href={`/decks/${deck.id}`} className={styles.secondaryButton} onClick={handleBackToDeckClick}>
+            Back
           </Link>
+
+          <button type="button" className={styles.secondaryButton} onClick={scrollToNewCard}>
+            New card
+          </button>
 
           <button
             type="button"
-            className={`${styles.primaryButton} ${
-              hasUnsavedChanges ? styles.primaryButtonActive : ''
-            }`}
-            aria-label="Save changes"
-            disabled={!hasUnsavedChanges}
+            className={`${styles.primaryButton} ${hasUnsavedChanges ? styles.primaryButtonActive : ""}`}
+            disabled={!hasUnsavedChanges || isSaving}
+            onClick={saveCards}
           >
-            Save changes
+            {isSaving ? "Saving..." : "Save changes"}
           </button>
         </div>
       </div>
 
-      <div ref={scrollAreaRef} className={styles.scrollArea}>
-        <div className={styles.list}>
-          {localCards.map((card, index) => {
-            const isNewCard =
-              isCardEmpty(card) && index === localCards.length - 1;
+      {error && <p className={styles.errorText}>{error}</p>}
 
-            return (
-              <DeckCardsEditItem
-                key={card.id}
-                card={card}
-                index={index}
-                isNewCard={isNewCard}
-                itemRef={isNewCard ? newCardRef : undefined}
-                onChange={updateCardField}
-              />
-            );
-          })}
-        </div>
-      </div>
+      <div className={styles.list}>
+        {cards.map((card, index) => {
+          const isTrailingEmptyCard = isCardEmpty(card) && index === cards.length - 1;
 
-      <div className={styles.floatingNav}>
-        <button
-          type="button"
-          className={styles.floatingButton}
-          onClick={scrollToTop}
-          aria-label="Scroll to top"
-          title="Scroll to top"
-        >
-          ↑
-        </button>
-
-        <button
-          type="button"
-          className={`${styles.floatingButton} ${styles.floatingButtonAccent}`}
-          onClick={scrollToNewCard}
-          aria-label="Jump to new card"
-          title="Jump to new card"
-        >
-          ↓
-        </button>
+          return (
+            <DeckCardsEditItem
+              key={card.id}
+              card={card}
+              index={index}
+              isNewCard={isTrailingEmptyCard || isNewCard(card)}
+              canDelete={!isTrailingEmptyCard}
+              itemRef={isTrailingEmptyCard ? newCardRef : undefined}
+              onChange={changeCard}
+              onDelete={() => removeCard(card)}
+            />
+          );
+        })}
       </div>
     </section>
   );

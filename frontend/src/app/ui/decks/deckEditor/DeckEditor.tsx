@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 
 import styles from "./deckEditor.module.css";
 
@@ -11,7 +12,7 @@ type DeckEditorProps = {
   deckId: string | null;
   parentDeckId?: string;
   decks: Deck[];
-  onClose: () => void;
+  onCloseAction: () => void;
   onSaveAction: (deck: Deck, options: { isNew: boolean }) => void;
 };
 
@@ -67,7 +68,7 @@ export default function DeckEditor({
   deckId,
   parentDeckId,
   decks,
-  onClose,
+  onCloseAction,
   onSaveAction,
 }: DeckEditorProps) {
   const baseDeck = useMemo(() => {
@@ -121,7 +122,7 @@ export default function DeckEditor({
           }
         }
 
-        onClose();
+        onCloseAction();
       }
     }
 
@@ -132,7 +133,7 @@ export default function DeckEditor({
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
     };
-  }, [open, onClose, hasUnsavedChanges]);
+  }, [open, onCloseAction, hasUnsavedChanges]);
 
   function updateField(
     field: "name" | "description" | "color" | "icon",
@@ -155,7 +156,7 @@ export default function DeckEditor({
       }
     }
 
-    onClose();
+    onCloseAction();
   }
 
   function handleOverlayClick() {
@@ -184,7 +185,7 @@ export default function DeckEditor({
     };
 
     onSaveAction(nextDeck, { isNew: isNewDeck });
-    onClose();
+    onCloseAction();
   }
 
   if (!open) {
@@ -248,7 +249,7 @@ export default function DeckEditor({
             onClick={handleClose}
             aria-label="Close modal"
           >
-            ×
+            <Image src="/close_icon.svg" alt="" width={20} height={20} />
           </button>
         </div>
 
@@ -319,9 +320,8 @@ export default function DeckEditor({
 
           <button
             type="button"
-            className={`${styles.primaryButton} ${
-              hasUnsavedChanges ? styles.primaryButtonActive : ""
-            }`}
+            className={`${styles.primaryButton} ${hasUnsavedChanges ? styles.primaryButtonActive : ""
+              }`}
             onClick={handleSave}
             disabled={!hasUnsavedChanges || !draft.name.trim()}
           >

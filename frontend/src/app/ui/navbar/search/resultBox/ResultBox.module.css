@@ -53,6 +53,8 @@
 .link {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 
   height: clamp(40px, 37.71px + 0.298vw, 52px);
   padding: 0 clamp(10px, 8.29px + 0.223vw, 14px);
@@ -72,6 +74,24 @@
   background: var(--color-surface-hover);
   border-color: var(--color-border);
   transform: translateY(-1px);
+}
+
+.title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.type {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--color-subtle-overlay);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
 }
 
 .link:focus-visible {

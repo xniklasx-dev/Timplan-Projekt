@@ -1,41 +1,50 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+
 import type { Deck } from "@/app/lib/definitions";
 import placeholderDecks from "@/app/lib/placeholder-decks.json";
+
 import styles from "./page.module.css";
+
 import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
 import DeckGrid from "@/app/ui/decks/deckGrid/DeckGrid";
 import DeckEditor from "@/app/ui/decks/deckEditor/DeckEditor";
-
-const initialDecks: Deck[] = placeholderDecks as unknown as Deck[];
-const DECKS_STORAGE_KEY = "timplan-decks";
 
 type DeckEditorState = {
   open: boolean;
   deckId: string | null;
 };
 
+type SaveDeckOptions = {
+  isNew: boolean;
+};
+
+const STORAGE_KEY = "timplan-decks";
+const startDecks: Deck[] = placeholderDecks as unknown as Deck[];
+
 function loadDecks(): Deck[] {
   if (typeof window === "undefined") {
-    return initialDecks;
+    return startDecks;
   }
 
   try {
-    const storedDecks = window.localStorage.getItem(DECKS_STORAGE_KEY);
+    const savedDecks = window.localStorage.getItem(STORAGE_KEY);
 
-    if (!storedDecks) {
-      return initialDecks;
+    if (savedDecks === null) {
+      return startDecks;
     }
 
-    const parsedDecks = JSON.parse(storedDecks) as Deck[];
+    const parsedDecks = JSON.parse(savedDecks) as Deck[];
 
-    return Array.isArray(parsedDecks) && parsedDecks.length > 0
-      ? parsedDecks
-      : initialDecks;
+    if (!Array.isArray(parsedDecks) || parsedDecks.length === 0) {
+      return startDecks;
+    }
+
+    return parsedDecks;
   } catch {
-    return initialDecks;
+    return startDecks;
   }
 }
 
@@ -44,46 +53,41 @@ export default function Decks() {
 
   const [isGridView, setIsGridView] = useState(false);
   const [decks, setDecks] = useState<Deck[]>(loadDecks);
-  const [deckEditorState, setDeckEditorState] = useState<DeckEditorState>({
-    open: false,
-    deckId: null,
-  });
+  const [deckEditorState, setDeckEditorState] = useState<DeckEditorState>({ open: false, deckId: null });
 
   useEffect(() => {
-    window.localStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(decks));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(decks));
   }, [decks]);
 
-  const handleToggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const toggleView = (event: ChangeEvent<HTMLInputElement>) => {
     setIsGridView(event.target.checked);
   };
 
-  const handleEditCard = (cardId: string) => {
-    console.log(`Edit card with ID: ${cardId}`);
+  const editCard = (cardId: string) => {
+    console.log("Edit card with ID: ", cardId);
   };
 
-  const handleOpenAddDeckEditor = () => {
-    setDeckEditorState({
-      open: true,
-      deckId: null,
-    });
+  const openAddDeckEditor = () => {
+    setDeckEditorState({ open: true, deckId: null });
   };
 
-  const handleCloseDeckEditor = () => {
-    setDeckEditorState({
-      open: false,
-      deckId: null,
-    });
+  const closeDeckEditor = () => {
+    setDeckEditorState({ open: false, deckId: null });
   };
 
-  const handleSaveDeck = (savedDeck: Deck, options: { isNew: boolean }) => {
+  const saveDeck = (savedDeck: Deck, options: SaveDeckOptions) => {
     setDecks((currentDecks) => {
       if (options.isNew) {
         return [...currentDecks, savedDeck];
       }
 
-      return currentDecks.map((deck) =>
-        deck.id === savedDeck.id ? savedDeck : deck,
-      );
+      return currentDecks.map((deck) => {
+        if (deck.id === savedDeck.id) {
+          return savedDeck;
+        }
+
+        return deck;
+      });
     });
 
     if (options.isNew) {
@@ -91,8 +95,25 @@ export default function Decks() {
     }
   };
 
-  const topLevelDecks =
-    decks.filter((deck) => !deck.parentDeckId || +deck.parentDeckId <= 0) ?? [];
+  const topLevelDecks = decks.filter((deck) => {
+    if (!deck.parentDeckId) {
+      return true;
+    }
+
+    return Number(deck.parentDeckId) <= 0;
+  });
+
+  let editorKey = "new-top-level";
+
+  if (deckEditorState.deckId !== null) {
+    editorKey = deckEditorState.deckId;
+  }
+
+  if (deckEditorState.open) {
+    editorKey = editorKey + "-open";
+  } else {
+    editorKey = editorKey + "-closed";
+  }
 
   return (
     <main className={styles.page}>
@@ -100,12 +121,12 @@ export default function Decks() {
         title="Deck Library"
         subtitle="Select a deck to start studying"
         isGridView={isGridView}
-        onToggleViewAction={handleToggleView}
+        onToggleViewAction={toggleView}
         dropdownButtonLabel="Test"
         dropdownButtons={[
           {
             label: "Add Deck",
-            onClick: handleOpenAddDeckEditor,
+            onClick: openAddDeckEditor,
           },
         ]}
       />
@@ -113,18 +134,16 @@ export default function Decks() {
       <DeckGrid
         decks={topLevelDecks}
         isGridView={isGridView}
-        onEditCardAction={handleEditCard}
+        onEditCardAction={editCard}
       />
 
       <DeckEditor
-        key={`${
-          deckEditorState.deckId ?? "new-top-level"
-        }-${deckEditorState.open ? "open" : "closed"}`}
+        key={editorKey}
         open={deckEditorState.open}
         deckId={deckEditorState.deckId}
         decks={decks}
-        onClose={handleCloseDeckEditor}
-        onSaveAction={handleSaveDeck}
+        onCloseAction={closeDeckEditor}
+        onSaveAction={saveDeck}
       />
     </main>
   );

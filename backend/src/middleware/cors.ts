@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+
 import cors from "cors";
 import type { RequestHandler } from "express";
 import { env } from "../config/env.js";

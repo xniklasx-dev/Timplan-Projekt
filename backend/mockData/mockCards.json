@@ -1,35 +1,25 @@
 [
   {
-    "id": "card-ts-basics-001",
-    "deckId": "ts-basics",
+    "id": "fd326a60-abdf-4077-a8f0-289679ee1ef3",
+    "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
     "front": "TypeScript question 1?",
     "back": "This is the answer for TypeScript question 1.",
+    "hint": null,
     "tags": [
       "typescript",
       "mock",
       "level-1"
     ],
-    "media": [
-      {
-        "id": "media-ts-basics-1",
-        "type": "image",
-        "url": "https://example.com/ts-basics/1.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-02-26T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-01-29T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 2,
-    "correctReviews": 1,
     "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z",
-    "deleted": false,
-    "revision": 1
+    "updatedAt": "2026-01-29T08:58:26.523Z"
   },
   {
-    "id": "card-ts-basics-002",
-    "deckId": "ts-basics",
+    "id": "32357d2e-479c-4fe4-8258-fb118d83b382",
+    "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
     "front": "TypeScript question 2?",
     "back": "This is the answer for TypeScript question 2.",
     "hint": "Hint for TypeScript 2",
@@ -38,50 +28,34 @@
       "mock",
       "level-2"
     ],
-    "media": [],
     "state": "review",
     "due": "2026-02-27T08:58:26.523Z",
-    "rating": 2,
-    "lastReview": "2026-02-02T08:58:26.523Z",
+    "rating": "good",
     "totalReviews": 4,
-    "correctReviews": 2,
     "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z",
-    "deleted": false,
-    "revision": 2
+    "updatedAt": "2026-02-01T08:58:26.523Z"
   },
   {
-    "id": "card-ts-basics-003",
-    "deckId": "ts-basics",
+    "id": "64a75b76-861b-46bc-a76e-699aac86dfd5",
+    "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
     "front": "TypeScript question 3?",
     "back": "This is the answer for TypeScript question 3.",
-    "extra": "Extra explanation for TypeScript 3",
+    "hint": null,
     "tags": [
       "typescript",
       "mock",
       "level-3"
     ],
-    "media": [
-      {
-        "id": "media-ts-basics-3",
-        "type": "image",
-        "url": "https://example.com/ts-basics/3.png"
-      }
-    ],
     "state": "suspended",
     "due": "2026-02-28T08:58:26.523Z",
-    "rating": 3,
-    "lastReview": "2026-02-05T08:58:26.523Z",
+    "rating": "easy",
     "totalReviews": 6,
-    "correctReviews": 6,
     "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z",
-    "deleted": false,
-    "revision": 3
+    "updatedAt": "2026-02-04T08:58:26.523Z"
   },
   {
-    "id": "card-ts-basics-004",
-    "deckId": "ts-basics",
+    "id": "1e34c1e5-09eb-48d9-aa87-6dd49dbfdee3",
+    "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
     "front": "TypeScript question 4?",
     "back": "This is the answer for TypeScript question 4.",
     "hint": "Hint for TypeScript 4",
@@ -90,77 +64,52 @@
       "mock",
       "level-4"
     ],
-    "media": [],
     "state": "new",
     "due": "2026-03-01T08:58:26.523Z",
-    "rating": 0,
-    "lastReview": "2026-02-09T08:58:26.523Z",
+    "rating": null,
     "totalReviews": 8,
-    "correctReviews": 7,
     "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z",
-    "deleted": false,
-    "revision": 4
+    "updatedAt": "2026-02-07T08:58:26.523Z"
   },
   {
-    "id": "card-ts-basics-005",
-    "deckId": "ts-basics",
+    "id": "1200de8f-e173-476d-8084-83e752859a17",
+    "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
     "front": "TypeScript question 5?",
     "back": "This is the answer for TypeScript question 5.",
+    "hint": null,
     "tags": [
       "typescript",
       "mock",
       "level-5"
     ],
-    "media": [
-      {
-        "id": "media-ts-basics-5",
-        "type": "image",
-        "url": "https://example.com/ts-basics/5.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-03-02T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-02-12T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 10,
-    "correctReviews": 8,
     "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z",
-    "deleted": false,
-    "revision": 5
+    "updatedAt": "2026-02-10T08:58:26.523Z"
   },
   {
-    "id": "card-react-001",
-    "deckId": "react",
+    "id": "48f88f94-6660-4a45-a8d5-e36683f8d335",
+    "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
     "front": "React question 1?",
     "back": "This is the answer for React question 1.",
+    "hint": null,
     "tags": [
       "react",
       "mock",
       "level-1"
     ],
-    "media": [
-      {
-        "id": "media-react-1",
-        "type": "image",
-        "url": "https://example.com/react/1.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-02-26T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-01-29T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 2,
-    "correctReviews": 1,
     "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z",
-    "deleted": false,
-    "revision": 1
+    "updatedAt": "2026-01-29T08:58:26.523Z"
   },
   {
-    "id": "card-react-002",
-    "deckId": "react",
+    "id": "1518cdae-26b5-4721-a48a-6aea958f091b",
+    "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
     "front": "React question 2?",
     "back": "This is the answer for React question 2.",
     "hint": "Hint for React 2",
@@ -169,50 +118,34 @@
       "mock",
       "level-2"
     ],
-    "media": [],
     "state": "review",
     "due": "2026-02-27T08:58:26.523Z",
-    "rating": 2,
-    "lastReview": "2026-02-02T08:58:26.523Z",
+    "rating": "good",
     "totalReviews": 4,
-    "correctReviews": 2,
     "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z",
-    "deleted": false,
-    "revision": 2
+    "updatedAt": "2026-02-01T08:58:26.523Z"
   },
   {
-    "id": "card-react-003",
-    "deckId": "react",
+    "id": "1b77d42c-4dae-49ff-9a24-bcba0e5a0b41",
+    "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
     "front": "React question 3?",
     "back": "This is the answer for React question 3.",
-    "extra": "Extra explanation for React 3",
+    "hint": null,
     "tags": [
       "react",
       "mock",
       "level-3"
     ],
-    "media": [
-      {
-        "id": "media-react-3",
-        "type": "image",
-        "url": "https://example.com/react/3.png"
-      }
-    ],
     "state": "suspended",
     "due": "2026-02-28T08:58:26.523Z",
-    "rating": 3,
-    "lastReview": "2026-02-05T08:58:26.523Z",
+    "rating": "easy",
     "totalReviews": 6,
-    "correctReviews": 6,
     "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z",
-    "deleted": false,
-    "revision": 3
+    "updatedAt": "2026-02-04T08:58:26.523Z"
   },
   {
-    "id": "card-react-004",
-    "deckId": "react",
+    "id": "92182a7d-472d-48bb-8672-348e5c6b37d3",
+    "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
     "front": "React question 4?",
     "back": "This is the answer for React question 4.",
     "hint": "Hint for React 4",
@@ -221,77 +154,52 @@
       "mock",
       "level-4"
     ],
-    "media": [],
     "state": "new",
     "due": "2026-03-01T08:58:26.523Z",
-    "rating": 0,
-    "lastReview": "2026-02-09T08:58:26.523Z",
+    "rating": null,
     "totalReviews": 8,
-    "correctReviews": 7,
     "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z",
-    "deleted": false,
-    "revision": 4
+    "updatedAt": "2026-02-07T08:58:26.523Z"
   },
   {
-    "id": "card-react-005",
-    "deckId": "react",
+    "id": "59dd5b87-3d71-41be-89db-81c635ee38fc",
+    "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
     "front": "React question 5?",
     "back": "This is the answer for React question 5.",
+    "hint": null,
     "tags": [
       "react",
       "mock",
       "level-5"
     ],
-    "media": [
-      {
-        "id": "media-react-5",
-        "type": "image",
-        "url": "https://example.com/react/5.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-03-02T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-02-12T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 10,
-    "correctReviews": 8,
     "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z",
-    "deleted": false,
-    "revision": 5
+    "updatedAt": "2026-02-10T08:58:26.523Z"
   },
   {
-    "id": "card-algorithms-001",
-    "deckId": "algorithms",
+    "id": "86afc1f2-aaff-4a6a-900c-d9e16ff3ba42",
+    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
     "front": "Algorithms question 1?",
     "back": "This is the answer for Algorithms question 1.",
+    "hint": null,
     "tags": [
       "algorithms",
       "mock",
       "level-1"
     ],
-    "media": [
-      {
-        "id": "media-algorithms-1",
-        "type": "image",
-        "url": "https://example.com/algorithms/1.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-02-26T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-01-29T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 2,
-    "correctReviews": 1,
     "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z",
-    "deleted": false,
-    "revision": 1
+    "updatedAt": "2026-01-29T08:58:26.523Z"
   },
   {
-    "id": "card-algorithms-002",
-    "deckId": "algorithms",
+    "id": "e55c4e65-540c-43da-8de4-77da503746b2",
+    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
     "front": "Algorithms question 2?",
     "back": "This is the answer for Algorithms question 2.",
     "hint": "Hint for Algorithms 2",
@@ -300,50 +208,34 @@
       "mock",
       "level-2"
     ],
-    "media": [],
     "state": "review",
     "due": "2026-02-27T08:58:26.523Z",
-    "rating": 2,
-    "lastReview": "2026-02-02T08:58:26.523Z",
+    "rating": "good",
     "totalReviews": 4,
-    "correctReviews": 2,
     "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z",
-    "deleted": false,
-    "revision": 2
+    "updatedAt": "2026-02-01T08:58:26.523Z"
   },
   {
-    "id": "card-algorithms-003",
-    "deckId": "algorithms",
+    "id": "f6ee0737-ab69-4d1c-9684-b946a77e2d21",
+    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
     "front": "Algorithms question 3?",
     "back": "This is the answer for Algorithms question 3.",
-    "extra": "Extra explanation for Algorithms 3",
+    "hint": null,
     "tags": [
       "algorithms",
       "mock",
       "level-3"
     ],
-    "media": [
-      {
-        "id": "media-algorithms-3",
-        "type": "image",
-        "url": "https://example.com/algorithms/3.png"
-      }
-    ],
     "state": "suspended",
     "due": "2026-02-28T08:58:26.523Z",
-    "rating": 3,
-    "lastReview": "2026-02-05T08:58:26.523Z",
+    "rating": "easy",
     "totalReviews": 6,
-    "correctReviews": 6,
     "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z",
-    "deleted": false,
-    "revision": 3
+    "updatedAt": "2026-02-04T08:58:26.523Z"
   },
   {
-    "id": "card-algorithms-004",
-    "deckId": "algorithms",
+    "id": "9f9c998c-f521-4719-b7c0-68b348068218",
+    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
     "front": "Algorithms question 4?",
     "back": "This is the answer for Algorithms question 4.",
     "hint": "Hint for Algorithms 4",
@@ -352,77 +244,52 @@
       "mock",
       "level-4"
     ],
-    "media": [],
     "state": "new",
     "due": "2026-03-01T08:58:26.523Z",
-    "rating": 0,
-    "lastReview": "2026-02-09T08:58:26.523Z",
+    "rating": null,
     "totalReviews": 8,
-    "correctReviews": 7,
     "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z",
-    "deleted": false,
-    "revision": 4
+    "updatedAt": "2026-02-07T08:58:26.523Z"
   },
   {
-    "id": "card-algorithms-005",
-    "deckId": "algorithms",
+    "id": "9f9d96c1-7154-4dc0-af2d-d03d2d8daba0",
+    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
     "front": "Algorithms question 5?",
     "back": "This is the answer for Algorithms question 5.",
+    "hint": null,
     "tags": [
       "algorithms",
       "mock",
       "level-5"
     ],
-    "media": [
-      {
-        "id": "media-algorithms-5",
-        "type": "image",
-        "url": "https://example.com/algorithms/5.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-03-02T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-02-12T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 10,
-    "correctReviews": 8,
     "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z",
-    "deleted": false,
-    "revision": 5
+    "updatedAt": "2026-02-10T08:58:26.523Z"
   },
   {
-    "id": "card-web-001",
-    "deckId": "web",
+    "id": "59f3914c-3d61-4921-afe4-509e0a8dc04f",
+    "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
     "front": "Web question 1?",
     "back": "This is the answer for Web question 1.",
+    "hint": null,
     "tags": [
       "web",
       "mock",
       "level-1"
     ],
-    "media": [
-      {
-        "id": "media-web-1",
-        "type": "image",
-        "url": "https://example.com/web/1.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-02-26T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-01-29T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 2,
-    "correctReviews": 1,
     "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z",
-    "deleted": false,
-    "revision": 1
+    "updatedAt": "2026-01-29T08:58:26.523Z"
   },
   {
-    "id": "card-web-002",
-    "deckId": "web",
+    "id": "f7d3cd87-77e2-40d5-9621-27140c00d539",
+    "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
     "front": "Web question 2?",
     "back": "This is the answer for Web question 2.",
     "hint": "Hint for Web 2",
@@ -431,50 +298,34 @@
       "mock",
       "level-2"
     ],
-    "media": [],
     "state": "review",
     "due": "2026-02-27T08:58:26.523Z",
-    "rating": 2,
-    "lastReview": "2026-02-02T08:58:26.523Z",
+    "rating": "good",
     "totalReviews": 4,
-    "correctReviews": 2,
     "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z",
-    "deleted": false,
-    "revision": 2
+    "updatedAt": "2026-02-01T08:58:26.523Z"
   },
   {
-    "id": "card-web-003",
-    "deckId": "web",
+    "id": "0a01b531-9e35-4ecf-a1d5-5ae6594a297b",
+    "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
     "front": "Web question 3?",
     "back": "This is the answer for Web question 3.",
-    "extra": "Extra explanation for Web 3",
+    "hint": null,
     "tags": [
       "web",
       "mock",
       "level-3"
     ],
-    "media": [
-      {
-        "id": "media-web-3",
-        "type": "image",
-        "url": "https://example.com/web/3.png"
-      }
-    ],
     "state": "suspended",
     "due": "2026-02-28T08:58:26.523Z",
-    "rating": 3,
-    "lastReview": "2026-02-05T08:58:26.523Z",
+    "rating": "easy",
     "totalReviews": 6,
-    "correctReviews": 6,
     "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z",
-    "deleted": false,
-    "revision": 3
+    "updatedAt": "2026-02-04T08:58:26.523Z"
   },
   {
-    "id": "card-web-004",
-    "deckId": "web",
+    "id": "c14b4e19-61c0-4ba4-97e9-8905a3baddd1",
+    "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
     "front": "Web question 4?",
     "back": "This is the answer for Web question 4.",
     "hint": "Hint for Web 4",
@@ -483,77 +334,52 @@
       "mock",
       "level-4"
     ],
-    "media": [],
     "state": "new",
     "due": "2026-03-01T08:58:26.523Z",
-    "rating": 0,
-    "lastReview": "2026-02-09T08:58:26.523Z",
+    "rating": null,
     "totalReviews": 8,
-    "correctReviews": 7,
     "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z",
-    "deleted": false,
-    "revision": 4
+    "updatedAt": "2026-02-07T08:58:26.523Z"
   },
   {
-    "id": "card-web-005",
-    "deckId": "web",
+    "id": "abe81643-016b-4ee7-ad9c-2ec29c57c25d",
+    "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
     "front": "Web question 5?",
     "back": "This is the answer for Web question 5.",
+    "hint": null,
     "tags": [
       "web",
       "mock",
       "level-5"
     ],
-    "media": [
-      {
-        "id": "media-web-5",
-        "type": "image",
-        "url": "https://example.com/web/5.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-03-02T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-02-12T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 10,
-    "correctReviews": 8,
     "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z",
-    "deleted": false,
-    "revision": 5
+    "updatedAt": "2026-02-10T08:58:26.523Z"
   },
   {
-    "id": "card-math-001",
-    "deckId": "math",
+    "id": "b3ce299a-41c2-4d53-80cc-b3524cdb34f2",
+    "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
     "front": "Math question 1?",
     "back": "This is the answer for Math question 1.",
+    "hint": null,
     "tags": [
       "math",
       "mock",
       "level-1"
     ],
-    "media": [
-      {
-        "id": "media-math-1",
-        "type": "image",
-        "url": "https://example.com/math/1.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-02-26T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-01-29T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 2,
-    "correctReviews": 1,
     "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z",
-    "deleted": false,
-    "revision": 1
+    "updatedAt": "2026-01-29T08:58:26.523Z"
   },
   {
-    "id": "card-math-002",
-    "deckId": "math",
+    "id": "3e311228-37b1-4024-9101-f325b5584100",
+    "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
     "front": "Math question 2?",
     "back": "This is the answer for Math question 2.",
     "hint": "Hint for Math 2",
@@ -562,50 +388,34 @@
       "mock",
       "level-2"
     ],
-    "media": [],
     "state": "review",
     "due": "2026-02-27T08:58:26.523Z",
-    "rating": 2,
-    "lastReview": "2026-02-02T08:58:26.523Z",
+    "rating": "good",
     "totalReviews": 4,
-    "correctReviews": 2,
     "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z",
-    "deleted": false,
-    "revision": 2
+    "updatedAt": "2026-02-01T08:58:26.523Z"
   },
   {
-    "id": "card-math-003",
-    "deckId": "math",
+    "id": "809704de-0ca1-4a05-a834-1ad781afc8b8",
+    "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
     "front": "Math question 3?",
     "back": "This is the answer for Math question 3.",
-    "extra": "Extra explanation for Math 3",
+    "hint": null,
     "tags": [
       "math",
       "mock",
       "level-3"
     ],
-    "media": [
-      {
-        "id": "media-math-3",
-        "type": "image",
-        "url": "https://example.com/math/3.png"
-      }
-    ],
     "state": "suspended",
     "due": "2026-02-28T08:58:26.523Z",
-    "rating": 3,
-    "lastReview": "2026-02-05T08:58:26.523Z",
+    "rating": "easy",
     "totalReviews": 6,
-    "correctReviews": 6,
     "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z",
-    "deleted": false,
-    "revision": 3
+    "updatedAt": "2026-02-04T08:58:26.523Z"
   },
   {
-    "id": "card-math-004",
-    "deckId": "math",
+    "id": "90b4bed9-5164-4d3b-a766-b8ad3868b83f",
+    "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
     "front": "Math question 4?",
     "back": "This is the answer for Math question 4.",
     "hint": "Hint for Math 4",
@@ -614,77 +424,52 @@
       "mock",
       "level-4"
     ],
-    "media": [],
     "state": "new",
     "due": "2026-03-01T08:58:26.523Z",
-    "rating": 0,
-    "lastReview": "2026-02-09T08:58:26.523Z",
+    "rating": null,
     "totalReviews": 8,
-    "correctReviews": 7,
     "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z",
-    "deleted": false,
-    "revision": 4
+    "updatedAt": "2026-02-07T08:58:26.523Z"
   },
   {
-    "id": "card-math-005",
-    "deckId": "math",
+    "id": "aa604ff7-e7d4-4bde-84a9-664d29061ac5",
+    "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
     "front": "Math question 5?",
     "back": "This is the answer for Math question 5.",
+    "hint": null,
     "tags": [
       "math",
       "mock",
       "level-5"
     ],
-    "media": [
-      {
-        "id": "media-math-5",
-        "type": "image",
-        "url": "https://example.com/math/5.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-03-02T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-02-12T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 10,
-    "correctReviews": 8,
     "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z",
-    "deleted": false,
-    "revision": 5
+    "updatedAt": "2026-02-10T08:58:26.523Z"
   },
   {
-    "id": "card-devops-001",
-    "deckId": "devops",
+    "id": "2e3bcbc7-e13c-449b-bb18-301573f76f6b",
+    "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
     "front": "DevOps question 1?",
     "back": "This is the answer for DevOps question 1.",
+    "hint": null,
     "tags": [
       "devops",
       "mock",
       "level-1"
     ],
-    "media": [
-      {
-        "id": "media-devops-1",
-        "type": "image",
-        "url": "https://example.com/devops/1.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-02-26T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-01-29T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 2,
-    "correctReviews": 1,
     "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z",
-    "deleted": false,
-    "revision": 1
+    "updatedAt": "2026-01-29T08:58:26.523Z"
   },
   {
-    "id": "card-devops-002",
-    "deckId": "devops",
+    "id": "0e2838a0-2f75-4f89-b5bb-bc3a6a17d451",
+    "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
     "front": "DevOps question 2?",
     "back": "This is the answer for DevOps question 2.",
     "hint": "Hint for DevOps 2",
@@ -693,50 +478,34 @@
       "mock",
       "level-2"
     ],
-    "media": [],
     "state": "review",
     "due": "2026-02-27T08:58:26.523Z",
-    "rating": 2,
-    "lastReview": "2026-02-02T08:58:26.523Z",
+    "rating": "good",
     "totalReviews": 4,
-    "correctReviews": 2,
     "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z",
-    "deleted": false,
-    "revision": 2
+    "updatedAt": "2026-02-01T08:58:26.523Z"
   },
   {
-    "id": "card-devops-003",
-    "deckId": "devops",
+    "id": "c4dc2036-c064-4ea5-a731-04de40b388cd",
+    "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
     "front": "DevOps question 3?",
     "back": "This is the answer for DevOps question 3.",
-    "extra": "Extra explanation for DevOps 3",
+    "hint": null,
     "tags": [
       "devops",
       "mock",
       "level-3"
     ],
-    "media": [
-      {
-        "id": "media-devops-3",
-        "type": "image",
-        "url": "https://example.com/devops/3.png"
-      }
-    ],
     "state": "suspended",
     "due": "2026-02-28T08:58:26.523Z",
-    "rating": 3,
-    "lastReview": "2026-02-05T08:58:26.523Z",
+    "rating": "easy",
     "totalReviews": 6,
-    "correctReviews": 6,
     "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z",
-    "deleted": false,
-    "revision": 3
+    "updatedAt": "2026-02-04T08:58:26.523Z"
   },
   {
-    "id": "card-devops-004",
-    "deckId": "devops",
+    "id": "3fb3b6b8-e9cd-49aa-9ef6-07c9a2965dcc",
+    "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
     "front": "DevOps question 4?",
     "back": "This is the answer for DevOps question 4.",
     "hint": "Hint for DevOps 4",
@@ -745,44 +514,29 @@
       "mock",
       "level-4"
     ],
-    "media": [],
     "state": "new",
     "due": "2026-03-01T08:58:26.523Z",
-    "rating": 0,
-    "lastReview": "2026-02-09T08:58:26.523Z",
+    "rating": null,
     "totalReviews": 8,
-    "correctReviews": 7,
     "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z",
-    "deleted": false,
-    "revision": 4
+    "updatedAt": "2026-02-07T08:58:26.523Z"
   },
   {
-    "id": "card-devops-005",
-    "deckId": "devops",
+    "id": "006dca77-0337-4da8-aa90-3cbe90a12096",
+    "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
     "front": "DevOps question 5?",
     "back": "This is the answer for DevOps question 5.",
+    "hint": null,
     "tags": [
       "devops",
       "mock",
       "level-5"
     ],
-    "media": [
-      {
-        "id": "media-devops-5",
-        "type": "image",
-        "url": "https://example.com/devops/5.png"
-      }
-    ],
     "state": "learning",
     "due": "2026-03-02T08:58:26.523Z",
-    "rating": 1,
-    "lastReview": "2026-02-12T08:58:26.523Z",
+    "rating": "hard",
     "totalReviews": 10,
-    "correctReviews": 8,
     "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z",
-    "deleted": false,
-    "revision": 5
+    "updatedAt": "2026-02-10T08:58:26.523Z"
   }
 ]

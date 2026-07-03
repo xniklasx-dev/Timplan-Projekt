@@ -1,44 +1,100 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { useParams } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-import styles from './page.module.css';
+import type { Card, Deck } from "@/app/lib/definitions";
+import { getCardsByDeckId } from "@/app/lib/card-service";
+import decksData from "@/app/lib/placeholder-decks.json";
+import DeckCardsEditView from "@/app/ui/cards/deckCardsEditView/DeckCardsEditView";
 
-import type { Card, Deck } from '@/app/lib/definitions';
-import decksData from '@/app/lib/placeholder-decks.json';
-import cardsData from '@/app/lib/placeholder-cards.json';
-
-import DeckCardsEditView from '@/app/ui/cards/deckCardsEditView/DeckCardsEditView';
+import styles from "./page.module.css";
 
 const decks = decksData as unknown as Deck[];
-const cards = cardsData as unknown as Card[];
+const TEST_USER_ID = "833cfb77-79b1-4f23-bfb0-51c1cbecd7ae";
+
+
+// TODO: Remove this function once the backend is fully implemented and the decks are fetched from the backend instead of using placeholder data.
+function createPageDeck(deckId: string, cards: Card[]): Deck {
+  const now = new Date();
+
+  return {
+    id: deckId,
+    name: "Backend deck",
+    description: "Cards loaded from the backend.",
+    tags: [],
+    cardIds: cards.map((card) => card.id),
+    totalCards: cards.length,
+    newCards: 0,
+    learningCards: 0,
+    reviewCards: 0,
+    dueToday: 0,
+    studiedToday: 0,
+    createdAt: now,
+    updatedAt: now,
+    deleted: false,
+    revision: 1,
+  };
+}
 
 export default function EditDeckCardsPage() {
   const params = useParams<{ deckid: string }>();
   const deckId = params.deckid;
 
-  const deck = useMemo(
-    () => decks.find((entry) => entry.id === deckId),
-    [deckId]
-  );
+  const [deckCards, setDeckCards] = useState<Card[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const deckCards = useMemo(
-    () =>
-      cards.filter(
-        (card) => card.deckId === deckId && !card.deleted
-      ),
-    [deckId]
-  );
+  useEffect(() => {
+    let ignoreResult = false;
 
-  if (!deck) {
+    async function loadCards() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const cards = await getCardsByDeckId(deckId, TEST_USER_ID);
+
+        if (!ignoreResult) {
+          setDeckCards(cards);
+        }
+      } catch (error) {
+        if (!ignoreResult) {
+          setError(error instanceof Error ? error.message : "Could not load cards.");
+        }
+      } finally {
+        if (!ignoreResult) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadCards();
+
+    return () => {
+      ignoreResult = true;
+    };
+  }, [deckId]);
+
+  const deck = decks.find((entry) => entry.id === deckId) ?? createPageDeck(deckId, deckCards);
+
+  if (isLoading) {
     return (
       <main className={styles.page}>
         <section className={styles.emptyState}>
-          <h1 className={styles.title}>Deck not found</h1>
-          <p className={styles.description}>
-            No deck exists for this route parameter.
-          </p>
+          <h1 className={styles.title}>Loading cards...</h1>
+          <p className={styles.description}>Fetching this deck&apos;s cards from the backend.</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className={styles.page}>
+        <section className={styles.emptyState}>
+          <h1 className={styles.title}>Cards could not be loaded</h1>
+          <p className={styles.description}>{error}</p>
         </section>
       </main>
     );
@@ -46,7 +102,7 @@ export default function EditDeckCardsPage() {
 
   return (
     <main className={styles.page}>
-      <DeckCardsEditView deck={deck} initialCards={deckCards} />
+      <DeckCardsEditView key={deck.id} deck={deck} initialCards={deckCards} userId={TEST_USER_ID} />
     </main>
   );
 }

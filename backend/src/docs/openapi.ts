@@ -7,7 +7,7 @@ export const openapiDocument = new OpenApiGeneratorV3(registry.definitions).gene
   info: {
     title: "Timplan API",
     description: "API documentation for the Timplan project.",
-    version: "0.1.0",
+    version: "1.0.0",
   },
 });
 

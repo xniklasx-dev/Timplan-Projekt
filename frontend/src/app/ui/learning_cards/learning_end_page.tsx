@@ -1,8 +1,14 @@
 "use client";
 import { useRouter } from "next/navigation";
+import type { Card, Deck } from "@/app/lib/definitions";
 import styles from "./learning_end_page.module.css";
 
-export default function LearningEndPage({ deckCards, selectedDeck }: { deckCards: any[]; selectedDeck: any }) {
+type LearningEndPageProps = {
+  deckCards: Card[];
+  selectedDeck: Deck;
+};
+
+export default function LearningEndPage({ deckCards, selectedDeck }: LearningEndPageProps) {
     const router = useRouter();
   const size = 240;
   const strokeWidth = 30;
@@ -28,7 +34,7 @@ export default function LearningEndPage({ deckCards, selectedDeck }: { deckCards
 
   return (
     <div className={styles.learningEndPage}>
-        <h1 className={styles.h1}>Wonderful! You've completed the deck {selectedDeck.name}!</h1>
+        <h1 className={styles.h1}>Wonderful! You have completed the deck {selectedDeck.name}!</h1>
         <div className={styles.divider}></div>
         <div className={styles.total}>Total cards reviewed: {total}</div>
         <div className={styles.statsContainer}>
