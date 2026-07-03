@@ -12,7 +12,8 @@ interface CardCounts
     medium: number;
     hard: number;
 }
- //Testdaten, von KI generiert
+
+//Example data
 const dailyWeekData: CardCounts[] = [
     { easy: 3, medium: 1, hard: 2 },
     { easy: 7, medium: 0, hard: 1 },
@@ -29,7 +30,7 @@ const dailyMonthData = [
     ...dailyWeekData,
     ...dailyWeekData
 ];
-//Testdaten, von KI generiert
+
 const monthlyYearData: CardCounts[] = [
     { easy: 40, medium: 60, hard: 20 },
     { easy: 30, medium: 50, hard: 15 },
@@ -44,7 +45,8 @@ const monthlyYearData: CardCounts[] = [
     { easy: 100, medium: 60, hard: 20 },
     { easy: 120, medium: 70, hard: 10 }
 ];
- //Tagesdaten zusammenfassen
+
+//grouping the daily data into weeks for the month view
 function groupIntoWeeks(data: CardCounts[]): CardCounts[]
 {
     const weeks: CardCounts[] = [];
@@ -62,14 +64,14 @@ function groupIntoWeeks(data: CardCounts[]): CardCounts[]
     }
     return weeks;
 }
- //Säulendarstellung
-const dataLabelsPlugin: Plugin<"bar"> =
-{
+
+//showing card stats on chart in bars
+const showCardStatsOnChart: Plugin<"bar"> = {
     id: "dataLabels",
     afterDatasetsDraw(chart)
     {
         const ctx = chart.ctx;
-        
+
         const css = getComputedStyle(document.documentElement);
         const textColor = css.getPropertyValue("--color-text").trim();
 
@@ -82,39 +84,47 @@ const dataLabelsPlugin: Plugin<"bar"> =
         {
             const meta = chart.getDatasetMeta(i);
 
-            meta.data.forEach((bar: Element & { x:number, y: number, base?: number}, index: number) => {
+            meta.data.forEach((bar: Element & { x: number, y: number, base?: number }, index: number) =>
+            {
                 const value = dataset.data[index] as number;
+
                 //no bars for 0
                 if (value === 0) return;
+
                 //position
                 const x = bar.x;
                 const base: number = bar.base ?? 0;
 
                 const y = (bar.y + base) / 2;
-                 ctx.fillText(String(value), x, y);
+                ctx.fillText(String(value), x, y);
             });
         });
     }
 };
 
-const ChartComponent: React.FC = () => {
+const ChartComponent: React.FC = () =>
+{
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const chartRef = useRef<ChartJS | null>(null);
-    //aktuelle Ansicht
+
+    //current view
     const [view, setView] = useState<"week" | "month" | "year">("week");
-    const renderChart = useCallback((view: "week" | "month" | "year") => {
+    const renderChart = useCallback((view: "week" | "month" | "year") =>
+    {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
-        //Chart löschen
+
+        //deleting last chart
         if (chartRef.current)
         {
             chartRef.current.destroy();
             chartRef.current = null;
         }
-        //Farben
+
+        //colours css
         const css = getComputedStyle(document.documentElement);
         const bgColor = css.getPropertyValue("--color-background").trim();
         const easyColor = css.getPropertyValue("--color-easy").trim();
@@ -122,7 +132,8 @@ const ChartComponent: React.FC = () => {
         const hardColor = css.getPropertyValue("--color-hard").trim();
 
         canvas.style.backgroundColor = bgColor;
-        //Werte
+
+        //labels and values
         let labels: string[] = [];
         let values: CardCounts[] = [];
 
@@ -131,25 +142,30 @@ const ChartComponent: React.FC = () => {
             labels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
             values = dailyWeekData;
         }
-        else if (view === "month")
+
+        if (view === "month")
         {
             values = groupIntoWeeks(dailyMonthData);
             labels = values.map((_, i) => `Week ${i + 1}`);
         }
-        else
+
+        if (view === "year")
         {
             labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             values = monthlyYearData;
         }
-        //Daten holen
+
+        //get data
         const easyData = values.map(v => v.easy);
         const mediumData = values.map(v => v.medium);
         const hardData = values.map(v => v.hard);
-        //Y-Achse
+
+        //y-axis
         const maxSum = values.reduce((max, v) => Math.max(max, v.easy + v.medium + v.hard), 0);
         const stepSize = view === "week" ? 5 : view === "month" ? 10 : 20;
         const yAxisMax = Math.ceil((maxSum + stepSize) / stepSize) * stepSize;
-        //Chart erstellen
+
+        //create chart
         const chart = new Chart(ctx, {
             type: "bar",
             data: {
@@ -160,15 +176,14 @@ const ChartComponent: React.FC = () => {
                     { label: "Hard", data: hardData, backgroundColor: hardColor }
                 ]
             },
-            options:
-            {
+            options: {
                 indexAxis: "x",
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: true,
-                        //Legende klickbar zum Umschalten
+                        //clickable Legend
                         onClick(e, legendItem, legend)
                         {
                             const chart = legend.chart;
@@ -182,10 +197,12 @@ const ChartComponent: React.FC = () => {
 
                             const clickedIsOnlyVisible =
                                 visibleCount === 1 && !chart.getDatasetMeta(idx).hidden;
-                            //Eine Schwierigkeit hervorheben
-                            if (clickedIsOnlyVisible) {
+                            //reduce on one difficulty
+                            if (clickedIsOnlyVisible)
+                            {
                                 chart.data.datasets.forEach((_, i) => chart.setDatasetVisibility(i, true));
-                            } else {
+                            } else
+                            {
                                 chart.data.datasets.forEach((_, i) => chart.setDatasetVisibility(i, i === idx));
                             }
 
@@ -199,7 +216,7 @@ const ChartComponent: React.FC = () => {
                     y: { stacked: true, beginAtZero: true, max: yAxisMax, ticks: { stepSize } }
                 }
             },
-            plugins: [dataLabelsPlugin]
+            plugins: [showCardStatsOnChart]
         });
 
         chartRef.current = chart;
@@ -219,8 +236,8 @@ const ChartComponent: React.FC = () => {
                 minHeight: "100vh",
                 padding: "20px",
             }}
-            >
-            {/*Ansicht wechseln*/}
+        >
+            {/*switch between views*/}
             <div className={styles.controls}>
                 <button className={styles.button} onClick={() => setView("week")}>
                     Week
