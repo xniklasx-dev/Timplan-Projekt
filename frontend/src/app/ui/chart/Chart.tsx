@@ -141,26 +141,9 @@ const ChartComponent: React.FC = () =>
         canvas.style.backgroundColor = bgColor;
 
         //labels and values
-        let labels: string[] = [];
-        let values: CardCounts[] = [];
-
-        if (view === "week")
-        {
-            labels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-            values = dailyWeekData;
-        }
-
-        if (view === "month")
-        {
-            values = groupIntoWeeks(dailyMonthData);
-            labels = values.map((_, i) => `Week ${i + 1}`);
-        }
-
-        if (view === "year")
-        {
-            labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            values = monthlyYearData;
-        }
+        const lableViewObject = setLabelAndValue(view);
+        const labels = lableViewObject.labels;
+        const values = lableViewObject.values;
 
         //get data
         const easyData = values.map(v => v.easy);
@@ -288,6 +271,30 @@ function handleLegendClick(
     chart.update();
 }
 
+function setLabelAndValue(view: string): { labels: string[], values: CardCounts[] }
+{
+    let labels: string[] = [];
+    let values: CardCounts[] = [];
+    if (view === "week")
+    {
+        labels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+        values = dailyWeekData;
+    }
+
+    if (view === "month")
+    {
+        values = groupIntoWeeks(dailyMonthData);
+        labels = values.map((_, i) => `Week ${i + 1}`);
+    }
+
+    if (view === "year")
+    {
+        labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        values = monthlyYearData;
+    }
+
+    return { labels, values };
+}
 
 
 export default ChartComponent;
