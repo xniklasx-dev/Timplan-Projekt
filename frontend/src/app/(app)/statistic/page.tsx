@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import ChartComponent from "../../ui/chart/Chart";
+import ChartComponent from "@/app/ui/chart/Chart";
 
 export default function Statistic() {
   return (

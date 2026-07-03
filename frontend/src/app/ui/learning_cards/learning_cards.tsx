@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./learning_cards.module.css";
 import { Card } from "../../lib/definitions";
 
-export default function LearnCard({ card, currentIndex, onRate, changeIndex, deckLength }: { card: Card; currentIndex: number; onRate: (rating: 0 | 1 | 2 | 3) => void; changeIndex: (index: number) => void; deckLength: number }) {
+export default function LearnCard({ card, currentIndex, onRate, onPrev, onSkip, changeIndex, deckLength }: { card: Card; currentIndex: number; onRate: (rating: 0 | 1 | 2 | 3) => void; onPrev: () => void; onSkip: () => void; changeIndex: (index: number) => void; deckLength: number }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [isHintRevealed, setIsHintRevealed] = useState(false);
 
@@ -27,8 +27,7 @@ export default function LearnCard({ card, currentIndex, onRate, changeIndex, dec
         <div className={styles.outer}>
             {card.hint && !isRevealed&&(
                 <div className={styles.hint}
-                    onMouseEnter={() => setIsHintRevealed(true)}
-                    onMouseLeave={() => setIsHintRevealed(false)}>
+                    onClick={() => setIsHintRevealed(prev => !prev)}>
                         <button className={styles.hintButton}>? Hint</button>
                         {isHintRevealed && (
                             <div className={styles.hintPopup}>
@@ -38,13 +37,11 @@ export default function LearnCard({ card, currentIndex, onRate, changeIndex, dec
                 </div>
             )}
             {currentIndex > 0 && 
-                <button className={styles.prevButton} onClick={() => changeIndex(currentIndex-1)}>Previous</button>
+                <button className={styles.prevButton} onClick={() => onPrev()}>Previous</button>
             }            
             {!isRevealed&& (
                 <div>
-                    {currentIndex < deckLength - 1 && (
-                        <button className={styles.skipButton} onClick={() => changeIndex(currentIndex+1)}>Skip</button>)
-                    }
+                    <button className={styles.skipButton} onClick={() => onSkip()}>Skip</button>
                     <button className={styles.revButton} onClick={() => setIsRevealed(true)}>Reveal Answer</button>
                 </div>
             )}

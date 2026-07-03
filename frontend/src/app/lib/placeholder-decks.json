@@ -43,6 +43,7 @@
     "id": "3",
     "name": "History 20th Century",
     "description": "Major events & figures",
+    "childDeckIds": ["7"],
     "tags": ["history"],
     "cardIds": ["c10", "c11", "c12"],
     "color": "#FFD93D",
@@ -186,6 +187,7 @@
   },
   {
     "id": "7",
+    "parentDeckId": "3",
     "name": "Geography Europe",
     "description": "Countries & capitals",
     "tags": ["geography"],

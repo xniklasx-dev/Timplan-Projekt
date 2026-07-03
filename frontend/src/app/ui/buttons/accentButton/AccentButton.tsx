@@ -1,7 +1,7 @@
 "use client";
 
 import React, { JSX } from "react";
-import styles from "./accentButton.module.css";
+import styles from "../buttons.module.css";
 
 type AccentButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: React.ReactNode;
@@ -16,7 +16,7 @@ export default function AccentButton({
 }: AccentButtonProps): JSX.Element {
   return (
     <button
-      className={`${styles.button} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
+      className={`${styles.base} ${styles.accent} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
       {...props}
     >
       {children}

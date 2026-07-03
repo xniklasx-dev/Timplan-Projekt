@@ -1,0 +1,62 @@
+[
+    { 
+        "id": "1",
+        "username": "testuser",
+        "displayname": "Test User",
+        "email": "test@example.com",
+        "password": "password",
+        "token": "mock-token-1",
+        "createdAt": "2026-02-20T12:00:00Z",
+        "updatedAt": "2026-02-20T12:00:00Z"
+    },
+    { 
+        "id": "2",
+        "username": "niktest",
+        "displayname": "Nik",
+        "email": "nik@example.com",
+        "password": "password",
+        "token": "mock-token-2",
+        "createdAt": "2026-02-20T12:00:00Z",
+        "updatedAt": "2026-02-20T12:00:00Z"
+    },
+    { 
+        "id": "3",
+        "username": "maxtest",
+        "displayname": "Max",
+        "email": "max@example.com",
+        "password": "password",
+        "token": "mock-token-3",
+        "createdAt": "2026-02-20T12:00:00Z",
+        "updatedAt": "2026-02-20T12:00:00Z"
+    },
+    { 
+        "id": "4",
+        "username": "tonytest",
+        "displayname": "Tony",
+        "email": "tony@example.com",
+        "password": "password",
+        "token": "mock-token-4",
+        "createdAt": "2026-02-20T12:00:00Z",
+        "updatedAt": "2026-02-20T12:00:00Z"
+    },
+    { 
+        "id": "5",
+        "username": "leonietest",
+        "displayname": "Leonie",
+        "email": "leonie@example.com",
+        "password": "password",
+        "token": "mock-token-5",
+        "createdAt": "2026-02-20T12:00:00Z",
+        "updatedAt": "2026-02-20T12:00:00Z"
+    },
+    { 
+        "id": "6",
+        "username": "pascaltest",
+        "displayname": "Pascal",
+        "email": "pascal@example.com",
+        "password": "password",
+        "token": "mock-token-6",
+        "createdAt": "2026-02-20T12:00:00Z",
+        "updatedAt": "2026-02-20T12:00:00Z"
+    }
+]

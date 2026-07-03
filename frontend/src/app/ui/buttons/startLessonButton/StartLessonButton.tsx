@@ -2,7 +2,7 @@
 
 import React, { JSX } from "react";
 import Image from "next/image";
-import styles from "./startLessonButton.module.css";
+import styles from "../buttons.module.css";
 
 type StartLessonButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children?: React.ReactNode;
@@ -17,7 +17,7 @@ export default function StartLessonButton({
 }: StartLessonButtonProps): JSX.Element {
   return (
     <button
-      className={`${styles.button} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
+      className={`${styles.base} ${styles.iconButton} ${fullWidth ? styles.fullWidth : ""} ${className || ""}`}
       {...props}
     >
       <Image

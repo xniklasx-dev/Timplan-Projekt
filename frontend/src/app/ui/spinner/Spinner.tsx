@@ -1,7 +1,7 @@
 "use client";
 
-import styles from "./Spinner.module.css";
+import styles from "./spinner.module.css";
 
-export default function Spinner() {
-    return <div className={styles.spinner}></div>;
+export default function Spinner({ small = false }: { small?: boolean }) {
+    return <div className={small ? styles.spinnerSmall : styles.spinner}></div>;
 }
