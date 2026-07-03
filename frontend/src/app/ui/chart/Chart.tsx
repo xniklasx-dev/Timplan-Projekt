@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import Chart from "chart.js/auto";
-import type { Chart as ChartJS, Plugin, Element } from "chart.js";
+import type { Chart as ChartJS, Plugin, Element, LegendItem, LegendElement, ChartEvent } from "chart.js";
 import styles from "../../(app)/statistic/page.module.css";
 
 
@@ -11,6 +11,13 @@ interface CardCounts
     easy: number;
     medium: number;
     hard: number;
+}
+
+interface DataSet
+{
+    label: string;
+    data: number[];
+    backgroundColor: string;
 }
 
 //Example data
@@ -165,59 +172,14 @@ const ChartComponent: React.FC = () =>
         const stepSize = view === "week" ? 5 : view === "month" ? 10 : 20;
         const yAxisMax = Math.ceil((maxSum + stepSize) / stepSize) * stepSize;
 
+        const dataSet: DataSet[] = [
+            { label: "Easy", data: easyData, backgroundColor: easyColor },
+            { label: "Medium", data: mediumData, backgroundColor: mediumColor },
+            { label: "Hard", data: hardData, backgroundColor: hardColor }
+        ];
+
         //create chart
-        const chart = new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels,
-                datasets: [
-                    { label: "Easy", data: easyData, backgroundColor: easyColor },
-                    { label: "Medium", data: mediumData, backgroundColor: mediumColor },
-                    { label: "Hard", data: hardData, backgroundColor: hardColor }
-                ]
-            },
-            options: {
-                indexAxis: "x",
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        //clickable Legend
-                        onClick(e, legendItem, legend)
-                        {
-                            const chart = legend.chart;
-                            if (legendItem.datasetIndex === undefined) return;
-
-                            const idx = legendItem.datasetIndex ?? legendItem.index;
-
-                            const visibleCount = chart.data.datasets.filter(
-                                (_, i) => chart.getDatasetMeta(i).hidden === false
-                            ).length;
-
-                            const clickedIsOnlyVisible =
-                                visibleCount === 1 && !chart.getDatasetMeta(idx).hidden;
-                            //reduce on one difficulty
-                            if (clickedIsOnlyVisible)
-                            {
-                                chart.data.datasets.forEach((_, i) => chart.setDatasetVisibility(i, true));
-                            } else
-                            {
-                                chart.data.datasets.forEach((_, i) => chart.setDatasetVisibility(i, i === idx));
-                            }
-
-                            chart.update();
-                        }
-                    },
-                    tooltip: { enabled: true }
-                },
-                scales: {
-                    x: { stacked: true },
-                    y: { stacked: true, beginAtZero: true, max: yAxisMax, ticks: { stepSize } }
-                }
-            },
-            plugins: [showCardStatsOnChart]
-        });
+        const chart = createChartObject(ctx, labels, dataSet, yAxisMax, stepSize);
 
         chartRef.current = chart;
     }, []);
@@ -258,6 +220,74 @@ const ChartComponent: React.FC = () =>
         </div>
     );
 };
+
+function createChartObject(
+    ctx: CanvasRenderingContext2D,
+    labels: string[],
+    dataSet: DataSet[],
+    yAxisMax: number,
+    stepSize: number
+)
+{
+    const chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels,
+            datasets: dataSet
+        },
+        options: {
+            indexAxis: "x",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    onClick: handleLegendClick
+                },
+                tooltip: { enabled: true }
+            },
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true, max: yAxisMax, ticks: { stepSize } }
+            }
+        },
+        plugins: [showCardStatsOnChart]
+    });
+
+    return chart;
+}
+
+function handleLegendClick(
+    this: LegendElement<"bar">,
+    e: ChartEvent,
+    legendItem: LegendItem,
+    legend: LegendElement<"bar">
+)
+{
+    const chart = legend.chart;
+
+    if (legendItem.datasetIndex === undefined) return;
+
+    const idx = legendItem.datasetIndex ?? legendItem.index;
+
+    const visibleCount = chart.data.datasets.filter(
+        (_, i) => chart.getDatasetMeta(i).hidden === false
+    ).length;
+
+    const clickedIsOnlyVisible =
+        visibleCount === 1 && !chart.getDatasetMeta(idx).hidden;
+
+    if (clickedIsOnlyVisible)
+    {
+        chart.data.datasets.forEach((_, i) => chart.setDatasetVisibility(i, true));
+    } else
+    {
+        chart.data.datasets.forEach((_, i) => chart.setDatasetVisibility(i, i === idx));
+    }
+
+    chart.update();
+}
+
 
 
 export default ChartComponent;
