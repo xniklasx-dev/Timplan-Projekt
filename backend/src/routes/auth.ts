@@ -10,8 +10,10 @@ import { env } from "../config/env.js";
 import { drizzleUsersRepository } from "../repositories/users/drizzleRepository.js";
 import { loadMockUsers } from "../repositories/users/loadMockUsers.js";
 import { memoryUsersRepository } from "../repositories/users/memoryRepository.js";
+import { tokenVerifier } from "../middleware/tokenVerifier.js";
 
 const router = Router();
+// Switch between mockData and PostgreSQL 
 const usersRepository: UsersRepository =
   env.dataSource === "memory" 
     ? loadMockUsers(memoryUsersRepository)
@@ -25,9 +27,8 @@ router.get("/auth/me", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing")
     }
 
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, env.jwtSecret) as { userId: string };
-
+    const decoded = tokenVerifier(authHeader);
+    
     const user = await usersRepository.getUserById(decoded.userId);
     
     if (!user) {
@@ -46,13 +47,19 @@ router.post("/auth/register", asyncHandler(async(req, res) => {
   }
 
   const { email, username, password } = result.data;
-  const existingUser = await usersRepository.getUserByEmail(email);
+  const existingUsername = await usersRepository.getUserByUsername(username);
+  const existingEmail = await usersRepository.getUserByEmail(email);
     
-  if (existingUser) {
+  if (existingUsername) {
+    throw new ApiError(409, "Username already in use");
+  }
+  if (existingEmail) {
     throw new ApiError(409, "Email already in use");
   }
 
+  // Salt rounds 12
   const passwordHash = await bcrypt.hash(password, 12);
+
   const newUser = await usersRepository.createUser({ 
     email, username, passwordHash, displayName: null, avatarUrl: null 
   });
@@ -103,6 +110,7 @@ router.post("/auth/forgot-password", asyncHandler(async(req, res) => {
         throw new ApiError(400, "Email is required");
     }
 
+    // Always return success (for email enumeration prevention)
     res.status(200).json({ 
       "message": "If this email exists, a reset link has been sent" 
     });
@@ -113,9 +121,11 @@ router.post("/auth/forgot-password", asyncHandler(async(req, res) => {
 router.post("/auth/logout", asyncHandler(async(req, res) => {
   const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
-        throw new ApiError(401, "Authorization header is missing");
-    }
+  if (!authHeader) {
+      throw new ApiError(401, "Authorization header is missing");
+  }
+
+  tokenVerifier(authHeader);
 
   res.status(200).json({ message: "Logged out successfully" });
 }));
@@ -127,7 +137,9 @@ router.post("/auth/me/avatar", asyncHandler(async(req, res) => {
 
     if (!authHeader || authHeader.length === 0) {
         throw new ApiError(401, "Authorization header is missing");
-    }   
+    } 
+    
+    tokenVerifier(authHeader);
     
     res.status(200).json("Avatar uploaded")
 }));
@@ -140,10 +152,8 @@ router.patch("/auth/me", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing");
     }
 
+    const decoded = tokenVerifier(authHeader);
     
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, env.jwtSecret) as { userId: string };
-
     const user = await usersRepository.getUserById(decoded.userId);
 
     if (!user) {
@@ -172,6 +182,8 @@ router.patch("/auth/me/password", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing");
     }
 
+    tokenVerifier(authHeader);
+
     res.status(200).json({ message: "Update password successfully" })
 }));
 
@@ -184,6 +196,8 @@ router.delete("/auth/me/avatar", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing");
     }
 
+    tokenVerifier(authHeader);
+    
     res.status(204).send();
 }));
 
@@ -196,10 +210,8 @@ router.delete("/auth/me", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing");
     }
 
+    const decoded = tokenVerifier(authHeader);
     
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, env.jwtSecret) as { userId: string };
-
     const user = await usersRepository.getUserById(decoded.userId);
 
     if(!user) {

@@ -254,7 +254,7 @@ export const DateDataSchema = z
             example: "testuser@example.com",
         }),
         
-        password: z.string().min(12).openapi({
+        password: z.string().min(8).openapi({
             example: "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3mS0i8"
         })
     })
@@ -267,7 +267,7 @@ export const DateDataSchema = z
             example: "testuser or testuser@example.com",
         }),
         
-        password: z.string().min(12).openapi({
+        password: z.string().min(8).openapi({
             example: "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3mS0i8"
         })
     })

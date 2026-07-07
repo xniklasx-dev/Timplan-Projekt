@@ -4,6 +4,7 @@ import { mockUsers, MockUser } from "@/app/mocks/users.mock";
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
 
+// auth/login
 export async function login(data: LoginDTO): Promise<User> {
     if (USE_MOCK) {
         console.log("Search for: ", data.emailOrUsername, data.password);
@@ -21,7 +22,7 @@ export async function login(data: LoginDTO): Promise<User> {
         return {
             id: user.id,
             username: user.username,
-            displayname: user.displayname,
+            displayName: user.displayName,
             avatarUrl: user.avatarUrl,
             email: user.email,
             token: user.token ?? "mock-token-fallback",
@@ -41,7 +42,8 @@ export async function login(data: LoginDTO): Promise<User> {
         throw new Error(error.error ?? "Login failed");
     }
 
-    return res.json();
+    const { user, token } = await res.json();
+    return { ...user, token };
 }
 
 export async function register(data: RegisterDTO): Promise<User> {
@@ -59,7 +61,7 @@ export async function register(data: RegisterDTO): Promise<User> {
     return {
         id: newUser.id,
         username: newUser.username,
-        displayname: newUser.displayname,
+        displayName: newUser.displayName,
         avatarUrl: newUser.avatarUrl,
         email: newUser.email,
         token: newUser.token,

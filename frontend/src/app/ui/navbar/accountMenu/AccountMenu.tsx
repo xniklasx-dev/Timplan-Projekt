@@ -46,7 +46,7 @@ export default function AccountMenu(/*{ user }: { user: User | null }*/) {
               className={styles.avatarImage} />
           ) : (
             <span className={styles.avatarInitial}>
-              {(user.displayname ?? user.username).charAt(0).toUpperCase()}
+              {(user.displayName ?? user.username).charAt(0).toUpperCase()}
             </span>
           )
         ) : (
@@ -59,7 +59,7 @@ export default function AccountMenu(/*{ user }: { user: User | null }*/) {
           {user ? (
             <>
               <div className={styles.menuHeader}>
-                <div className={styles.menuTitle}>{user.displayname ?? user.username}</div>
+                <div className={styles.menuTitle}>{user.displayName ?? user.username}</div>
                 <div className={styles.menuSub}>{user.email ?? ''}</div>
               </div>
 

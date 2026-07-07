@@ -9,7 +9,7 @@ import styles from "./page.module.css";
 export default function AccountSettingsPage() {
   const { user, updateUser, isLoading } = useAuth();
   const [username, setUsername] = useState(user?.username ?? "");
-  const [displayname, setDisplayname] = useState(user?.displayname ?? "");
+  const [displayName, setDisplayName] = useState(user?.displayName ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -53,7 +53,7 @@ export default function AccountSettingsPage() {
       return;
     }
     // Later: API-Call to update profile
-    updateUser({ username, email, displayname });
+    updateUser({ username, email, displayName });
     setProfileSuccess("Profile updated successfully.");
   }
 
@@ -109,7 +109,7 @@ export default function AccountSettingsPage() {
                       </div>
                   ) : (
                     <span className={styles.avatarInitial}>
-                      {(user?.displayname ?? user?.username ?? "?").charAt(0).toUpperCase()}
+                      {(user?.displayName ?? user?.username ?? "?").charAt(0).toUpperCase()}
                     </span>
                   )}
                   <div className={styles.avatarOverlay}>Change</div>
@@ -150,8 +150,8 @@ export default function AccountSettingsPage() {
                 <input
                   className={styles.input}
                   type="text"
-                  value={displayname}
-                  onChange={(e) => setDisplayname(e.target.value)}
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Your display name"
                 />
               </div>

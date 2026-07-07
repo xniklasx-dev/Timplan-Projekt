@@ -2,7 +2,7 @@
     { 
         "id": "1",
         "username": "testuser",
-        "displayname": "Test User",
+        "displayName": "Test User",
         "email": "test@example.com",
         "password": "password",
         "token": "mock-token-1",
@@ -12,7 +12,7 @@
     { 
         "id": "2",
         "username": "niktest",
-        "displayname": "Nik",
+        "displayName": "Nik",
         "email": "nik@example.com",
         "password": "password",
         "token": "mock-token-2",
@@ -22,7 +22,7 @@
     { 
         "id": "3",
         "username": "maxtest",
-        "displayname": "Max",
+        "displayName": "Max",
         "email": "max@example.com",
         "password": "password",
         "token": "mock-token-3",
@@ -32,7 +32,7 @@
     { 
         "id": "4",
         "username": "tonytest",
-        "displayname": "Tony",
+        "displayName": "Tony",
         "email": "tony@example.com",
         "password": "password",
         "token": "mock-token-4",
@@ -42,7 +42,7 @@
     { 
         "id": "5",
         "username": "leonietest",
-        "displayname": "Leonie",
+        "displayName": "Leonie",
         "email": "leonie@example.com",
         "password": "password",
         "token": "mock-token-5",
@@ -52,7 +52,7 @@
     { 
         "id": "6",
         "username": "pascaltest",
-        "displayname": "Pascal",
+        "displayName": "Pascal",
         "email": "pascal@example.com",
         "password": "password",
         "token": "mock-token-6",
