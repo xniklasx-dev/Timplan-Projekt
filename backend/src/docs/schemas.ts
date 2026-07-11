@@ -229,7 +229,7 @@ export const DateDataSchema = z
             example: "Test User",
         }),
 
-        avatarUrl: z.string().url().optional().openapi({
+        avatarUrl: z.string().url().optional().nullable().openapi({
             example: "https://example.com/avatar.jpg",
         }),
 
@@ -307,11 +307,17 @@ export const DateDataSchema = z
     })
     .openapi("UpdateUser");
 
+    export const ChangePasswordSchema = z.object({
+        currentPassword: z.string().min(8),
+        newPassword: z.string().min(8)
+    }).strict();
+
     export type UserData = z.output<typeof UserSchema>;
     export type RegisterData = z.input<typeof RegisterSchema>;
     export type LoginData = z.input<typeof LoginSchema>;
     export type ForgotPasswordData = z.input<typeof ForgotPasswordSchema>;
     export type ResetPasswordData = z.input<typeof ResetPasswordSchema>;
     export type UpdateProfileData = z.input<typeof UpdateProfileSchema>;
+    export type ChangePasswordData = z.input<typeof ChangePasswordSchema>;
 
     

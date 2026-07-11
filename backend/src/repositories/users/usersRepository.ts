@@ -12,5 +12,7 @@ export interface UsersRepository {
 
     updateUser(id: string, updates: UpdateProfileData): Promise<User>;
 
+    updatePassword(id: string, passwordHash: string): Promise<void>
+
     deleteUser(id: string): Promise<void>;
 }

@@ -4,6 +4,45 @@ import { mockUsers, MockUser } from "@/app/mocks/users.mock";
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
 
+// auth/register
+export async function register(data: RegisterDTO): Promise<User> {
+    if (USE_MOCK) {
+        const newUser: MockUser = {
+            id: crypto.randomUUID(),
+            ...data,
+            token: "mock-token-" + Date.now(),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        mockUsers.push(newUser);
+
+        return {
+            id: newUser.id,
+            username: newUser.username,
+            displayName: newUser.displayName,
+            avatarUrl: newUser.avatarUrl,
+            email: newUser.email,
+            token: newUser.token,
+            createdAt: newUser.createdAt,
+            updatedAt: newUser.updatedAt
+        };
+    }
+
+    const res = await fetch(`${API_BASE}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error ?? "Registration failed");
+    }
+
+    return res.json();
+}
+
 // auth/login
 export async function login(data: LoginDTO): Promise<User> {
     if (USE_MOCK) {
@@ -46,42 +85,57 @@ export async function login(data: LoginDTO): Promise<User> {
     return { ...user, token };
 }
 
-export async function register(data: RegisterDTO): Promise<User> {
-    if (USE_MOCK) {
-        const newUser: MockUser = {
-        id: crypto.randomUUID(),
-        ...data,
-        token: "mock-token-" + Date.now(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-    };
-    
-    mockUsers.push(newUser);
 
-    return {
-        id: newUser.id,
-        username: newUser.username,
-        displayName: newUser.displayName,
-        avatarUrl: newUser.avatarUrl,
-        email: newUser.email,
-        token: newUser.token,
-        createdAt: newUser.createdAt,
-        updatedAt: newUser.updatedAt
-    };
+
+export async function updateProfile(data: Partial<User>, token: string): Promise<User> {
+    const res = await fetch(`${API_BASE}/auth/me`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` },
+        body: JSON.stringify(data)
+    });
+
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error ?? "Login failed");
+    }
+
+    return res.json();
 }
 
-const res = await fetch(`${API_BASE}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-});
+export async function updatePassword(data: { currentPassword: string; newPassword: string }, token: string): Promise<void> {
+    const res = await fetch(`${API_BASE}/auth/me/password`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` },
+        body: JSON.stringify(data)
+    });
 
-if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error ?? "Registration failed");
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error ?? "Update password failed");
+    }
+
+    return
 }
 
-return res.json();
+export async function updateAvatar(avatarUrl: string, token: string): Promise<User> {
+    const res = await fetch(`${API_BASE}/auth/me/avatar`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` },
+        body: JSON.stringify({ avatarUrl })
+    });
+
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error ?? "Update avatar failed");
+    }
+
+    return res.json();
 }
 
 export async function logout(): Promise<void> {

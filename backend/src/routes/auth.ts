@@ -2,7 +2,7 @@ import { Router } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-import { LoginSchema, RegisterSchema, UpdateProfileSchema } from "../docs/schemas.js";
+import {ChangePasswordSchema, LoginSchema, RegisterSchema, UpdateProfileSchema} from "../docs/schemas.js";
 import { ApiError } from "../middleware/errorHandler.js";
 import { asyncHandler } from "../middleware/asyncHandler.js"
 import { UsersRepository } from "../repositories/users/usersRepository.js";
@@ -13,7 +13,7 @@ import { memoryUsersRepository } from "../repositories/users/memoryRepository.js
 import { tokenVerifier } from "../middleware/tokenVerifier.js";
 
 const router = Router();
-// Switch between mockData and PostgreSQL 
+// Switch mockData/PostgreSQL
 const usersRepository: UsersRepository =
   env.dataSource === "memory" 
     ? loadMockUsers(memoryUsersRepository)
@@ -110,8 +110,8 @@ router.post("/auth/forgot-password", asyncHandler(async(req, res) => {
         throw new ApiError(400, "Email is required");
     }
 
-    // Always return success (for email enumeration prevention)
-    res.status(200).json({ 
+    // Coming soon
+    res.status(200).json({
       "message": "If this email exists, a reset link has been sent" 
     });
 }));
@@ -137,11 +137,14 @@ router.post("/auth/me/avatar", asyncHandler(async(req, res) => {
 
     if (!authHeader || authHeader.length === 0) {
         throw new ApiError(401, "Authorization header is missing");
-    } 
-    
-    tokenVerifier(authHeader);
-    
-    res.status(200).json("Avatar uploaded")
+    }
+
+    const { avatarUrl } = req.body;
+    const decoded = tokenVerifier(authHeader);
+    const user = await usersRepository.updateUser(decoded.userId, { avatarUrl });
+
+    const { passwordHash: _, ...safeUser } = user;
+    res.status(200).json(safeUser);
 }));
 
 //PATCH /auth/me
@@ -182,9 +185,31 @@ router.patch("/auth/me/password", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing");
     }
 
-    tokenVerifier(authHeader);
+    const result = ChangePasswordSchema.safeParse(req.body);
 
-    res.status(200).json({ message: "Update password successfully" })
+    if (!result.success) {
+        throw new ApiError(400, "invalid input");
+    }
+
+    const { currentPassword, newPassword } = result.data;
+    const  decoded = tokenVerifier(authHeader);
+    const user = await usersRepository.getUserById(decoded.userId);
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
+
+    if (!isValid) {
+        throw new ApiError(401, "Invalid password");
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+    await usersRepository.updatePassword(decoded.userId, passwordHash);
+
+    res.status(200).json({ message: "Password updated successfully" });
+
 }));
 
 
@@ -196,8 +221,9 @@ router.delete("/auth/me/avatar", asyncHandler(async(req, res) => {
         throw new ApiError(401, "Authorization header is missing");
     }
 
-    tokenVerifier(authHeader);
-    
+    const  decoded = tokenVerifier(authHeader);
+    await usersRepository.updateUser(decoded.userId, { avatarUrl: null });
+
     res.status(204).send();
 }));
 

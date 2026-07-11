@@ -62,6 +62,21 @@ export class DrizzleUsersRepository implements UsersRepository {
         return updatedUser;
     }
 
+
+    async updatePassword(id: string, passwordHash: string): Promise<void> {
+        const [updatedUser] = await db
+            .update(users)
+            .set({
+                passwordHash,
+                updatedAt: new Date(),
+            })
+            .where(eq(users.id, id))
+
+        if (!updatedUser) {
+            throw new ApiError(404, "User not found");
+        }
+    }
+
     async deleteUser(id: string): Promise<void> {
         await db.delete(users).where(eq(users.id, id));
     }

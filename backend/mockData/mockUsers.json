@@ -4,8 +4,8 @@
         "username": "testuser",
         "displayName": "Test User",
         "email": "test@example.com",
-        "password": "password",
-        "token": "mock-token-1",
+        "passwordHash": "password",
+        "avatarUrl": null,
         "createdAt": "2026-02-20T12:00:00Z",
         "updatedAt": "2026-02-20T12:00:00Z"
     },
@@ -14,8 +14,8 @@
         "username": "niktest",
         "displayName": "Nik",
         "email": "nik@example.com",
-        "password": "password",
-        "token": "mock-token-2",
+        "passwordHash": "password",
+        "avatarUrl": null,
         "createdAt": "2026-02-20T12:00:00Z",
         "updatedAt": "2026-02-20T12:00:00Z"
     },
@@ -24,8 +24,8 @@
         "username": "maxtest",
         "displayName": "Max",
         "email": "max@example.com",
-        "password": "password",
-        "token": "mock-token-3",
+        "passwordHash": "password",
+        "avatarUrl": null,
         "createdAt": "2026-02-20T12:00:00Z",
         "updatedAt": "2026-02-20T12:00:00Z"
     },
@@ -34,8 +34,8 @@
         "username": "tonytest",
         "displayName": "Tony",
         "email": "tony@example.com",
-        "password": "password",
-        "token": "mock-token-4",
+        "passwordHash": "password",
+        "avatarUrl": null,
         "createdAt": "2026-02-20T12:00:00Z",
         "updatedAt": "2026-02-20T12:00:00Z"
     },
@@ -44,8 +44,8 @@
         "username": "leonietest",
         "displayName": "Leonie",
         "email": "leonie@example.com",
-        "password": "password",
-        "token": "mock-token-5",
+        "passwordHash": "password",
+        "avatarUrl": null,
         "createdAt": "2026-02-20T12:00:00Z",
         "updatedAt": "2026-02-20T12:00:00Z"
     },
@@ -54,8 +54,8 @@
         "username": "pascaltest",
         "displayName": "Pascal",
         "email": "pascal@example.com",
-        "password": "password",
-        "token": "mock-token-6",
+        "passwordHash": "password",
+        "avatarUrl": null,
         "createdAt": "2026-02-20T12:00:00Z",
         "updatedAt": "2026-02-20T12:00:00Z"
     }

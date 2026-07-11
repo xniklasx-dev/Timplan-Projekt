@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { User } from "../../db/schema.js";
 import { UpdateProfileData } from "../../docs/schemas.js";
 import { UsersRepository } from "./usersRepository.js";
+import {ApiError} from "../../middleware/errorHandler.js";
 
 export class MemoryUsersRepository implements UsersRepository {
     private readonly users = new Map<string, User>();
@@ -50,6 +51,21 @@ export class MemoryUsersRepository implements UsersRepository {
         };
         this.users.set(id, updatedUser);
         return updatedUser;
+    }
+
+    async updatePassword(id: string, passwordHash: string): Promise<void> {
+        const existingUser = this.users.get(id);
+
+        if (!existingUser) {
+            throw Error(`User ${id} not found`);
+        }
+        const updatedUser: User = {
+            ...existingUser,
+            passwordHash,
+            updatedAt: new Date()
+        };
+
+        this.users.set(id, updatedUser);
     }
 
     async deleteUser(id: string): Promise<void> {
