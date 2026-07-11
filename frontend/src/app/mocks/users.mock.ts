@@ -2,7 +2,7 @@
 export interface MockUser {
     id: string;
     username: string;
-    displayname?: string;
+    displayName?: string;
     avatarUrl?: string;
     email: string;
     password: string;
@@ -15,7 +15,7 @@ export const mockUsers: MockUser[] = [
     {
         id: "1",
         username: "testuser",
-        displayname: "Test User",
+        displayName: "Test User",
         email: "test@example.com",
         password: "password",
         token: "mock-token-1",
@@ -25,7 +25,7 @@ export const mockUsers: MockUser[] = [
     { 
         id: "2",
         username: "niktest",
-        displayname: "Nik",
+        displayName: "Nik",
         email: "nik@example.com",
         password: "password",
         token: "mock-token-2",
@@ -35,7 +35,7 @@ export const mockUsers: MockUser[] = [
     { 
         id: "3",
         username: "maxtest",
-        displayname: "Max",
+        displayName: "Max",
         email: "max@example.com",
         password: "password",
         token: "mock-token-3",
@@ -45,7 +45,7 @@ export const mockUsers: MockUser[] = [
     { 
         id: "4",
         username: "tonytest",
-        displayname: "Tony",
+        displayName: "Tony",
         email: "tony@example.com",
         password: "password",
         token: "mock-token-4",
@@ -55,7 +55,7 @@ export const mockUsers: MockUser[] = [
     { 
         id: "5",
         username: "leonietest",
-        displayname: "Leonie",
+        displayName: "Leonie",
         email: "leonie@example.com",
         password: "password",
         token: "mock-token-5",
@@ -65,7 +65,7 @@ export const mockUsers: MockUser[] = [
     { 
         id: "6",
         username: "pascaltest",
-        displayname: "Pascal",
+        displayName: "Pascal",
         email: "pascal@example.com",
         password: "password",
         token: "mock-token-6",

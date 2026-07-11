@@ -13,7 +13,7 @@ export interface RegisterDTO {
 export interface User {
     id: string;
     username: string;
-    displayname?: string;
+    displayName?: string;
     avatarUrl?: string;
     email: string;
     token: string;
