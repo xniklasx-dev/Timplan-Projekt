@@ -4,6 +4,7 @@ import {
   bigint,
   date,
   index,
+  integer,
   pgEnum,
   pgTable,
   text,
@@ -44,9 +45,9 @@ export const users = pgTable("users",
       .notNull()
       .defaultNow(),
   },
-  (table) => ({
-    emailUnique: uniqueIndex("users_email_unique").on(table.email),
-  }),
+  (table) => [
+    uniqueIndex("users_email_unique").on(table.email),
+  ],
 );
 
 export const decks = pgTable("decks",
@@ -76,34 +77,74 @@ export const decks = pgTable("decks",
       .notNull()
       .defaultNow(),
   },
-  (table) => ({
-    userIdIndex: index("decks_user_id_idx").on(table.userId),
-    parentDeckIdIndex: index("decks_parent_deck_id_idx").on(
+  (table) => [
+    index("decks_user_id_idx").on(table.userId),
+    index("decks_parent_deck_id_idx").on(
       table.parentDeckId,
     ),
-  }),
+  ],
 );
 
-export const cards = pgTable("cards",
+export const cards = pgTable(
+  "cards",
   {
     id: uuid("id").primaryKey().defaultRandom(),
 
     deckId: uuid("deck_id")
       .notNull()
-      .references(() => decks.id, { onDelete: "cascade", onUpdate: "cascade" }),
+      .references(() => decks.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
 
     front: text("front").notNull(),
     back: text("back").notNull(),
     hint: text("hint"),
-    tags: text("tags").array(),
 
-    state: cardStateEnum("state").notNull().default("new"),
+    tags: text("tags")
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
 
-    due: timestamp("due", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("cards_deck_id_created_at_idx").on(
+      table.deckId,
+      table.createdAt,
+    ),
+
+    index("cards_tags_idx").using("gin", table.tags),
+  ],
+);
+
+export const cardProgress = pgTable(
+  "card_progress",
+  {
+    cardId: uuid("card_id")
+      .primaryKey()
+      .references(() => cards.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+
+    state: cardStateEnum("state")
+      .notNull()
+      .default("new"),
 
     rating: cardRatingEnum("rating"),
 
-    totalReviews: bigint("total_reviews", { mode: "number" })
+    due: timestamp("due", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+
+    totalReviews: integer("total_reviews")
       .notNull()
       .default(0),
 
@@ -115,20 +156,14 @@ export const cards = pgTable("cards",
       .notNull()
       .defaultNow(),
   },
-  (table) => ({
-    deckIdIndex: index("cards_deck_id_idx").on(table.deckId),
+  (table) => [
+    index("card_progress_due_idx").on(table.due),
 
-    deckDueIndex: index("cards_deck_id_due_idx").on(
-      table.deckId,
-      table.due,
-    ),
-
-    deckStateDueIndex: index("cards_deck_id_state_due_idx").on(
-      table.deckId,
+    index("card_progress_state_due_idx").on(
       table.state,
       table.due,
     ),
-  }),
+  ],
 );
 
 export const dateData = pgTable("date_data",
@@ -145,14 +180,14 @@ export const dateData = pgTable("date_data",
     medium: bigint("medium", { mode: "number" }).notNull().default(0),
     hard: bigint("hard", { mode: "number" }).notNull().default(0),
   },
-  (table) => ({
-    userDateUnique: uniqueIndex("date_data_user_id_date_unique").on(
+  (table) => [
+    uniqueIndex("date_data_user_id_date_unique").on(
       table.userId,
       table.date,
     ),
 
-    userIdIndex: index("date_data_user_id_idx").on(table.userId),
-  }),
+    index("date_data_user_id_idx").on(table.userId),
+  ],
 );
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -184,6 +219,15 @@ export const cardsRelations = relations(cards, ({ one }) => ({
     fields: [cards.deckId],
     references: [decks.id],
   }),
+
+  progress: one(cardProgress),
+}));
+
+export const cardProgressRelations = relations(cardProgress, ({ one }) => ({
+  card: one(cards, {
+    fields: [cardProgress.cardId],
+    references: [cards.id],
+  }),
 }));
 
 export const dateDataRelations = relations(dateData, ({ one }) => ({
@@ -201,6 +245,9 @@ export type NewDeck = typeof decks.$inferInsert;
 
 export type Card = typeof cards.$inferSelect;
 export type NewCard = typeof cards.$inferInsert;
+
+export type CardProgress = typeof cardProgress.$inferSelect;
+export type NewCardProgress = typeof cardProgress.$inferInsert;
 
 export type DateData = typeof dateData.$inferSelect;
 export type NewDateData = typeof dateData.$inferInsert;

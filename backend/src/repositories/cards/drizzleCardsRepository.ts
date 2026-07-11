@@ -1,8 +1,7 @@
-import { and, eq, getTableColumns, inArray, sql } from "drizzle-orm";
-
+import { and, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../../db/client.js";
 import { Card, cards, decks } from "../../db/schema.js";
-import { BatchUpsertCardsData, CardUpdateData, CreateCardData } from "../../docs/schemas.js";
+import { BatchUpsertCardsData, CardUpdateData, CreateCardData } from "../../validation/cardSchemas.js";
 import { CardsRepository } from "./cardsRepository.js";
 
 const cardColumns = getTableColumns(cards);
@@ -18,31 +17,6 @@ export class DrizzleCardsRepository implements CardsRepository {
     return result.length > 0;
   }
 
-  async hasCardAccess(cardId: string, userId: string): Promise<boolean> {
-    const result = await db
-      .select({ id: cards.id })
-      .from(cards)
-      .innerJoin(decks, eq(decks.id, cards.deckId))
-      .where(and(eq(cards.id, cardId), eq(decks.userId, userId)))
-      .limit(1);
-
-    return result.length > 0;
-  }
-
-  async hasCardsAccess(cardIds: string[], userId: string): Promise<boolean> {
-    if (cardIds.length === 0) {
-      return true;
-    }
-
-    const ownedCards = await db
-      .select({ id: cards.id })
-      .from(cards)
-      .innerJoin(decks, eq(decks.id, cards.deckId))
-      .where(and(inArray(cards.id, cardIds), eq(decks.userId, userId)));
-
-    return ownedCards.length === cardIds.length;
-  }
-
   async getCardsByDeckId(deckId: string, userId: string): Promise<Card[]> {
     return db
       .select(cardColumns)
@@ -51,12 +25,12 @@ export class DrizzleCardsRepository implements CardsRepository {
       .where(and(eq(cards.deckId, deckId), eq(decks.userId, userId)));
   }
 
-  async getCardById(cardId: string, userId: string): Promise<Card | null> {
+  async getCardById(cardId: string, deckId: string, userId: string): Promise<Card | null> {
     const [card] = await db
       .select(cardColumns)
       .from(cards)
       .innerJoin(decks, eq(decks.id, cards.deckId))
-      .where(and(eq(cards.id, cardId), eq(decks.userId, userId)))
+      .where(and(eq(cards.id, cardId), eq(decks.userId, userId), eq(cards.deckId, deckId)))
       .limit(1);
 
     return card ?? null;
@@ -68,14 +42,14 @@ export class DrizzleCardsRepository implements CardsRepository {
     return newCard;
   }
 
-  async updateCard(cardId: string, cardData: CardUpdateData): Promise<Card | null> {
+  async updateCard(cardId: string, deckId: string, cardData: CardUpdateData): Promise<Card | null> {
     const [updatedCard] = await db
       .update(cards)
       .set({
         ...cardData,
         updatedAt: new Date(),
       })
-      .where(eq(cards.id, cardId))
+      .where(and(eq(cards.id, cardId), eq(cards.deckId, deckId)))
       .returning();
 
     return updatedCard ?? null;
@@ -83,7 +57,7 @@ export class DrizzleCardsRepository implements CardsRepository {
 
   async upsertManyCards(cardsData: BatchUpsertCardsData): Promise<Card[]> {
     const values = cardsData.cards.map((card) => ({
-      id: card.id,
+      id: card.cardId,
       deckId: cardsData.deckId,
       front: card.front,
       back: card.back,
@@ -103,17 +77,21 @@ export class DrizzleCardsRepository implements CardsRepository {
           tags: sql`EXCLUDED.tags`,
           updatedAt: new Date(),
         },
+        setWhere: eq(cards.deckId, cardsData.deckId),
       })
       .returning();
   }
 
-  async deleteCard(cardId: string): Promise<void> {
-    await db.delete(cards).where(eq(cards.id, cardId));
+  async deleteCard(cardId: string, deckId: string): Promise<boolean> {
+    const deletedCards = await db
+      .delete(cards)
+      .where(and(eq(cards.id, cardId), eq(cards.deckId, deckId)))
+      .returning({ id: cards.id });
+
+    return deletedCards.length > 0;
   }
 
   async batchDeleteCard(deckId: string): Promise<void> {
     await db.delete(cards).where(eq(cards.deckId, deckId));
   }
 }
-
-export const drizzleCardsRepository = new DrizzleCardsRepository();

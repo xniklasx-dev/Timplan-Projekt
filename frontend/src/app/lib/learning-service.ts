@@ -52,9 +52,6 @@ export function rateCard(card: Card, rating: 0 | 1 | 2 | 3, stats: StatsMap): { 
     ...card,
     rating,
     totalReviews: card.totalReviews + 1,
-    correctReviews:
-      rating >= 2 ? card.correctReviews + 1 : card.correctReviews,
-    lastReview: now,
     due: calculateNextDueDate(rating),
     state: getNewState(rating),
     updatedAt: now,

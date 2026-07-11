@@ -1,7 +1,11 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+
 import { randomUUID } from "node:crypto";
 
 import { Card } from "../../db/schema.js";
-import { BatchUpsertCardsData, CardUpdateData, CreateCardData } from "../../docs/schemas.js";
+import { BatchUpsertCardsData, CardUpdateData, CreateCardData } from "../../validation/cardSchemas.js";
 import { CardsRepository } from "./cardsRepository.js";
 
 export class MemoryCardsRepository implements CardsRepository {
@@ -14,8 +18,12 @@ export class MemoryCardsRepository implements CardsRepository {
     }
   }
 
+  getAllCards(): Card[] {
+    return Array.from(this.cards.values());
+  }
+
   // TODO: implement sobald nik die decks gemacht hat
-  async hasDeckAccess(deckId: string, userId: string): Promise<boolean> {
+  async hasDeckAccess(_deckId: string, _userId: string): Promise<boolean> {
     
     /*const ownerId = this.deckOwners.get(deckId);
 
@@ -28,33 +36,11 @@ export class MemoryCardsRepository implements CardsRepository {
     return true
   }
 
-  async hasCardAccess(cardId: string, userId: string): Promise<boolean> {
-    const card = this.cards.get(cardId);
-
-    if (!card) {
-      return false;
-    }
-
-    return this.hasDeckAccess(card.deckId, userId);
-  }
-
-  async hasCardsAccess(cardIds: string[], userId: string): Promise<boolean> {
-    if (cardIds.length === 0) {
-      return true;
-    }
-
-    const ownedCards = await Promise.all(
-      cardIds.map((cardId) => this.hasCardAccess(cardId, userId)),
-    );
-
-    return ownedCards.every(Boolean);
-  }
-
-  async getCardsByDeckId(deckId: string, userId: string): Promise<Card[]> {
+  async getCardsByDeckId(deckId: string, _userId: string): Promise<Card[]> {
     return Array.from(this.cards.values()).filter((card) => card.deckId === deckId);
   }
 
-  async getCardById(cardId: string, userId: string): Promise<Card | null> {
+  async getCardById(cardId: string, _deckId: string, _userId: string): Promise<Card | null> {
     return this.cards.get(cardId) ?? null;
   }
 
@@ -67,10 +53,6 @@ export class MemoryCardsRepository implements CardsRepository {
       back: cardData.back,
       hint: cardData.hint ?? null,
       tags: cardData.tags ?? [],
-      state: "new",
-      due: now,
-      rating: null,
-      totalReviews: 0,
       createdAt: now,
       updatedAt: now,
     };
@@ -80,10 +62,10 @@ export class MemoryCardsRepository implements CardsRepository {
     return card;
   }
 
-  async updateCard(cardId: string, cardData: CardUpdateData): Promise<Card | null> {
+  async updateCard(cardId: string, deckId: string, cardData: CardUpdateData): Promise<Card | null> {
     const existingCard = this.cards.get(cardId);
 
-    if (!existingCard) {
+    if (!existingCard || existingCard.deckId !== deckId) {
       return null;
     }
 
@@ -99,20 +81,16 @@ export class MemoryCardsRepository implements CardsRepository {
   }
 
   async upsertManyCards(cardsData: BatchUpsertCardsData): Promise<Card[]> {
-    const now = new Date();
     const upsertedCards = cardsData.cards.map((cardData) => {
-      const existingCard = cardData.id ? this.cards.get(cardData.id) : undefined;
+      const existingCard = cardData.cardId ? this.cards.get(cardData.cardId) : undefined;
+      const now = new Date();
       const card: Card = {
-        id: cardData.id ?? randomUUID(),
+        id: cardData.cardId ?? randomUUID(),
         deckId: cardsData.deckId,
         front: cardData.front,
         back: cardData.back,
         hint: cardData.hint ?? null,
         tags: cardData.tags ?? [],
-        state: existingCard?.state ?? "new",
-        due: existingCard?.due ?? now,
-        rating: existingCard?.rating ?? null,
-        totalReviews: existingCard?.totalReviews ?? 0,
         createdAt: existingCard?.createdAt ?? now,
         updatedAt: now,
       };
@@ -125,8 +103,14 @@ export class MemoryCardsRepository implements CardsRepository {
     return upsertedCards;
   }
 
-  async deleteCard(cardId: string): Promise<void> {
-    this.cards.delete(cardId);
+  async deleteCard(cardId: string, deckId: string): Promise<boolean> {
+    const existingCard = this.cards.get(cardId);
+
+    if (!existingCard || existingCard.deckId !== deckId) {
+      return false;
+    }
+
+    return this.cards.delete(cardId);
   }
 
   async batchDeleteCard(deckId: string): Promise<void> {
@@ -143,5 +127,3 @@ function withoutUndefined<T extends Record<string, unknown>>(data: T): Partial<T
     Object.entries(data).filter(([, value]) => value !== undefined),
   ) as Partial<T>;
 }
-
-export const memoryCardsRepository = new MemoryCardsRepository();

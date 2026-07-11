@@ -6,22 +6,27 @@ import styles from './ResultBox.module.css';
 interface Props {
   query: string;
   loading: boolean;
-  items: Array<{ id: string; title: string; link: string }>;
+  error: boolean;
+  items: Array<{
+    id: string;
+    title: string;
+    link: string;
+    type: 'deck' | 'card';
+  }>;
+  onResultClick: () => void;
 }
 
-export default function ResultBox({ query, loading, items }: Props) {
+export default function ResultBox({ query, loading, error, items, onResultClick }: Props) {
   const trimmedQuery = query.trim();
   const resultAmount = items.length;
 
   let statusText = '';
   if (loading) {
-    statusText = trimmedQuery
-      ? `Loading results for "${trimmedQuery}"…`
-      : 'Loading…';
+    statusText = `Searching for "${trimmedQuery}"…`;
+  } else if (error) {
+    statusText = 'Search could not be loaded.';
   } else if (resultAmount === 0) {
-    statusText = trimmedQuery
-      ? `No results for "${trimmedQuery}".`
-      : 'No results.';
+    statusText = `No results for "${trimmedQuery}".`;
   } else {
     statusText =
       resultAmount === 1
@@ -38,20 +43,21 @@ export default function ResultBox({ query, loading, items }: Props) {
       <div className={styles.scrollArea}>
         {loading ? (
           <div className={styles.skeletonWrap} aria-hidden="true">
-            {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className={styles.skeletonRow} />
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className={styles.skeletonRow} />
             ))}
-        </div>
-        ) : resultAmount === 0 ? (
-          <div className={styles.empty}>
-            Try a different keyword.
           </div>
+        ) : error ? (
+          <div className={styles.empty}>Please try again in a moment.</div>
+        ) : resultAmount === 0 ? (
+          <div className={styles.empty}>Try a different keyword.</div>
         ) : (
           <ul className={styles.list} aria-label="Search results">
             {items.map((item) => (
-              <li key={item.id} className={styles.item}>
-                <Link className={styles.link} href={item.link}>
-                  {item.title}
+              <li key={`${item.type}-${item.id}`}>
+                <Link className={styles.link} href={item.link} onClick={onResultClick}>
+                  <span className={styles.title}>{item.title}</span>
+                  <span className={styles.type}>{item.type}</span>
                 </Link>
               </li>
             ))}
