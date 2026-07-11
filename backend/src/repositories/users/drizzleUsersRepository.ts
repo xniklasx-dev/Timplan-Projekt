@@ -1,0 +1,85 @@
+import { eq } from "drizzle-orm";
+
+import { db } from "../../db/client.js";
+import { User, users } from "../../db/schema.js";
+import { UpdateProfileData } from "../../validation/userSchemas.js";
+import { UsersRepository } from "./usersRepository.js";
+import { ApiError } from "../../middleware/errorHandler.js";
+
+export class DrizzleUsersRepository implements UsersRepository {
+  async getUserById(id: string): Promise<User | null> {
+    const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, id))
+        .limit(1);
+
+    return user ?? null;
+  }
+
+  async getUserByEmail(email: string): Promise<User | null> {
+    const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1);
+
+    return user ?? null;
+  }
+
+  async getUserByUsername(username: string): Promise<User | null> {
+    const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.username, username))
+        .limit(1);
+
+    return user ?? null;
+  }
+
+  async createUser(userData: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<User> {
+    const [newUser] = await db
+        .insert(users)
+        .values(userData)
+        .returning();
+
+    return newUser;
+  }
+
+  async updateUser(id: string, updates: UpdateProfileData): Promise<User> {
+    const [updatedUser] = await db
+        .update(users)
+        .set({
+          ...updates,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, id))
+        .returning();
+
+    if (!updatedUser) {
+      throw new ApiError(404, "User not found");
+    }
+    return updatedUser;
+  }
+
+
+  async updatePassword(id: string, passwordHash: string): Promise<void> {
+    const [updatedUser] = await db
+        .update(users)
+        .set({
+          passwordHash,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, id))
+
+    if (!updatedUser) {
+      throw new ApiError(404, "User not found");
+    }
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await db.delete(users).where(eq(users.id, id));
+  }
+}
+
+export const drizzleUsersRepository = new DrizzleUsersRepository();

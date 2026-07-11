@@ -7,6 +7,7 @@ import { requireJsonResponse, requireJsonInBody } from "./middleware/requireJson
 export function createApp() {
   const app = express();
 
+  app.options("*", corsMiddleware());
   app.use(corsMiddleware());
 
   app.use(requireJsonResponse);
