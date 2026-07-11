@@ -18,9 +18,12 @@ import {
   DeckUpdateSchema,
 } from "../validation/deckSchemas.js";
 import {
-  CreateUserSchema,
   UserSchema,
-  UserUpdateSchema,
+  RegisterSchema,
+  LoginSchema,
+  ForgotPasswordSchema,
+  ResetPasswordSchema,
+  UpdateProfileSchema,
 } from "../validation/userSchemas.js";
 
 export const registry = new OpenAPIRegistry();
@@ -31,12 +34,18 @@ registry.register("CreateCard", CreateCardSchema);
 registry.register("CardUpdate", CardUpdateSchema);
 registry.register("UpsertCard", UpsertCardSchema);
 registry.register("BatchUpsertCards", BatchUpsertCardsSchema);
+
 registry.register("Deck", DeckSchema);
 registry.register("CreateDeck", CreateDeckSchema);
 registry.register("DeckUpdate", DeckUpdateSchema);
+
 registry.register("User", UserSchema);
-registry.register("CreateUser", CreateUserSchema);
-registry.register("UserUpdate", UserUpdateSchema);
+registry.register("RegisterUser", RegisterSchema);
+registry.register("LoginUser", LoginSchema);
+registry.register("ForgotUserPassword", ForgotPasswordSchema);
+registry.register("ResetUserPassword", ResetPasswordSchema);
+registry.register("UpdateProfile", UpdateProfileSchema);
+
 registry.register("DateData", DateDataSchema);
 registry.register("CreateDateData", CreateDateDataSchema);
 registry.register("DateDataUpdate", DateDataUpdateSchema);

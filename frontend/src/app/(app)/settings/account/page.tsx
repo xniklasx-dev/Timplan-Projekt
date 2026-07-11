@@ -4,12 +4,13 @@ import { useState, useRef } from "react";
 import { useAuth } from "@/app/lib/auth/AuthContext";
 import Spinner from "@/app/ui/spinner/Spinner";
 import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
+import { updateAvatar, updateProfile, updatePassword } from "@/app/lib/auth/auth.service";
 import styles from "./page.module.css";
 
 export default function AccountSettingsPage() {
   const { user, updateUser, isLoading } = useAuth();
   const [username, setUsername] = useState(user?.username ?? "");
-  const [displayname, setDisplayname] = useState(user?.displayname ?? "");
+  const [displayname, setDisplayName] = useState(user?.displayname ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -25,26 +26,27 @@ export default function AccountSettingsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (isLoading) return <Spinner />;
-      if (!user) return null; 
+      if (!user) return null;
 
-  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    // Later: API-Call to upload avatar and get URL, for now just convert to base64
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
       setProfileError("Image size must be less than 2MB.");
       return;
     }
     const reader = new FileReader();
-  reader.onload = () => {
-    const base64 = reader.result as string;
-    setAvatarUrl(base64);
-    updateUser({ avatarUrl: base64 });
-  };
-  reader.readAsDataURL(file);
+    reader.onload = async () => {
+      const base64 = reader.result as string;
+      setAvatarUrl(base64);
+      const updated = await updateAvatar(base64, user!.token);
+      updateUser({ ...updated, token: user!.token });
+    };
+    reader.readAsDataURL(file);
   }
 
-  function handleProfileSave(e: React.FormEvent) {
+  async function handleProfileSave(e: React.FormEvent) {
     e.preventDefault();
     setProfileError("");
     setProfileSuccess("");
@@ -52,12 +54,22 @@ export default function AccountSettingsPage() {
       setProfileError("Username and email cannot be empty.");
       return;
     }
-    // Later: API-Call to update profile
-    updateUser({ username, email, displayname });
-    setProfileSuccess("Profile updated successfully.");
+    if (!user) return null;
+
+    try {
+      const updated = await updateProfile({username, email, displayname}, user.token);
+      updateUser({ ...updated, token:user.token })
+      setProfileSuccess("Profile updated successfully.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setProfileError(err.message);
+      } else {
+        setProfileSuccess("Update Profile failed");
+      }
+    }
   }
 
-  function handlePasswordChange(e: React.FormEvent) {
+  async function handlePasswordChange(e: React.FormEvent) {
     e.preventDefault();
     setPasswordError("");
     setPasswordSuccess("");
@@ -73,11 +85,21 @@ export default function AccountSettingsPage() {
       setPasswordError("Passwords do not match.");
       return;
     }
-    // Later: API-Call to change password
-    setPasswordSuccess("Password changed successfully.");
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+
+    if (!user) return null;
+    try {
+      await updatePassword({currentPassword, newPassword}, user.token);
+      setPasswordSuccess("Password changed successfully.");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      if (err instanceof Error) {
+        setPasswordError(err.message);
+      } else {
+        setPasswordError("Update password failed")
+      }
+    }
   }
 
   return (
@@ -151,7 +173,7 @@ export default function AccountSettingsPage() {
                   className={styles.input}
                   type="text"
                   value={displayname}
-                  onChange={(e) => setDisplayname(e.target.value)}
+                  onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Your display name"
                 />
               </div>

@@ -12,6 +12,7 @@ export function corsMiddleware(): RequestHandler {
 
   return cors({
     origin(origin, callback) {
+      console.log("CORS origin:", origin, "allowed", allowed);
       if (!origin) return callback(null, true);
       if (allowAll) return callback(null, true);
       return callback(null, allowed.has(origin));

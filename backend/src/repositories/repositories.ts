@@ -6,27 +6,34 @@ import { loadMockData } from "./loadMockData.js";
 import { DrizzleSearchRepository } from "./search/drizzleSearchRepository.js";
 import { MemorySearchRepository } from "./search/memorySearchRepository.js";
 import type { SearchRepository } from "./search/searchRepository.js";
+import type {UsersRepository} from "./users/usersRepository.js";
+import { DrizzleUsersRepository } from "./users/drizzleUsersRepository.js";
+import { MemoryUsersRepository } from "./users/memoryUsersRepository.js";
 
 type Repositories = {
   //add your repository interface here
   cardsRepository: CardsRepository;
   searchRepository: SearchRepository;
+  usersRepository: UsersRepository;
 };
 
 function createRepositories(): Repositories {
   if (env.dataSource === "memory") {
     //create your memory repository here
     const cardsRepository = new MemoryCardsRepository();
+    const usersRepository = new MemoryUsersRepository();
 
     loadMockData({
       //pass your memory repository to the mock loader here
       cardsRepository,
+      usersRepository,
     });
 
     return {
       //return your memory repository here
       cardsRepository,
       searchRepository: new MemorySearchRepository(cardsRepository),
+      usersRepository,
     };
   }
 
@@ -34,6 +41,7 @@ function createRepositories(): Repositories {
     //create and return your Drizzle repository here
     cardsRepository: new DrizzleCardsRepository(),
     searchRepository: new DrizzleSearchRepository(),
+    usersRepository: new DrizzleUsersRepository(),
   };
 }
 
@@ -41,4 +49,5 @@ export const {
   //add your repository here
   cardsRepository,
   searchRepository,
+  usersRepository,
 } = createRepositories();

@@ -1,10 +1,13 @@
-import type { Card } from "../db/schema.js";
+import type {Card, User} from "../db/schema.js";
 import mockCardsJson from "../../mockData/mockCards.json" with { type: "json" };
 import type { MemoryCardsRepository } from "./cards/memoryCardsRepository.js";
+import mockUsersJson from "../../mockData/mockUsers.json" with { type: "json" };
+import { MemoryUsersRepository } from "./users/memoryUsersRepository.js";
 
 type MemoryRepositories = {
   //add your memory repository here
   cardsRepository: MemoryCardsRepository;
+  usersRepository: MemoryUsersRepository;
 };
 
 type MockCard = Omit<Card, "createdAt" | "updatedAt"> & {
@@ -12,10 +15,17 @@ type MockCard = Omit<Card, "createdAt" | "updatedAt"> & {
   updatedAt: string;
 };
 
+type MockUser = Omit<User, "createdAt" | "updatedAt"> & {
+  createdAt: string;
+  updatedAt: string;
+}
+
 export function loadMockData(repositories: MemoryRepositories): void {
   //load your mock data into your repository here
   const cards = (mockCardsJson as MockCard[]).map(toCard);
   repositories.cardsRepository.loadCards(cards);
+  const users = (mockUsersJson as MockUser[]).map(toUser);
+  repositories.usersRepository.loadUsers(users);
 }
 
 function toCard(mockCard: MockCard): Card {
@@ -23,5 +33,13 @@ function toCard(mockCard: MockCard): Card {
     ...mockCard,
     createdAt: new Date(mockCard.createdAt),
     updatedAt: new Date(mockCard.updatedAt),
+  };
+}
+
+function toUser(mockUser: MockUser): User {
+  return {
+    ...mockUser,
+    createdAt: new Date(mockUser.createdAt),
+    updatedAt: new Date(mockUser.updatedAt),
   };
 }
