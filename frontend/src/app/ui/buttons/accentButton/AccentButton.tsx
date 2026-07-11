@@ -9,7 +9,9 @@ type AccentButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 export default function AccentButton(props: AccentButtonProps) {
-  const { children, fullWidth, className, ...rest } = props;
+  const children = props.children;
+  const fullWidth = props.fullWidth;
+  const className = props.className;
 
   let buttonClassName = styles.base + " " + styles.accent;
 
@@ -22,7 +24,7 @@ export default function AccentButton(props: AccentButtonProps) {
   }
 
   return (
-    <button {...rest} className={buttonClassName}>
+    <button {...props} className={buttonClassName}>
       {children}
     </button>
   );

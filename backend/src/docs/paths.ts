@@ -5,14 +5,7 @@ import {
   CardSchema,
   CardUpdateSchema,
   CreateCardSchema,
-
-  UserSchema,
-  RegisterSchema,
-  LoginSchema,
-  ForgotPasswordSchema,
-  ResetPasswordSchema,
-  UpdateProfileSchema,
-} from "./schemas.js";
+} from "../validation/cardSchemas.js";
 
 const UserIdHeader = z.object({
   userId: z.string().openapi({
@@ -37,9 +30,9 @@ const DeckIdParam = z.object({
 });
 
 const CardIdParam = z.object({
-  id: z.string().openapi({
+  cardId: z.string().openapi({
     param: {
-      name: "id",
+      name: "cardId",
       in: "path",
       required: true,
     },
@@ -56,12 +49,6 @@ const ErrorResponseSchema = z.object({
 const DeleteCardResponseSchema = z.object({
   message: z.string().openapi({
     example: "Card deleted successfully",
-  }),
-});
-
-const BatchDeleteCardsResponseSchema = z.object({
-  message: z.string().openapi({
-    example: "Cards deleted Sucessfully",
   }),
 });
 
@@ -90,7 +77,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "get",
-  path: "/cards/getAllCards/{deckId}",
+  path: "/decks/{deckId}/cards",
   tags: ["cards"],
   description: "List cards in a deck owned by the current user.",
   request: {
@@ -127,12 +114,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "get",
-  path: "/cards/{id}",
+  path: "/decks/{deckId}/cards/{cardId}",
   tags: ["cards"],
   description: "Get a single card owned by the current user.",
   request: {
     headers: UserIdHeader,
-    params: CardIdParam,
+    params: DeckIdParam.merge(CardIdParam),
   },
   responses: {
     200: {
@@ -172,11 +159,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "post",
-  path: "/cards",
+  path: "/decks/{deckId}/cards",
   tags: ["cards"],
   description: "Create a card in a deck owned by the current user.",
   request: {
     headers: UserIdHeader,
+    params: DeckIdParam,
     body: {
       content: {
         "application/json": {
@@ -215,12 +203,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "patch",
-  path: "/cards/{id}",
+  path: "/decks/{deckId}/cards/{cardId}",
   tags: ["cards"],
   description: "Update a card owned by the current user.",
   request: {
     headers: UserIdHeader,
-    params: CardIdParam,
+    params: DeckIdParam.merge(CardIdParam),
     body: {
       content: {
         "application/json": {
@@ -267,11 +255,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "put",
-  path: "/cards",
+  path: "/decks/{deckId}/cards",
   tags: ["cards"],
   description: "Create or update cards in a deck owned by the current user.",
   request: {
     headers: UserIdHeader,
+    params: DeckIdParam,
     body: {
       content: {
         "application/json": {
@@ -310,12 +299,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "delete",
-  path: "/cards/{id}",
+  path: "/decks/{deckId}/cards/{cardId}",
   tags: ["cards"],
   description: "Delete a card owned by the current user.",
   request: {
     headers: UserIdHeader,
-    params: CardIdParam,
+    params: DeckIdParam.merge(CardIdParam),
   },
   responses: {
     200: {
@@ -350,172 +339,5 @@ registry.registerPath({
         },
       },
     },
-  },
-});
-
-registry.registerPath({
-  method: "delete",
-  path: "/cards/batchDelete/{deckId}",
-  tags: ["cards"],
-  description: "Delete all cards in a deck owned by the current user.",
-  request: {
-    headers: UserIdHeader,
-    params: DeckIdParam,
-  },
-  responses: {
-    200: {
-      description: "Cards deleted.",
-      content: {
-        "application/json": {
-          schema: BatchDeleteCardsResponseSchema,
-        },
-      },
-    },
-    400: {
-      description: "Invalid user or deck id.",
-      content: {
-        "application/json": {
-          schema: ErrorResponseSchema,
-        },
-      },
-    },
-    403: {
-      description: "The user does not own the deck.",
-      content: {
-        "application/json": {
-          schema: ErrorResponseSchema,
-        },
-      },
-    },
-  },
-});
-
-const AuthHeader = z.object({
-  Authorization: z.string().openapi({
-    param: {
-      name: "Authorization",
-      in: "header",
-      required: true,
-    },
-    example: "Bearer mock-token",
-  }),
-});
-
-const AuthResponseSchema = z.object({
-  token: z.string().openapi({
-    example: "mock-token",
-  }),
-  user: UserSchema,
-});
-
-const MessageResponseSchema = z.object({
-  message: z.string().openapi({
-    example: "Password reset email sent",
-  }),
-});
-
-registry.registerPath({
-  method: "get",
-  path: "/auth/me",
-  tags: ["auth"],
-  description: "Get the current user's profile.",
-  request: { headers: AuthHeader, },
-  responses: {
-    200: { description: "Current user profile.", content: { "application/json": { schema: UserSchema } } },
-    401: { description: "Authentication required, header missing or invalid.", content: { "application/json": { schema: ErrorResponseSchema } } },  
-  },
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/auth/register",
-  tags: ["auth"],
-  description: "Register a new user.",
-  request: { body: { content: { "application/json": { schema: RegisterSchema } } } },
-  responses: {
-    201: { description: "User registered.", content: { "application/json": { schema: AuthResponseSchema } } },
-    400: { description: "Invalid request body.", content: { "application/json": { schema: ErrorResponseSchema } } },
-    409: { description: "Email already in use.", content: { "application/json": { schema: ErrorResponseSchema } } },
-  },
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/auth/login",
-  tags: ["auth"],
-  description: "Login a user.",
-  request: { body: { content: { "application/json": { schema: LoginSchema } } } },
-  responses: {
-    200: { description: "User logged in.", content: { "application/json": { schema: AuthResponseSchema } } },
-    400: { description: "Invalid request body.", content: { "application/json": { schema: ErrorResponseSchema } } },
-    401: { description: "Invalid email or password.", content: { "application/json": { schema: ErrorResponseSchema } } },
-  }
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/auth/forgot-password",
-  tags: ["auth"],
-  description: "Reset email sent if the address exists.",
-  request: { body: { content: { "application/json": { schema: ForgotPasswordSchema } } } },
-  responses: {
-    200: { description: "Password reset email sent.", content: { "application/json": { schema: MessageResponseSchema } } },
-    400: { description: "Invalid request body.", content: { "application/json": { schema: ErrorResponseSchema } } },
-  },
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/auth/reset-password",
-  tags: ["auth"],
-  description: "Reset the password for a user by reset token.",
-  request: { body: { content: { "application/json": { schema: ResetPasswordSchema } } } },
-  responses: {
-    200: { description: "Password reset succesfully, email sent.", content: { "application/json": { schema: MessageResponseSchema } } },
-    400: { description: "Invalid or expired token.", content: { "application/json": { schema: ErrorResponseSchema } } },
-  },
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/auth/logout",
-  tags: ["auth"],
-  description: "Logout a user.",
-  request: { 
-    headers: AuthHeader,
-  },
-  responses: {
-    200: { description: "User logged out.", content: { "application/json": { schema: MessageResponseSchema } } },
-    401: { description: "Invalid token.", content: { "application/json": { schema: ErrorResponseSchema } } },  
-  },
-});
-
-registry.registerPath({
-  method: "patch",
-  path: "/auth/me",
-  tags: ["auth"],
-  description: "Update the current user's profile.",
-  request: {
-    headers: AuthHeader, 
-    body: { content: { "application/json": { schema: UpdateProfileSchema } } },
-  },
-  responses: {
-    200: { description: "User profile updated.", content: { "application/json": { schema: UserSchema } } },
-    400: { description: "Invalid request body.", content: { "application/json": { schema: ErrorResponseSchema } } },
-    401: { description: "Authentication required, header missing or invalid.", content: { "application/json": { schema: ErrorResponseSchema } } },
-  },
-});
-
-registry.registerPath({
-  method: "delete",
-  path: "/auth/me",
-  tags: ["auth"],
-  description: "Delete current user's account.",
-  request: {
-    headers: AuthHeader,
-  },
-  responses: {
-    200: { description: "User deleted.", content: { "application/json": { schema: MessageResponseSchema } } },
-    401: { description: "Authentication required, header missing or invalid.", content: { "application/json": { schema: ErrorResponseSchema } } },
   },
 });

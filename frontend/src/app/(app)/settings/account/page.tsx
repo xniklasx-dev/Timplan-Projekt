@@ -5,12 +5,11 @@ import { useAuth } from "@/app/lib/auth/AuthContext";
 import Spinner from "@/app/ui/spinner/Spinner";
 import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 import styles from "./page.module.css";
-import {updateProfile, updatePassword, updateAvatar} from "@/app/lib/auth/auth.service";
 
 export default function AccountSettingsPage() {
   const { user, updateUser, isLoading } = useAuth();
   const [username, setUsername] = useState(user?.username ?? "");
-  const [displayName, setDisplayName] = useState(user?.displayName ?? "");
+  const [displayname, setDisplayname] = useState(user?.displayname ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -28,25 +27,24 @@ export default function AccountSettingsPage() {
   if (isLoading) return <Spinner />;
       if (!user) return null; 
 
-  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    // Later: API-Call to upload avatar and get URL, for now just with base64
+    // Later: API-Call to upload avatar and get URL, for now just convert to base64
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
       setProfileError("Image size must be less than 2MB.");
       return;
     }
     const reader = new FileReader();
-  reader.onload = async () => {
+  reader.onload = () => {
     const base64 = reader.result as string;
     setAvatarUrl(base64);
-    const updated = await updateAvatar(base64, user!.token);
-    updateUser({ ...updated, token: user!.token });
+    updateUser({ avatarUrl: base64 });
   };
   reader.readAsDataURL(file);
   }
 
-  async function handleProfileSave(e: React.FormEvent) {
+  function handleProfileSave(e: React.FormEvent) {
     e.preventDefault();
     setProfileError("");
     setProfileSuccess("");
@@ -54,22 +52,12 @@ export default function AccountSettingsPage() {
       setProfileError("Username and email cannot be empty.");
       return;
     }
-    if (!user) return null;
-
-    try {
-      const updated = await updateProfile({username, email, displayName}, user.token);
-      updateUser({ ...updated, token:user.token })
-      setProfileSuccess("Profile updated successfully.");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setProfileError(err.message);
-      } else {
-        setProfileSuccess("Update failed");
-      }
-    }
+    // Later: API-Call to update profile
+    updateUser({ username, email, displayname });
+    setProfileSuccess("Profile updated successfully.");
   }
 
-  async function handlePasswordChange(e: React.FormEvent) {
+  function handlePasswordChange(e: React.FormEvent) {
     e.preventDefault();
     setPasswordError("");
     setPasswordSuccess("");
@@ -85,197 +73,187 @@ export default function AccountSettingsPage() {
       setPasswordError("Passwords do not match.");
       return;
     }
-
-    if (!user) return null;
-    try {
-      await updatePassword({currentPassword, newPassword}, user.token);
-      setPasswordSuccess("Password changed successfully.");
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-    } catch (err) {
-      if (err instanceof Error) {
-        setPasswordError(err.message);
-      } else {
-        setPasswordError("Update password failed")
-      }
-    }
+    // Later: API-Call to change password
+    setPasswordSuccess("Password changed successfully.");
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
   }
 
-    return (
-        <div className={styles.page}>
-          <div className={styles.container}>
+  return (
+    <div className={styles.page}>
+      <div className={styles.container}>
 
-            <div className={styles.header}>
-              <h1 className={styles.title}>Account Settings</h1>
-              <p className={styles.subtitle}>Edit your profile information and password</p>
-            </div>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Account Settings</h1>
+          <p className={styles.subtitle}>Edit your profile information and password</p>
+        </div>
 
-            {/* Profile Section */}
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Profile Information</h2>
-              <div className={styles.card}>
-                <form onSubmit={handleProfileSave} className={styles.form}>
+        {/* Profile Section */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Profile Information</h2>
+          <div className={styles.card}>
+            <form onSubmit={handleProfileSave} className={styles.form}>
 
-                  {/* Avatar Upload */}
-                  <div className={styles.avatarSection}>
-                    <div className={styles.avatarPreview}
-                         onClick={() => fileInputRef.current?.click()}>
-                      {avatarUrl ? (
-                          <div className={styles.avatarImageWrapper}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                src={avatarUrl}
-                                alt="Avatar"
-                                className={styles.avatarImage}/>
-                          </div>
-                      ) : (
-                          <span className={styles.avatarInitial}>
-                      {(user?.displayName ?? user?.username ?? "?").charAt(0).toUpperCase()}
+              {/* Avatar Upload */}
+              <div className={styles.avatarSection}>
+                <div className={styles.avatarPreview}
+                    onClick={() => fileInputRef.current?.click()}>
+                    {avatarUrl ? (
+                      <div className={styles.avatarImageWrapper}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                          src={avatarUrl} 
+                          alt="Avatar" 
+                          className={styles.avatarImage} />
+                      </div>
+                  ) : (
+                    <span className={styles.avatarInitial}>
+                      {(user?.displayname ?? user?.username ?? "?").charAt(0).toUpperCase()}
                     </span>
-                      )}
-                      <div className={styles.avatarOverlay}>Change</div>
-                    </div>
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        aria-label="Upload avatar image"
-                        className={styles.avatarInput}
-                        onChange={handleAvatarChange}
-                    />
-                    {avatarUrl && (
-                        <button
-                            type="button"
-                            className={styles.removeAvatarButton}
-                            onClick={() => {
-                              setAvatarUrl("");
-                              updateUser({avatarUrl: ""});
-                            }}
-                        >
-                          Remove photo
-                        </button>
-                    )}
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Username</label>
-                    <input
-                        className={styles.input}
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Username"
-                    />
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Display Name</label>
-                    <input
-                        className={styles.input}
-                        type="text"
-                        value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
-                        placeholder="Your display name"
-                    />
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Email</label>
-                    <input
-                        className={styles.input}
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email"
-                    />
-                  </div>
-                  {profileError && <p className={styles.error}>{profileError}</p>}
-                  {profileSuccess && <p className={styles.success}>{profileSuccess}</p>}
-                  <AccentButton type="submit" fullWidth>
-                    Save Changes
-                  </AccentButton>
-                </form>
-              </div>
-            </section>
-
-            {/* Password Section */}
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Change Password</h2>
-              <div className={styles.card}>
-                <form onSubmit={handlePasswordChange} className={styles.form}>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Current Password</label>
-                    <input
-                        className={styles.input}
-                        type="password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                        placeholder="Current password"
-                    />
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.label}>New Password</label>
-                    <input
-                        className={styles.input}
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        placeholder="New password"
-                    />
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Confirm New Password</label>
-                    <input
-                        className={styles.input}
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="Confirm new password"
-                    />
-                  </div>
-                  {passwordError && <p className={styles.error}>{passwordError}</p>}
-                  {passwordSuccess && <p className={styles.success}>{passwordSuccess}</p>}
-                  <AccentButton type="submit" fullWidth>
-                    Change Password
-                  </AccentButton>
-                </form>
-              </div>
-            </section>
-
-            {/* Delete Account */}
-            <section className={styles.section}>
-              <div className={styles.deleteCard}>
-                <div className={styles.deleteInfo}>
-                  <span className={styles.deleteTitle}>Delete Account</span>
-                  <span className={styles.deleteSub}>
-                This action cannot be undone. All your data will be permanently deleted.
-              </span>
+                  )}
+                  <div className={styles.avatarOverlay}>Change</div>
                 </div>
-                {!showDeleteConfirm ? (
-                    <button
-                        className={styles.deleteButton}
-                        onClick={() => setShowDeleteConfirm(true)}
-                    >
-                      Delete Account
-                    </button>
-                ) : (
-                    <div className={styles.confirmRow}>
-                      <span className={styles.confirmText}>Are you sure?</span>
-                      <button
-                          className={styles.deleteButton}
-                          onClick={() => setShowDeleteConfirm(false)}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                          className={styles.deleteButtonConfirm}
-                          onClick={() => alert("Account deletion not yet implemented.")}
-                      >
-                        Yes, delete
-                      </button>
-                    </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  aria-label="Upload avatar image"
+                  className={styles.avatarInput}
+                  onChange={handleAvatarChange}
+                />
+                {avatarUrl && (
+                  <button
+                    type="button"
+                    className={styles.removeAvatarButton}
+                    onClick={() => {
+                      setAvatarUrl("");
+                      updateUser({ avatarUrl: "" });
+                    }}
+                  >
+                    Remove photo
+                  </button>
                 )}
               </div>
-            </section>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Username</label>
+                <input
+                  className={styles.input}
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Username"
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Display Name</label>
+                <input
+                  className={styles.input}
+                  type="text"
+                  value={displayname}
+                  onChange={(e) => setDisplayname(e.target.value)}
+                  placeholder="Your display name"
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Email</label>
+                <input
+                  className={styles.input}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                />
+              </div>
+              {profileError && <p className={styles.error}>{profileError}</p>}
+              {profileSuccess && <p className={styles.success}>{profileSuccess}</p>}
+              <AccentButton type="submit" fullWidth>
+                Save Changes
+              </AccentButton>
+            </form>
           </div>
-        </div>
-    );
+        </section>
+
+        {/* Password Section */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Change Password</h2>
+          <div className={styles.card}>
+            <form onSubmit={handlePasswordChange} className={styles.form}>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Current Password</label>
+                <input
+                  className={styles.input}
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Current password"
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>New Password</label>
+                <input
+                  className={styles.input}
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="New password"
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Confirm New Password</label>
+                <input
+                  className={styles.input}
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                />
+              </div>
+              {passwordError && <p className={styles.error}>{passwordError}</p>}
+              {passwordSuccess && <p className={styles.success}>{passwordSuccess}</p>}
+              <AccentButton type="submit" fullWidth>
+                Change Password
+              </AccentButton>
+            </form>
+          </div>
+        </section>
+
+        {/* Danger Zone */}
+        <section className={styles.section}>
+          <div className={styles.dangerCard}>
+            <div className={styles.dangerInfo}>
+              <span className={styles.dangerTitle}>Delete Account</span>
+              <span className={styles.dangerSub}>
+                This action cannot be undone. All your data will be permanently deleted.
+              </span>
+            </div>
+            {!showDeleteConfirm ? (
+              <button
+                className={styles.dangerButton}
+                onClick={() => setShowDeleteConfirm(true)}
+              >
+                Delete Account
+              </button>
+            ) : (
+              <div className={styles.confirmRow}>
+                <span className={styles.confirmText}>Are you sure?</span>
+                <button
+                  className={styles.dangerButton}
+                  onClick={() => setShowDeleteConfirm(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className={styles.dangerButtonConfirm}
+                  onClick={() => alert("Account deletion not yet implemented.")}
+                >
+                  Yes, delete
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
 }
