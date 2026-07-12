@@ -71,6 +71,7 @@ export class DrizzleUsersRepository implements UsersRepository {
           updatedAt: new Date(),
         })
         .where(eq(users.id, id))
+        .returning();
 
     if (!updatedUser) {
       throw new ApiError(404, "User not found");
