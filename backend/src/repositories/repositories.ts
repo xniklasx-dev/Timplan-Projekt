@@ -6,15 +6,19 @@ import { loadMockData } from "./loadMockData.js";
 import { DrizzleSearchRepository } from "./search/drizzleSearchRepository.js";
 import { MemorySearchRepository } from "./search/memorySearchRepository.js";
 import type { SearchRepository } from "./search/searchRepository.js";
-import type {UsersRepository} from "./users/usersRepository.js";
+import type { UsersRepository } from "./users/usersRepository.js";
 import { DrizzleUsersRepository } from "./users/drizzleUsersRepository.js";
 import { MemoryUsersRepository } from "./users/memoryUsersRepository.js";
+import type { DecksRepository } from "./decks/decksRepository.js";
+import { DrizzleDecksRepository } from "./decks/drizzleDecksRepository.js";
+import { MemoryDecksRepository } from "./decks/memoryDecksRepository.js";
 
 type Repositories = {
   //add your repository interface here
   cardsRepository: CardsRepository;
   searchRepository: SearchRepository;
   usersRepository: UsersRepository;
+  decksRepository: DecksRepository;
 };
 
 function createRepositories(): Repositories {
@@ -22,6 +26,7 @@ function createRepositories(): Repositories {
     //create your memory repository here
     const cardsRepository = new MemoryCardsRepository();
     const usersRepository = new MemoryUsersRepository();
+    const decksRepository = new MemoryDecksRepository(cardsRepository);
 
     loadMockData({
       //pass your memory repository to the mock loader here
@@ -34,6 +39,7 @@ function createRepositories(): Repositories {
       cardsRepository,
       searchRepository: new MemorySearchRepository(cardsRepository),
       usersRepository,
+      decksRepository,
     };
   }
 
@@ -42,6 +48,7 @@ function createRepositories(): Repositories {
     cardsRepository: new DrizzleCardsRepository(),
     searchRepository: new DrizzleSearchRepository(),
     usersRepository: new DrizzleUsersRepository(),
+    decksRepository: new DrizzleDecksRepository(),
   };
 }
 
@@ -50,4 +57,5 @@ export const {
   cardsRepository,
   searchRepository,
   usersRepository,
+  decksRepository,
 } = createRepositories();
