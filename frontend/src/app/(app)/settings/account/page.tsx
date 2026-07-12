@@ -1,14 +1,22 @@
 "use client";
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useAuth } from "@/app/lib/auth/AuthContext";
 import Spinner from "@/app/ui/spinner/Spinner";
 import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
-import { updateAvatar, updateProfile, updatePassword } from "@/app/lib/auth/auth.service";
+import {
+  updateAvatar,
+  updateProfile,
+  updatePassword,
+  deleteAvatar,
+  deleteAccount
+} from "@/app/lib/auth/auth.service";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 
 export default function AccountSettingsPage() {
-  const { user, updateUser, isLoading } = useAuth();
+  const router = useRouter();
+  const { user, updateUser, logout: logoutContext, isLoading } = useAuth();
   const [username, setUsername] = useState(user?.username ?? "");
   const [displayname, setDisplayName] = useState(user?.displayname ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl ?? "");
@@ -33,7 +41,7 @@ export default function AccountSettingsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      setProfileError("Image size must be less than 2MB.");
+      setProfileError("Image size must be less than 10MB.");
       return;
     }
     const reader = new FileReader();
@@ -64,7 +72,7 @@ export default function AccountSettingsPage() {
       if (err instanceof Error) {
         setProfileError(err.message);
       } else {
-        setProfileSuccess("Update Profile failed");
+        setProfileError("Update Profile failed");
       }
     }
   }
@@ -86,7 +94,7 @@ export default function AccountSettingsPage() {
       return;
     }
 
-    if (!user) return null;
+    if (!user) return;
     try {
       await updatePassword({currentPassword, newPassword}, user.token);
       setPasswordSuccess("Password changed successfully.");
@@ -98,6 +106,38 @@ export default function AccountSettingsPage() {
         setPasswordError(err.message);
       } else {
         setPasswordError("Update password failed")
+      }
+    }
+  }
+
+  async function handleDeleteAvatar() {
+    if (!user) return null;
+    try {
+      await deleteAvatar(user.token);
+      setAvatarUrl("");
+      updateUser({ avatarUrl: undefined });
+    } catch (err) {
+      if (err instanceof Error) {
+        setProfileError(err.message);
+      } else {
+        setProfileError("Avatar deletion failed")
+      }
+    }
+  }
+
+  async function handleDeleteAccount() {
+    if (!user) return null;
+
+    try {
+      await deleteAccount(user.token);
+      logoutContext();
+      router.push('/login')
+      setProfileSuccess("Profile deleted successfully.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setProfileError(err.message);
+      } else {
+        setProfileError("Delete Profile failed");
       }
     }
   }
@@ -148,10 +188,7 @@ export default function AccountSettingsPage() {
                   <button
                     type="button"
                     className={styles.removeAvatarButton}
-                    onClick={() => {
-                      setAvatarUrl("");
-                      updateUser({ avatarUrl: "" });
-                    }}
+                    onClick={handleDeleteAvatar}
                   >
                     Remove photo
                   </button>
@@ -267,7 +304,7 @@ export default function AccountSettingsPage() {
                 </button>
                 <button
                   className={styles.dangerButtonConfirm}
-                  onClick={() => alert("Account deletion not yet implemented.")}
+                  onClick={handleDeleteAccount}
                 >
                   Yes, delete
                 </button>
