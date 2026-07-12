@@ -13,15 +13,13 @@ import {
   updateDeck,
   withChildDeckIds,
 } from "@/app/lib/deck-service";
-import placeholderCards from "@/app/lib/placeholder-cards.json";
 import DeckNavigator from "@/app/ui/decks/deckNavigator/DeckNavigator";
 import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
 import DeckGrid from "@/app/ui/decks/deckGrid/DeckGrid";
 import SingleCardAdd from "@/app/ui/cards/singleCardAdd/SingleCardAdd";
 import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
 import DeckEditor from "@/app/ui/decks/deckEditor/DeckEditor";
-
-const startCards: Card[] = placeholderCards as unknown as Card[];
+import { getCardsByDeckId } from "@/app/lib/card-service";
 
 type DeckEditorState = {
   open: boolean;
@@ -42,10 +40,11 @@ export default function Deck() {
   const deckId = params.id as string;
 
   const [decks, setDecks] = useState<Deck[]>([]);
+  const [cards, setCards] = useState<Card[]>([]);
 
-  const [loadedDecksForToken, setLoadedDecksForToken] = useState<string | null>(
-    null,
-  );
+  const [completedDataRequestKey, setCompletedDataRequestKey] = useState<
+    string | null
+  >(null);
 
   const [deckRequestError, setDeckRequestError] = useState<string | null>(null);
 
@@ -56,7 +55,6 @@ export default function Deck() {
     null,
   );
   const [isCardAddOpen, setIsCardAddOpen] = useState(false);
-  const [createdCards, setCreatedCards] = useState<Card[]>([]);
   const [deckEditorState, setDeckEditorState] = useState<DeckEditorState>({
     open: false,
     deckId: null,
@@ -70,17 +68,19 @@ export default function Deck() {
       return;
     }
 
+    const requestKey = `${token}:${deckId}`;
     let cancelled = false;
 
-    getDecks(token)
-      .then((loadedDecks) => {
+    Promise.all([getDecks(token), getCardsByDeckId(deckId, token)])
+      .then(([loadedDecks, loadedCards]) => {
         if (cancelled) {
           return;
         }
 
         setDecks(loadedDecks);
+        setCards(loadedCards);
         setDeckRequestError(null);
-        setLoadedDecksForToken(token);
+        setCompletedDataRequestKey(requestKey);
       })
       .catch((error: unknown) => {
         if (cancelled) {
@@ -88,25 +88,31 @@ export default function Deck() {
         }
 
         setDeckRequestError(
-          error instanceof Error ? error.message : "Failed to load decks",
+          error instanceof Error ? error.message : "Failed to load deck data",
         );
 
-        setLoadedDecksForToken(token);
+        setCompletedDataRequestKey(requestKey);
       });
 
     return () => {
       cancelled = true;
     };
-  }, [user?.token]);
+  }, [user?.token, deckId]);
+
+  const currentDataRequestKey = user?.token ? `${user.token}:${deckId}` : null;
 
   const isUnauthenticated = !authIsLoading && !user?.token;
 
   const decksAreLoading =
-    authIsLoading || Boolean(user?.token && loadedDecksForToken !== user.token);
+    authIsLoading ||
+    Boolean(
+      currentDataRequestKey &&
+      completedDataRequestKey !== currentDataRequestKey,
+    );
 
   const deckLoadError = isUnauthenticated
     ? "You must be logged in to load this deck"
-    : loadedDecksForToken === user?.token
+    : completedDataRequestKey === currentDataRequestKey
       ? deckRequestError
       : null;
 
@@ -139,17 +145,6 @@ export default function Deck() {
     }
   }
 
-  const cards: Card[] = [];
-  if (currentDeck.cardIds) {
-    for (const cardId of currentDeck.cardIds) {
-      const foundCard = startCards.find((card) => card.id === cardId);
-
-      if (foundCard) {
-        cards.push(foundCard);
-      }
-    }
-  }
-
   const toggleView = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsGridView(event.target.checked);
   };
@@ -164,7 +159,7 @@ export default function Deck() {
   };
 
   const handleCardCreated = (createdCard: Card) => {
-    setCreatedCards((currentCards) => {
+    setCards((currentCards) => {
       if (currentCards.some((card) => card.id === createdCard.id)) {
         return currentCards;
       }
@@ -293,15 +288,6 @@ export default function Deck() {
     deckEditorKey += "-closed";
   }
 
-  const displayedCards = [
-    ...cards,
-    ...createdCards.filter(
-      (createdCard) =>
-        createdCard.deckId === deckId &&
-        !cards.some((card) => card.id === createdCard.id),
-    ),
-  ];
-
   return (
     <main className={styles.page}>
       <DeckNavigator decks={decks} />
@@ -342,7 +328,7 @@ export default function Deck() {
 
       <DeckGrid
         decks={childDecks}
-        cards={displayedCards}
+        cards={cards}
         isGridView={isGridView}
         onEditCardAction={openExistingCardEditor}
       />
