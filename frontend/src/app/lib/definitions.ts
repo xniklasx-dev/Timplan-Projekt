@@ -40,7 +40,6 @@ export type Deck = {
   cardIds: string[];
 
   color?: string;
-  icon?: string;
   parentDeckId?: string;
   childDeckIds?: string[];
 

@@ -41,10 +41,6 @@ export const DeckSchema = z
         example: "#420420",
       }),
 
-    icon: NullableStringSchema.openapi({
-      example: "code",
-    }),
-
     createdAt: DateTimeSchema.openapi({
       example: "2026-05-06T18:53:54.378Z",
     }),
@@ -61,7 +57,6 @@ export const CreateDeckSchema = DeckSchema.pick({
   description: true,
   tags: true,
   color: true,
-  icon: true,
 })
   .extend({
     parentDeckId: NullableUUIDSchema.optional().openapi({
@@ -84,10 +79,6 @@ export const CreateDeckSchema = DeckSchema.pick({
       .openapi({
         example: "#420420",
       }),
-
-    icon: NullableStringSchema.optional().openapi({
-      example: "code",
-    }),
   })
   .strict()
   .openapi("CreateDeck");
@@ -102,4 +93,3 @@ export const DeckUpdateSchema = CreateDeckSchema.partial()
 export type DeckData = z.output<typeof DeckSchema>;
 export type CreateDeckData = z.input<typeof CreateDeckSchema> & { userId: string };
 export type DeckUpdateData = z.input<typeof DeckUpdateSchema>;
-

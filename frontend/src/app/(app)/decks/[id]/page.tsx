@@ -326,7 +326,7 @@ export default function Deck() {
         open={activeEditorCardId !== null}
         deckId="4992f5a6-2220-48a1-ac6c-1c762526bd45"
         cardId="c83705d2-dcd5-4fc5-8a03-12cf90b386f2"
-        userId="833cfb77-79b1-4f23-bfb0-51c1cbecd7ae"
+        token={user?.token ?? ""}
         onClose={closeCardEditor}
         onSaved={closeCardEditor}
       />

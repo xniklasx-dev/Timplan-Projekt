@@ -22,9 +22,17 @@ type BackendCard = {
   updatedAt: string;
 };
 
-export async function getCardsByDeckId(deckId: string, userId: string): Promise<Card[]> {
-  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards`, {
-    headers: cardHeaders(userId),
+type ApiErrorResponse = {
+  status?: string;
+  message?: string;
+  error?: string;
+};
+
+const cardApiBase = apiBaseUrl.replace(/\/+$/, "");
+
+export async function getCardsByDeckId(deckId: string, token: string): Promise<Card[]> {
+  const response = await fetch(`${cardApiBase}/decks/${deckId}/cards`, {
+    headers: createHeaders(token),
     cache: "no-store",
   });
 
@@ -32,20 +40,23 @@ export async function getCardsByDeckId(deckId: string, userId: string): Promise<
   return cards.map(toFrontendCard);
 }
 
-export async function getCardById(deckId: string, cardId: string, userId: string): Promise<Card> {
-  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards/${cardId}`, {
-    headers: cardHeaders(userId),
-    cache: "no-store",
-  });
+export async function getCardById(deckId: string, cardId: string, token: string): Promise<Card> {
+  const response = await fetch(
+    `${cardApiBase}/decks/${deckId}/cards/${cardId}`,
+    {
+      headers: createHeaders(token),
+      cache: "no-store",
+    },
+  );
 
   const card = await readResponse<BackendCard>(response);
   return toFrontendCard(card);
 }
 
-export async function createCard(cardData: CreateCardData, userId: string): Promise<Card> {
-  const response = await fetch(`${apiBaseUrl}/decks/${cardData.deckId}/cards`, {
+export async function createCard(cardData: CreateCardData, token: string): Promise<Card> {
+  const response = await fetch(`${cardApiBase}/decks/${cardData.deckId}/cards`, {
     method: "POST",
-    headers: cardHeaders(userId),
+    headers: createHeaders(token, true),
     body: JSON.stringify(toCardFormat(cardData)),
   });
 
@@ -53,21 +64,24 @@ export async function createCard(cardData: CreateCardData, userId: string): Prom
   return toFrontendCard(card);
 }
 
-export async function updateCard(deckId: string, cardId: string, cardData: CardFormData, userId: string): Promise<Card> {
-  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards/${cardId}`, {
-    method: "PATCH",
-    headers: cardHeaders(userId),
-    body: JSON.stringify(toCardFormat(cardData)),
-  });
+export async function updateCard(deckId: string, cardId: string, cardData: CardFormData, token: string): Promise<Card> {
+  const response = await fetch(
+    `${cardApiBase}/decks/${deckId}/cards/${cardId}`,
+    {
+      method: "PATCH",
+      headers: createHeaders(token, true),
+      body: JSON.stringify(toCardFormat(cardData)),
+    },
+  );
 
   const card = await readResponse<BackendCard>(response);
   return toFrontendCard(card);
 }
 
-export async function upsertCards(deckId: string, cardsData: UpsertCardData[], userId: string): Promise<Card[]> {
-  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards`, {
+export async function upsertCards(deckId: string, cardsData: UpsertCardData[], token: string): Promise<Card[]> {
+  const response = await fetch(`${cardApiBase}/decks/${deckId}/cards`, {
     method: "PUT",
-    headers: cardHeaders(userId),
+    headers: createHeaders(token, true),
     body: JSON.stringify({ cards: cardsData.map(toUpsertBody) }),
   });
 
@@ -75,28 +89,62 @@ export async function upsertCards(deckId: string, cardsData: UpsertCardData[], u
   return cards.map(toFrontendCard);
 }
 
-export async function deleteCard(deckId: string, cardId: string, userId: string): Promise<void> {
-  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards/${cardId}`, {
-    method: "DELETE",
-    headers: cardHeaders(userId),
-  });
+export async function deleteCard(deckId: string, cardId: string, token: string): Promise<void> {
+  const response = await fetch(
+    `${cardApiBase}/decks/${deckId}/cards/${cardId}`,
+    {
+      method: "DELETE",
+      headers: createHeaders(token),
+    },
+  );
 
-  await readResponse<{ message: string }>(response);
+  await readResponse<void>(response);
 }
 
-function cardHeaders(userId: string): HeadersInit {
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${userId}`,
+function createHeaders(token: string, withBody = false): HeadersInit {
+  const headers: Record<string, string> = {
+    Accept: "application/json",
+    Authorization: `Bearer ${token}`,
   };
+
+  if (withBody) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  return headers;
 }
 
 async function readResponse<T>(response: Response): Promise<T> {
-  if (!response.ok) {
-    throw new Error(`Error: ${response.status} ${response.statusText}`);
+  if (response.status === 204) {
+    return undefined as T;
   }
 
-  return response.json() as Promise<T>;
+  const responseText = await response.text();
+  let responseData: unknown;
+
+  if (responseText) {
+    try {
+      responseData = JSON.parse(responseText);
+    } catch {
+      responseData = responseText;
+    }
+  }
+
+  if (!response.ok) {
+    const errorData =
+      typeof responseData === "object" && responseData !== null
+        ? (responseData as ApiErrorResponse)
+        : null;
+
+    const message =
+      errorData?.message ??
+      errorData?.error ??
+      `Card request failed with status ${response.status}`;
+
+    throw new Error(message);
+  }
+
+  return responseData as T;
 }
 
 export function normalizeTags(value: string | string[] | null | undefined): string[] {

@@ -126,6 +126,8 @@ function formatZodIssue(req: Request, issue: ZodIssue): ValidationErrorDetail {
 }
 
 export function errorHandler(err: unknown, req: Request, res: Response, _next: NextFunction): void {
+    console.error(err);
+
     if (err instanceof ZodError) {
         const errors = err.issues.map((issue) => formatZodIssue(req, issue));
 
@@ -145,7 +147,6 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
         });
         return;
     }
-    console.error(err);
 
     res.status(500).json({ 
         status: "error",

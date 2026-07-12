@@ -67,7 +67,6 @@ export const decks = pgTable("decks",
     description: text("description"),
     tags: text("tags").array(),
     color: text("color"),
-    icon: text("icon"),
 
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()

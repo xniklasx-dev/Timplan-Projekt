@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 import type { Card, Deck } from "@/app/lib/definitions";
+import { useAuth } from "@/app/lib/auth/AuthContext";
 import { getCardsByDeckId } from "@/app/lib/card-service";
 import decksData from "@/app/lib/placeholder-decks.json";
 import DeckCardsEditView from "@/app/ui/cards/deckCardsEditView/DeckCardsEditView";
@@ -11,8 +12,6 @@ import DeckCardsEditView from "@/app/ui/cards/deckCardsEditView/DeckCardsEditVie
 import styles from "./page.module.css";
 
 const decks = decksData as unknown as Deck[];
-const TEST_USER_ID = "833cfb77-79b1-4f23-bfb0-51c1cbecd7ae";
-
 
 // TODO: Remove this function once the backend is fully implemented and the decks are fetched from the backend instead of using placeholder data.
 function createPageDeck(deckId: string, cards: Card[]): Deck {
@@ -39,6 +38,7 @@ function createPageDeck(deckId: string, cards: Card[]): Deck {
 
 export default function EditDeckCardsPage() {
   const params = useParams<{ deckid: string }>();
+  const { user, isLoading: authIsLoading } = useAuth();
   const deckId = params.deckid;
 
   const [deckCards, setDeckCards] = useState<Card[]>([]);
@@ -46,6 +46,18 @@ export default function EditDeckCardsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = user?.token;
+
+    if (!token) {
+      if (!authIsLoading) {
+        setError("You must be logged in to load cards.");
+        setIsLoading(false);
+      }
+
+      return;
+    }
+
+    const authToken = token;
     let ignoreResult = false;
 
     async function loadCards() {
@@ -53,7 +65,7 @@ export default function EditDeckCardsPage() {
       setError(null);
 
       try {
-        const cards = await getCardsByDeckId(deckId, TEST_USER_ID);
+        const cards = await getCardsByDeckId(deckId, authToken);
 
         if (!ignoreResult) {
           setDeckCards(cards);
@@ -74,7 +86,7 @@ export default function EditDeckCardsPage() {
     return () => {
       ignoreResult = true;
     };
-  }, [deckId]);
+  }, [authIsLoading, deckId, user?.token]);
 
   const deck = decks.find((entry) => entry.id === deckId) ?? createPageDeck(deckId, deckCards);
 
@@ -102,7 +114,7 @@ export default function EditDeckCardsPage() {
 
   return (
     <main className={styles.page}>
-      <DeckCardsEditView key={deck.id} deck={deck} initialCards={deckCards} userId={TEST_USER_ID} />
+      <DeckCardsEditView key={deck.id} deck={deck} initialCards={deckCards} token={user?.token ?? ""} />
     </main>
   );
 }
