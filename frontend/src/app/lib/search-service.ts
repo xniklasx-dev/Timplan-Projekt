@@ -7,11 +7,11 @@ export type SearchResult = {
   type: "deck" | "card";
 };
 
-export async function search(query: string, userId: string): Promise<SearchResult[]> {
+export async function search(query: string, token: string): Promise<SearchResult[]> {
   const params = new URLSearchParams({ q: query.trim() });
   const response = await fetch(`${apiBaseUrl}/search?${params.toString()}`, {
     headers: {
-      Authorization: `Bearer ${userId}`,
+      Authorization: `Bearer ${token}`,
     },
     cache: "no-store",
   });

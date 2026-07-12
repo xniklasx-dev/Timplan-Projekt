@@ -122,7 +122,7 @@ export const UpsertCardSchema = CreateCardSchema.extend({
   .strict()
   .openapi("UpsertCard");
 
-const BatchUpsertCardsObjectSchema = z
+export const BatchUpsertCardsSchema = z
   .object({
     cards: z.array(UpsertCardSchema).min(1).openapi({
       example: [
@@ -142,28 +142,20 @@ const BatchUpsertCardsObjectSchema = z
       ],
     }),
   })
-  .strict();
-
-export const BatchUpsertCardsSchema = z
-  .preprocess((value) => {
-    if (!value || typeof value !== "object" || Array.isArray(value)) {
-      return value;
-    }
-
-    const data = value as Record<string, unknown>;
-
-    if ("cards" in data || !("cardsData" in data)) {
-      return data;
-    }
-
-    const { cardsData, ...rest } = data;
-
-    return {
-      ...rest,
-      cards: cardsData,
-    };
-  }, BatchUpsertCardsObjectSchema)
+  .strict()
   .openapi("BatchUpsertCards");
+
+export const BatchDeleteCardsSchema = z
+  .object({
+    cardIds: z.array(UUIDSchema).min(1).openapi({
+      example: [
+        "5980c97c-e245-400a-b4c1-52b07feac04f",
+        "1fd82b13-9e3e-4b5e-a29f-d7cc772e66e1",
+      ],
+    }),
+  })
+  .strict()
+  .openapi("BatchDeleteCards");
 
 export type CardData = z.output<typeof CardSchema>;
 export type CardProgressData = z.output<typeof CardProgressSchema>;
@@ -171,4 +163,4 @@ export type CreateCardData = z.input<typeof CreateCardSchema> & { deckId: string
 export type CardUpdateData = z.input<typeof CardUpdateSchema>;
 export type UpsertCardData = z.input<typeof UpsertCardSchema>;
 export type BatchUpsertCardsData = z.output<typeof BatchUpsertCardsSchema> & { deckId: string };
-
+export type BatchDeleteCardsData = z.output<typeof BatchDeleteCardsSchema>;

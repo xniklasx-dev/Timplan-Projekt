@@ -1,17 +1,17 @@
 "use client";
-
 import { useState } from "react";
+import { useAuth } from "@/app/lib/auth/AuthContext";
 import Link from "next/link";
 
 import styles from "./page.module.css";
 import SingleCardAdd from "@/app/ui/cards/singleCardAdd/SingleCardAdd";
 import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
 
-const TEST_DECK_ID = "4992f5a6-2220-48a1-ac6c-1c762526bd45";
-const TEST_CARD_ID = "87894550-48d2-43c3-b5df-c77361fd687b";
-const TEST_USER_ID = "833cfb77-79b1-4f23-bfb0-51c1cbecd7ae";
+const TEST_DECK_ID = "d54f4045-6ebc-4af8-a7ce-a3ce3b1b905f";
+const TEST_CARD_ID = "8a4683f1-7914-4c04-9d99-2a3bc9a21841";
 
 export default function Testing() {
+  const { user } = useAuth();
   const [showAddCard, setShowAddCard] = useState(false);
   const [showEditCard, setShowEditCard] = useState(false);
 
@@ -20,16 +20,40 @@ export default function Testing() {
       <main className={styles.main}>
         <h1>Testing Page</h1>
 
+        <p className={styles.testInfo}>
+          Deck: <code>{TEST_DECK_ID}</code><br />
+          Card: <code>{TEST_CARD_ID}</code>
+        </p>
+
+        {!user?.token && <p className={styles.testWarning}>Log in with the backend to test card requests.</p>}
+
         <div className={styles.testButtonRow}>
-          <button type="button" className={styles.testButton} onClick={() => setShowAddCard(true)}>
+          <button
+            type="button"
+            className={styles.testButton}
+            onClick={() => setShowAddCard(true)}
+            disabled={!user?.token}
+          >
             Test add card
           </button>
 
-          <button type="button" className={styles.testButton} onClick={() => setShowEditCard(true)}>
+          <button
+            type="button"
+            className={styles.testButton}
+            onClick={() => setShowEditCard(true)}
+            disabled={!user?.token}
+          >
             Test edit card
           </button>
 
-          <Link className={styles.testButton} href={`/cards/edit/${TEST_DECK_ID}`}>
+          <Link
+            className={`${styles.testButton} ${!user?.token ? styles.testButtonDisabled : ""}`}
+            href={`/cards/edit/${TEST_DECK_ID}`}
+            aria-disabled={!user?.token}
+            onClick={(event) => {
+              if (!user?.token) event.preventDefault();
+            }}
+          >
             Test bulk edit
           </Link>
         </div>
@@ -37,7 +61,7 @@ export default function Testing() {
         <SingleCardAdd
           open={showAddCard}
           deckId={TEST_DECK_ID}
-          userId={TEST_USER_ID}
+          token={user?.token ?? ""}
           onClose={() => setShowAddCard(false)}
         />
 
@@ -45,7 +69,7 @@ export default function Testing() {
           open={showEditCard}
           deckId={TEST_DECK_ID}
           cardId={TEST_CARD_ID}
-          userId={TEST_USER_ID}
+          token={user?.token ?? ""}
           onClose={() => setShowEditCard(false)}
           onSaved={() => setShowEditCard(false)}
         />

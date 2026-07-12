@@ -13,7 +13,7 @@ type DeckEditorProps = {
   parentDeckId?: string;
   decks: Deck[];
   onCloseAction: () => void;
-  onSaveAction: (deck: Deck, options: { isNew: boolean }) => void;
+  onSaveAction: (deck: Deck, options: { isNew: boolean }) => Promise<void>;
 };
 
 function createDeckId() {
@@ -29,7 +29,6 @@ function normalizeDeck(deck: Deck): Deck {
     ...deck,
     description: deck.description ?? "",
     color: deck.color ?? "",
-    icon: deck.icon ?? "",
     parentDeckId: deck.parentDeckId ?? undefined,
     childDeckIds: deck.childDeckIds ?? [],
     cardIds: deck.cardIds ?? [],
@@ -46,7 +45,6 @@ function createEmptyDeck(parentDeckId?: string): Deck {
     tags: [],
     cardIds: [],
     color: "",
-    icon: "",
     parentDeckId,
     childDeckIds: [],
     totalCards: 0,
@@ -90,6 +88,7 @@ export default function DeckEditor({
   const [tagsInput, setTagsInput] = useState(
     normalizedBaseDeck.tags.join(", "),
   );
+  const [isSaving, setIsSaving] = useState(false);
 
   const hasUnsavedChanges = useMemo(() => {
     const normalizedTags = tagsInput
@@ -101,7 +100,6 @@ export default function DeckEditor({
       draft.name !== normalizedBaseDeck.name ||
       (draft.description ?? "") !== (normalizedBaseDeck.description ?? "") ||
       (draft.color ?? "") !== (normalizedBaseDeck.color ?? "") ||
-      (draft.icon ?? "") !== (normalizedBaseDeck.icon ?? "") ||
       (draft.parentDeckId ?? "") !== (normalizedBaseDeck.parentDeckId ?? "") ||
       normalizedTags.join("|") !== normalizedBaseDeck.tags.join("|")
     );
@@ -136,7 +134,7 @@ export default function DeckEditor({
   }, [open, onCloseAction, hasUnsavedChanges]);
 
   function updateField(
-    field: "name" | "description" | "color" | "icon",
+    field: "name" | "description" | "color",
     value: string,
   ) {
     setDraft((current) => ({
@@ -163,7 +161,11 @@ export default function DeckEditor({
     handleClose();
   }
 
-  function handleSave() {
+  async function handleSave(): Promise<void> {
+    if (isSaving) {
+      return;
+    }
+
     const normalizedTags = tagsInput
       .split(",")
       .map((tag) => tag.trim())
@@ -176,7 +178,6 @@ export default function DeckEditor({
       name: draft.name.trim(),
       description: (draft.description ?? "").trim(),
       color: (draft.color ?? "").trim(),
-      icon: (draft.icon ?? "").trim(),
       tags: normalizedTags,
       parentDeckId: draft.parentDeckId ?? parentDeckId ?? undefined,
       updatedAt: now,
@@ -184,8 +185,18 @@ export default function DeckEditor({
       revision: isNewDeck ? 1 : draft.revision + 1,
     };
 
-    onSaveAction(nextDeck, { isNew: isNewDeck });
-    onCloseAction();
+    setIsSaving(true);
+
+    try {
+      await onSaveAction(nextDeck, {
+        isNew: isNewDeck,
+      });
+
+      onCloseAction();
+    } catch {
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   if (!open) {
@@ -287,16 +298,6 @@ export default function DeckEditor({
               />
             </label>
 
-            <label className={styles.field}>
-              <span className={styles.label}>Icon</span>
-              <input
-                className={styles.input}
-                value={draft.icon ?? ""}
-                onChange={(event) => updateField("icon", event.target.value)}
-                placeholder="e.g. book-open"
-              />
-            </label>
-
             <label className={`${styles.field} ${styles.fieldFull}`}>
               <span className={styles.label}>Tags</span>
               <textarea
@@ -320,12 +321,15 @@ export default function DeckEditor({
 
           <button
             type="button"
-            className={`${styles.primaryButton} ${hasUnsavedChanges ? styles.primaryButtonActive : ""
-              }`}
-            onClick={handleSave}
-            disabled={!hasUnsavedChanges || !draft.name.trim()}
+            className={`${styles.primaryButton} ${
+              hasUnsavedChanges ? styles.primaryButtonActive : ""
+            }`}
+            onClick={() => {
+              void handleSave();
+            }}
+            disabled={isSaving || !hasUnsavedChanges || !draft.name.trim()}
           >
-            Save changes
+            {isSaving ? "Saving..." : "Save changes"}
           </button>
         </div>
       </div>

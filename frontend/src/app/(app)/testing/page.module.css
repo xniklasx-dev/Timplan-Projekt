@@ -1,3 +1,22 @@
+.page {
+  height: 100%;
+  padding: 24px;
+}
+
+.main {
+  width: min(100%, 900px);
+  margin: 0 auto;
+}
+
+.testInfo {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.testWarning {
+  color: var(--color-error);
+}
+
 .testButtonRow {
   display: flex;
   flex-wrap: wrap;
@@ -29,4 +48,11 @@
   background: var(--color-accent-hover);
   transform: translateY(-1px);
   box-shadow: 0 12px 24px rgba(66, 4, 32, 0.28);
+}
+
+.testButton:disabled,
+.testButtonDisabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  pointer-events: none;
 }

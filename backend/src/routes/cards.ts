@@ -1,6 +1,11 @@
 import { Router} from "express";
 
-import { BatchUpsertCardsSchema, CardUpdateSchema, CreateCardSchema } from "../validation/cardSchemas.js";
+import {
+  BatchDeleteCardsSchema,
+  BatchUpsertCardsSchema,
+  CardUpdateSchema,
+  CreateCardSchema,
+} from "../validation/cardSchemas.js";
 import { parseUUID, getUserId } from "../utils/apiUtils.js";
 import { ApiError } from "../middleware/errorHandler.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
@@ -98,6 +103,19 @@ router.put("/decks/:deckId/cards", asyncHandler(async (req, res) => {
   const upsertedCards = await cardsRepository.upsertManyCards(cardListData);
 
   res.json(upsertedCards);
+}));
+
+// DELETE /decks/:deckId/cards/batch-delete
+router.delete("/decks/:deckId/cards/batch-delete", asyncHandler(async (req, res) => {
+  const userId = getUserId(req);
+  const deckId = parseUUID(req.params.deckId);
+
+  await requireDeckAccess(deckId, userId);
+
+  const { cardIds } = BatchDeleteCardsSchema.parse(req.body);
+  const deletedCount = await cardsRepository.deleteCardsByIds(deckId, cardIds);
+
+  return res.json({ deletedCount });
 }));
 
 // DELETE /decks/:deckId/cards/:cardId

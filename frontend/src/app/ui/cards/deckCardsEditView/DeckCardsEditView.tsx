@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import type { Card, Deck } from "@/app/lib/definitions";
-import { deleteCard, normalizeTags, upsertCards, type UpsertCardData } from "@/app/lib/card-service";
+import { deleteCards, normalizeTags, upsertCards, type UpsertCardData } from "@/app/lib/card-service";
 import ConfirmDialog from "@/app/ui/confirmDialog/ConfirmDialog";
 import Toast from "@/app/ui/toast/Toast";
 
@@ -15,7 +15,7 @@ import styles from "./DeckCardsEditView.module.css";
 type DeckCardsEditViewProps = {
   deck: Deck;
   initialCards: Card[];
-  userId: string;
+  token: string;
 };
 
 function normalizeCard(card: Card): Card {
@@ -82,7 +82,7 @@ function ensureTrailingEmptyCard(cards: Card[], deckId: string): Card[] {
   return [...cards, createEmptyCard(deckId, cards.length + 1)];
 }
 
-export default function DeckCardsEditView({ deck, initialCards, userId }: DeckCardsEditViewProps) {
+export default function DeckCardsEditView({ deck, initialCards, token }: DeckCardsEditViewProps) {
   const router = useRouter();
   const baseCards = initialCards.map(normalizeCard);
 
@@ -166,6 +166,11 @@ export default function DeckCardsEditView({ deck, initialCards, userId }: DeckCa
   async function saveCards() {
     if (!hasUnsavedChanges || isSaving || !validateCards()) return;
 
+    if (!token) {
+      setError("You must be logged in to save cards.");
+      return;
+    }
+
     const cardsToSave: UpsertCardData[] = realCards.map((card) => ({
       cardId: isNewCard(card) ? undefined : card.id,
       front: card.front,
@@ -177,19 +182,11 @@ export default function DeckCardsEditView({ deck, initialCards, userId }: DeckCa
     setIsSaving(true);
 
     try {
-      for (const cardId of deletedCardIds) {
-        try {
-          await deleteCard(deck.id, cardId, userId);
-        } catch (error) {
-          const message = error instanceof Error ? error.message : "";
-
-          if (!message.includes("404")) {
-            throw error;
-          }
-        }
+      if (deletedCardIds.length > 0) {
+        await deleteCards(deck.id, deletedCardIds, token);
       }
 
-      const saved = cardsToSave.length > 0 ? await upsertCards(deck.id, cardsToSave, userId) : [];
+      const saved = cardsToSave.length > 0 ? await upsertCards(deck.id, cardsToSave, token) : [];
       const normalizedSavedCards = saved.map(normalizeCard);
 
       setSavedCards(normalizedSavedCards);
