@@ -17,12 +17,11 @@ import placeholderCards from "@/app/lib/placeholder-cards.json";
 import DeckNavigator from "@/app/ui/decks/deckNavigator/DeckNavigator";
 import DeckHeader from "@/app/ui/decks/deckHeader/DeckHeader";
 import DeckGrid from "@/app/ui/decks/deckGrid/DeckGrid";
+import SingleCardAdd from "@/app/ui/cards/singleCardAdd/SingleCardAdd";
 import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
 import DeckEditor from "@/app/ui/decks/deckEditor/DeckEditor";
 
 const startCards: Card[] = placeholderCards as unknown as Card[];
-
-const NEW_CARD_ID = "c0";
 
 type DeckEditorState = {
   open: boolean;
@@ -56,6 +55,8 @@ export default function Deck() {
   const [activeEditorCardId, setActiveEditorCardId] = useState<string | null>(
     null,
   );
+  const [isCardAddOpen, setIsCardAddOpen] = useState(false);
+  const [createdCards, setCreatedCards] = useState<Card[]>([]);
   const [deckEditorState, setDeckEditorState] = useState<DeckEditorState>({
     open: false,
     deckId: null,
@@ -154,10 +155,26 @@ export default function Deck() {
   };
 
   const openNewCardEditor = () => {
-    setActiveEditorCardId(NEW_CARD_ID);
+    setActiveEditorCardId(null);
+    setIsCardAddOpen(true);
+  };
+
+  const closeCardAdd = () => {
+    setIsCardAddOpen(false);
+  };
+
+  const handleCardCreated = (createdCard: Card) => {
+    setCreatedCards((currentCards) => {
+      if (currentCards.some((card) => card.id === createdCard.id)) {
+        return currentCards;
+      }
+
+      return [...currentCards, createdCard];
+    });
   };
 
   const openExistingCardEditor = (cardId: string) => {
+    setIsCardAddOpen(false);
     setActiveEditorCardId(cardId);
   };
 
@@ -276,6 +293,15 @@ export default function Deck() {
     deckEditorKey += "-closed";
   }
 
+  const displayedCards = [
+    ...cards,
+    ...createdCards.filter(
+      (createdCard) =>
+        createdCard.deckId === deckId &&
+        !cards.some((card) => card.id === createdCard.id),
+    ),
+  ];
+
   return (
     <main className={styles.page}>
       <DeckNavigator decks={decks} />
@@ -316,16 +342,24 @@ export default function Deck() {
 
       <DeckGrid
         decks={childDecks}
-        cards={cards}
+        cards={displayedCards}
         isGridView={isGridView}
         onEditCardAction={openExistingCardEditor}
+      />
+
+      <SingleCardAdd
+        open={isCardAddOpen}
+        deckId={deckId}
+        token={user?.token ?? ""}
+        onClose={closeCardAdd}
+        onCreated={handleCardCreated}
       />
 
       <SingleCardEditor
         key={activeEditorCardId ?? "closed"}
         open={activeEditorCardId !== null}
-        deckId="4992f5a6-2220-48a1-ac6c-1c762526bd45"
-        cardId="c83705d2-dcd5-4fc5-8a03-12cf90b386f2"
+        deckId={deckId}
+        cardId={activeEditorCardId ?? ""}
         token={user?.token ?? ""}
         onClose={closeCardEditor}
         onSaved={closeCardEditor}
