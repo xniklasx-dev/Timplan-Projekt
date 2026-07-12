@@ -8,7 +8,7 @@ import { useAuth } from "@/app/lib/auth/AuthContext";
 
 import {
   createDeck,
-  getDecks,
+  getDecksWithStats,
   toDeckWriteData,
   updateDeck,
   withChildDeckIds,
@@ -66,7 +66,7 @@ export default function Decks() {
 
     let cancelled = false;
 
-    getDecks(token)
+    getDecksWithStats(token)
       .then((loadedDecks) => {
         if (cancelled) {
           return;
