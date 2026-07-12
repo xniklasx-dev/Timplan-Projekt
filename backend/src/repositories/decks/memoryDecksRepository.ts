@@ -62,7 +62,6 @@ export class MemoryDecksRepository implements DecksRepository {
       description: deckData.description ?? null,
       tags: deckData.tags ? [...deckData.tags] : null,
       color: deckData.color ?? null,
-      icon: deckData.icon ?? null,
       createdAt: now,
       updatedAt: now,
     };

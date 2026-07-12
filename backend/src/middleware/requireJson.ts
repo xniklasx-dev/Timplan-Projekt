@@ -14,9 +14,6 @@ export function requireJsonResponse(req: Request, _res: Response, next: NextFunc
 }
 
 export function requireJsonInBody(req: Request, _res: Response, next: NextFunction) {
-  if (req.method === "OPTIONS") {
-    return next();
-  }
   const methodRequiresBody = ["POST", "PUT", "PATCH"].includes(req.method);
   if (methodRequiresBody && !req.is('application/json')) {
     return next(new ApiError(415, "Content-Type must be application/json", true, "unsupported_media_type"));

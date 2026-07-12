@@ -13,12 +13,12 @@ import styles from "./SingleCardAdd.module.css";
 type SingleCardAddProps = {
   open: boolean;
   deckId: string;
-  userId: string;
+  token: string;
   onClose: () => void;
   onCreated?: (card: Card) => void;
 };
 
-export default function SingleCardAdd({ open, deckId, userId, onClose, onCreated }: SingleCardAddProps) {
+export default function SingleCardAdd({ open, deckId, token, onClose, onCreated }: SingleCardAddProps) {
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
   const [hint, setHint] = useState("");
@@ -89,7 +89,7 @@ export default function SingleCardAdd({ open, deckId, userId, onClose, onCreated
   }
 
   async function handleCreate() {
-    if (!canCreate || !userId) return;
+    if (!canCreate || !token) return;
 
     setIsSaving(true);
     setError(null);
@@ -101,7 +101,7 @@ export default function SingleCardAdd({ open, deckId, userId, onClose, onCreated
         back,
         hint,
         tags,
-      }, userId);
+      }, token);
 
       onCreated?.(createdCard);
       setToastMessage("Card created successfully.");

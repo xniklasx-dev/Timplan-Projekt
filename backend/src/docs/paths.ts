@@ -39,9 +39,9 @@ const DeckIdParam = z.object({
 });
 
 const CardIdParam = z.object({
-  id: z.string().openapi({
+  cardId: z.string().openapi({
     param: {
-      name: "id",
+      name: "cardId",
       in: "path",
       required: true,
     },
@@ -58,12 +58,6 @@ const ErrorResponseSchema = z.object({
 const DeleteCardResponseSchema = z.object({
   message: z.string().openapi({
     example: "Card deleted successfully",
-  }),
-});
-
-const BatchDeleteCardsResponseSchema = z.object({
-  message: z.string().openapi({
-    example: "Cards deleted Sucessfully",
   }),
 });
 
@@ -92,12 +86,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "get",
-  path: "/cards/getAllCards/{deckId}",
+  path: "/decks/{deckId}/cards/{cardId}",
   tags: ["cards"],
   description: "List cards in a deck owned by the current user.",
   request: {
     headers: UserIdHeader,
-    params: DeckIdParam,
+    params: DeckIdParam.merge(CardIdParam),
   },
   responses: {
     200: {
@@ -129,12 +123,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "get",
-  path: "/cards/{id}",
+  path: "/decks/{deckId}/cards/{cardId}",
   tags: ["cards"],
   description: "Get a single card owned by the current user.",
   request: {
     headers: UserIdHeader,
-    params: CardIdParam,
+    params: DeckIdParam.merge(CardIdParam),
   },
   responses: {
     200: {
@@ -174,11 +168,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "post",
-  path: "/cards",
+  path: "/decks/{deckId}/cards",
   tags: ["cards"],
   description: "Create a card in a deck owned by the current user.",
   request: {
     headers: UserIdHeader,
+    params: DeckIdParam,
     body: {
       content: {
         "application/json": {
@@ -217,12 +212,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "patch",
-  path: "/cards/{id}",
+  path: "/decks/{deckId}/cards/{cardId}",
   tags: ["cards"],
   description: "Update a card owned by the current user.",
   request: {
     headers: UserIdHeader,
-    params: CardIdParam,
+    params: DeckIdParam.merge(CardIdParam),
     body: {
       content: {
         "application/json": {
@@ -269,11 +264,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "put",
-  path: "/cards",
+  path: "/decks/{deckId}/cards",
   tags: ["cards"],
   description: "Create or update cards in a deck owned by the current user.",
   request: {
     headers: UserIdHeader,
+    params: DeckIdParam,
     body: {
       content: {
         "application/json": {
@@ -312,12 +308,12 @@ registry.registerPath({
 
 registry.registerPath({
   method: "delete",
-  path: "/cards/{id}",
+  path: "/decks/{deckId}/cards/{cardId}",
   tags: ["cards"],
   description: "Delete a card owned by the current user.",
   request: {
     headers: UserIdHeader,
-    params: CardIdParam,
+    params: DeckIdParam.merge(CardIdParam),
   },
   responses: {
     200: {
@@ -346,43 +342,6 @@ registry.registerPath({
     },
     404: {
       description: "Card not found.",
-      content: {
-        "application/json": {
-          schema: ErrorResponseSchema,
-        },
-      },
-    },
-  },
-});
-
-registry.registerPath({
-  method: "delete",
-  path: "/cards/batchDelete/{deckId}",
-  tags: ["cards"],
-  description: "Delete all cards in a deck owned by the current user.",
-  request: {
-    headers: UserIdHeader,
-    params: DeckIdParam,
-  },
-  responses: {
-    200: {
-      description: "Cards deleted.",
-      content: {
-        "application/json": {
-          schema: BatchDeleteCardsResponseSchema,
-        },
-      },
-    },
-    400: {
-      description: "Invalid user or deck id.",
-      content: {
-        "application/json": {
-          schema: ErrorResponseSchema,
-        },
-      },
-    },
-    403: {
-      description: "The user does not own the deck.",
       content: {
         "application/json": {
           schema: ErrorResponseSchema,

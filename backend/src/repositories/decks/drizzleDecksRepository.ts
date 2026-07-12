@@ -49,7 +49,6 @@ export class DrizzleDecksRepository implements DecksRepository {
         description: deckData.description ?? null,
         tags: deckData.tags ?? null,
         color: deckData.color ?? null,
-        icon: deckData.icon ?? null,
       })
       .returning();
 

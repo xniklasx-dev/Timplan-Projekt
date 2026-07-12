@@ -69,7 +69,7 @@ export default function NavSearch({ open, onOpen, onClose }: NavSearchProps) {
 
     const timeout = window.setTimeout(async () => {
       try {
-        const results = await search(trimmedQuery, user.id);
+        const results = await search(trimmedQuery, user.token);
         setItems(results);
       } catch {
         setError(true);

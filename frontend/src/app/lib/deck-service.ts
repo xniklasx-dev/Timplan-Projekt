@@ -8,7 +8,6 @@ export type BackendDeck = {
   description: string | null;
   tags: string[] | null;
   color: string | null;
-  icon: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -19,7 +18,6 @@ export type DeckWriteData = {
   description?: string | null;
   tags?: string[] | null;
   color?: string | null;
-  icon?: string | null;
 };
 
 type ApiErrorResponse = {
@@ -85,7 +83,6 @@ function toFrontendDeck(backendDeck: BackendDeck): Deck {
     tags: backendDeck.tags ? [...backendDeck.tags] : [],
     cardIds: [],
     color: backendDeck.color ?? "",
-    icon: backendDeck.icon ?? "",
     parentDeckId: backendDeck.parentDeckId ?? undefined,
     childDeckIds: [],
 
@@ -131,15 +128,12 @@ export function toDeckWriteData(deck: Deck): DeckWriteData {
 
   const color = deck.color?.trim() ?? "";
 
-  const icon = deck.icon?.trim() ?? "";
-
   return {
     parentDeckId: deck.parentDeckId ?? null,
     name: deck.name.trim(),
     description: description || null,
     tags: deck.tags.length > 0 ? [...deck.tags] : null,
     color: color || null,
-    icon: icon || null,
   };
 }
 

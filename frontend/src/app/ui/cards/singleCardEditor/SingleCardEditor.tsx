@@ -14,14 +14,14 @@ type SingleCardEditorProps = {
   open: boolean;
   deckId: string;
   cardId: string;
-  userId: string;
+  token: string;
   onClose: () => void;
   onSaved?: (updatedCard: Card) => void;
 };
 
 type EditableField = "front" | "back" | "hint";
 
-export default function SingleCardEditor({ open, deckId, cardId, userId, onClose, onSaved }: SingleCardEditorProps) {
+export default function SingleCardEditor({ open, deckId, cardId, token, onClose, onSaved }: SingleCardEditorProps) {
   const [originalCard, setOriginalCard] = useState<Card | null>(null);
   const [draftCard, setDraftCard] = useState<Card | null>(null);
   const [tagsInput, setTagsInput] = useState("");
@@ -36,7 +36,7 @@ export default function SingleCardEditor({ open, deckId, cardId, userId, onClose
   useEffect(() => {
     if (!open || !deckId || !cardId) return;
 
-    if (!userId) {
+    if (!token) {
       setError("User not authenticated");
       setOriginalCard(null);
       setDraftCard(null);
@@ -53,7 +53,7 @@ export default function SingleCardEditor({ open, deckId, cardId, userId, onClose
       setDraftCard(null);
 
       try {
-        const card = await getCardById(deckId, cardId, userId);
+        const card = await getCardById(deckId, cardId, token);
 
         if (ignoreResult) return;
 
@@ -76,7 +76,7 @@ export default function SingleCardEditor({ open, deckId, cardId, userId, onClose
     return () => {
       ignoreResult = true;
     };
-  }, [open, deckId, cardId, userId]);
+  }, [open, deckId, cardId, token]);
 
   useEffect(() => {
     if (!open) return;
@@ -142,7 +142,7 @@ export default function SingleCardEditor({ open, deckId, cardId, userId, onClose
   }
 
   async function saveCard() {
-    if (!draftCard || !userId || !hasChanges || isSaving) return;
+    if (!draftCard || !token || !hasChanges || isSaving) return;
 
     if (draftCard.front.trim() === "" || draftCard.back.trim() === "") {
       setError("Front and back fields are required");
@@ -153,7 +153,7 @@ export default function SingleCardEditor({ open, deckId, cardId, userId, onClose
     setError(null);
 
     try {
-      const savedCard = await updateCard(deckId, cardId, toCardFormat(draftCard), userId);
+      const savedCard = await updateCard(deckId, cardId, toCardFormat(draftCard), token);
 
       setOriginalCard(savedCard);
       setDraftCard(savedCard);

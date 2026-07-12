@@ -7,15 +7,10 @@ function start() {
   app.listen(env.port, () => {
     const port = env.port;
     const localUrl = `http://localhost:${port}`;
-    const publicUrl = process.env.WEBSITE_HOSTNAME ? `https://${process.env.WEBSITE_HOSTNAME}` : null;
 
     console.log("");
     console.log("Server ready");
     console.log(`- Local:         ${localUrl}`);
-    if (publicUrl) {
-      console.log(`- Public:        ${publicUrl}`);
-    }
-
     console.log("");
   });
 }

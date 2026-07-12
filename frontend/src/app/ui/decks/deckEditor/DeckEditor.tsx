@@ -29,7 +29,6 @@ function normalizeDeck(deck: Deck): Deck {
     ...deck,
     description: deck.description ?? "",
     color: deck.color ?? "",
-    icon: deck.icon ?? "",
     parentDeckId: deck.parentDeckId ?? undefined,
     childDeckIds: deck.childDeckIds ?? [],
     cardIds: deck.cardIds ?? [],
@@ -46,7 +45,6 @@ function createEmptyDeck(parentDeckId?: string): Deck {
     tags: [],
     cardIds: [],
     color: "",
-    icon: "",
     parentDeckId,
     childDeckIds: [],
     totalCards: 0,
@@ -102,7 +100,6 @@ export default function DeckEditor({
       draft.name !== normalizedBaseDeck.name ||
       (draft.description ?? "") !== (normalizedBaseDeck.description ?? "") ||
       (draft.color ?? "") !== (normalizedBaseDeck.color ?? "") ||
-      (draft.icon ?? "") !== (normalizedBaseDeck.icon ?? "") ||
       (draft.parentDeckId ?? "") !== (normalizedBaseDeck.parentDeckId ?? "") ||
       normalizedTags.join("|") !== normalizedBaseDeck.tags.join("|")
     );
@@ -137,7 +134,7 @@ export default function DeckEditor({
   }, [open, onCloseAction, hasUnsavedChanges]);
 
   function updateField(
-    field: "name" | "description" | "color" | "icon",
+    field: "name" | "description" | "color",
     value: string,
   ) {
     setDraft((current) => ({
@@ -181,7 +178,6 @@ export default function DeckEditor({
       name: draft.name.trim(),
       description: (draft.description ?? "").trim(),
       color: (draft.color ?? "").trim(),
-      icon: (draft.icon ?? "").trim(),
       tags: normalizedTags,
       parentDeckId: draft.parentDeckId ?? parentDeckId ?? undefined,
       updatedAt: now,
@@ -299,16 +295,6 @@ export default function DeckEditor({
                 value={draft.color ?? ""}
                 onChange={(event) => updateField("color", event.target.value)}
                 placeholder="e.g. #5a0f2e"
-              />
-            </label>
-
-            <label className={styles.field}>
-              <span className={styles.label}>Icon</span>
-              <input
-                className={styles.input}
-                value={draft.icon ?? ""}
-                onChange={(event) => updateField("icon", event.target.value)}
-                placeholder="e.g. book-open"
               />
             </label>
 
