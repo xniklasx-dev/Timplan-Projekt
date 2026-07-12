@@ -143,7 +143,7 @@ export async function updatePassword(data: { currentPassword: string; newPasswor
 
     if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.message ?? "Update password failed");
+        throw new Error(error.error ?? "Update password failed");
     }
     await  res.text();
     return;
@@ -185,23 +185,31 @@ export async function logout(): Promise<void> {
 // auth/deleteAvatar
 export async function deleteAvatar(token: string): Promise<void> {
     if (USE_MOCK) return ;
-    await fetch(`${API_BASE}/auth/me/avatar`, {
+    const res = await fetch(`${API_BASE}/auth/me/avatar`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         }
     });
+    if (!res.ok) {
+        const error  = await res.json();
+        throw new Error(error.error ?? "Delete avatar failed");
+    }
 }
 
-// auth/deleteAvatar
+// auth/deleteAccount
 export async function deleteAccount(token: string): Promise<void> {
     if (USE_MOCK) return;
-    await fetch(`${API_BASE}/auth/me`, {
+    const res = await fetch(`${API_BASE}/auth/me`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         }
     });
+    if (!res.ok) {
+        const error  = await res.json();
+        throw new Error(error.error ?? "Delete account failed");
+    }
 }

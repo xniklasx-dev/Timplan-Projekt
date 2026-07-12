@@ -41,7 +41,7 @@ export default function AccountSettingsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      setProfileError("Image size must be less than 2MB.");
+      setProfileError("Image size must be less than 10MB.");
       return;
     }
     const reader = new FileReader();
@@ -72,7 +72,7 @@ export default function AccountSettingsPage() {
       if (err instanceof Error) {
         setProfileError(err.message);
       } else {
-        setProfileSuccess("Update Profile failed");
+        setProfileError("Update Profile failed");
       }
     }
   }
@@ -105,7 +105,7 @@ export default function AccountSettingsPage() {
       if (err instanceof Error) {
         setPasswordError(err.message);
       } else {
-        setPasswordSuccess("Update password failed")
+        setPasswordError("Update password failed")
       }
     }
   }
@@ -120,7 +120,7 @@ export default function AccountSettingsPage() {
       if (err instanceof Error) {
         setProfileError(err.message);
       } else {
-        setProfileSuccess("Avatar delition failed")
+        setProfileError("Avatar deletion failed")
       }
     }
   }
@@ -137,7 +137,7 @@ export default function AccountSettingsPage() {
       if (err instanceof Error) {
         setProfileError(err.message);
       } else {
-        setProfileSuccess("Delete Profile failed");
+        setProfileError("Delete Profile failed");
       }
     }
   }
