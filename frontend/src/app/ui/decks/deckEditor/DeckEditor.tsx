@@ -13,7 +13,7 @@ type DeckEditorProps = {
   parentDeckId?: string;
   decks: Deck[];
   onCloseAction: () => void;
-  onSaveAction: (deck: Deck, options: { isNew: boolean }) => void;
+  onSaveAction: (deck: Deck, options: { isNew: boolean }) => Promise<void>;
 };
 
 function createDeckId() {
@@ -90,6 +90,7 @@ export default function DeckEditor({
   const [tagsInput, setTagsInput] = useState(
     normalizedBaseDeck.tags.join(", "),
   );
+  const [isSaving, setIsSaving] = useState(false);
 
   const hasUnsavedChanges = useMemo(() => {
     const normalizedTags = tagsInput
@@ -163,7 +164,11 @@ export default function DeckEditor({
     handleClose();
   }
 
-  function handleSave() {
+  async function handleSave(): Promise<void> {
+    if (isSaving) {
+      return;
+    }
+
     const normalizedTags = tagsInput
       .split(",")
       .map((tag) => tag.trim())
@@ -184,8 +189,18 @@ export default function DeckEditor({
       revision: isNewDeck ? 1 : draft.revision + 1,
     };
 
-    onSaveAction(nextDeck, { isNew: isNewDeck });
-    onCloseAction();
+    setIsSaving(true);
+
+    try {
+      await onSaveAction(nextDeck, {
+        isNew: isNewDeck,
+      });
+
+      onCloseAction();
+    } catch {
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   if (!open) {
@@ -320,12 +335,15 @@ export default function DeckEditor({
 
           <button
             type="button"
-            className={`${styles.primaryButton} ${hasUnsavedChanges ? styles.primaryButtonActive : ""
-              }`}
-            onClick={handleSave}
-            disabled={!hasUnsavedChanges || !draft.name.trim()}
+            className={`${styles.primaryButton} ${
+              hasUnsavedChanges ? styles.primaryButtonActive : ""
+            }`}
+            onClick={() => {
+              void handleSave();
+            }}
+            disabled={isSaving || !hasUnsavedChanges || !draft.name.trim()}
           >
-            Save changes
+            {isSaving ? "Saving..." : "Save changes"}
           </button>
         </div>
       </div>
