@@ -308,8 +308,8 @@ export default function Deck() {
         subtitle={currentDeck.description}
         isGridView={isGridView}
         onToggleViewAction={toggleView}
-        dropdownButtonLabel="Test"
-        dropdownButtons={[
+        onAddDeckAction={openAddDeckEditor}
+        editButtons={[
           {
             label: "Edit Cards",
             onClick: () => router.push(`/cards/edit/${currentDeck.id}`),
@@ -318,17 +318,14 @@ export default function Deck() {
             label: "Edit Deck",
             onClick: openDeckEditor,
           },
-          {
-            label: "Add Deck",
-            onClick: openAddDeckEditor,
-          },
-          {
-            label: "Delete Deck",
-            onClick: () => {
-              void deleteCurrentDeck();
-            },
-          },
         ]}
+        onDeleteDeckAction={() => {
+          void deleteCurrentDeck();
+        }}
+        onStartLessonAction={() => {
+          router.push(`/learning/${currentDeck.id}`);
+        }}
+        startLessonDisabled={cards.length === 0}
       />
 
       {deckActionError && <p role="alert">{deckActionError}</p>}

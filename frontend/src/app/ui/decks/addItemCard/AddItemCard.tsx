@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import styles from "@/app/(app)/decks/page.module.css";
 
 type AddItemCardProps = {
@@ -27,9 +29,14 @@ export default function AddItemCard({
       aria-label={label}
       title={label}
     >
-      <span className={styles.addItemPlus} aria-hidden="true">
-        +
-      </span>
+      <Image
+        src="/add_circle_icon.svg"
+        alt=""
+        width={64}
+        height={64}
+        className={styles.addItemIcon}
+        aria-hidden="true"
+      />
     </button>
   );
 }

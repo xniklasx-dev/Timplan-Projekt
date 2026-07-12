@@ -270,22 +270,117 @@
   outline-offset: 2px;
 }
 
-.addItemPlus {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.addItemIcon {
   width: 64px;
   height: 64px;
-  border: 2px solid currentColor;
-  border-radius: 50%;
-  font-size: 48px;
-  font-weight: 300;
-  line-height: 1;
   transition:
     transform 0.15s ease,
-    color 0.15s ease;
+    opacity 0.15s ease;
 }
 
-.addItemCard:hover .addItemPlus {
+.addItemCard:hover .addItemIcon {
   transform: scale(1.08);
+}
+
+.deckHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerIconButton {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--color-accent);
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.08s ease,
+    box-shadow 0.15s ease;
+}
+
+.headerIconButton:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  box-shadow:
+    0 0 0 2px var(--color-glow);
+}
+
+.headerIconButton:active {
+  transform:
+    translateY(1px) scale(0.95);
+}
+
+.headerIconButton:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-glow),
+    0 0 0 4px color-mix(in srgb,
+      var(--color-accent) 25%,
+      transparent);
+}
+
+.headerActionIcon {
+  width: 21px;
+  height: 21px;
+  display: block;
+  background: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.addCircleActionIcon {
+  mask-image:
+    url("/add_circle_icon.svg");
+  -webkit-mask-image:
+    url("/add_circle_icon.svg");
+}
+
+.deleteActionIcon {
+  mask-image:
+    url("/delete_icon.svg");
+  -webkit-mask-image:
+    url("/delete_icon.svg");
+}
+
+.deleteDeckButton {
+  border-color: #ef4444;
+  background: transparent;
+  color: #ef4444;
+}
+
+.deleteDeckButton:hover {
+  border-color: #ef4444;
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb,
+      #ef4444 30%,
+      transparent);
+}
+
+@media (max-width: 700px) {
+  .headerControls {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .deckHeaderActions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
 }

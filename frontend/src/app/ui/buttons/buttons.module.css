@@ -200,3 +200,23 @@
     0 0 0 2px var(--color-glow),
     0 0 0 4px color-mix(in srgb, var(--color-accent) 25%, transparent);
 }
+
+.dropdownTriggerIconOnly {
+  width: 48px;
+  height: 48px;
+  min-height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  gap: 4px;
+}
+
+.dropdownTriggerIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.dropdownTriggerIconOnly .dropdownChevron {
+  margin-left: -1px;
+  font-size: 10px;
+}
