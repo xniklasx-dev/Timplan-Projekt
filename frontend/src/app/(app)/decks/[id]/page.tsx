@@ -9,7 +9,7 @@ import {
   applyCardStatsToDeck,
   createDeck,
   deleteDeck as deleteDeckRequest,
-  getDecks,
+  getDecksWithStats,
   toDeckWriteData,
   updateDeck,
   withChildDeckIds,
@@ -80,7 +80,7 @@ export default function Deck() {
     const requestKey = `${token}:${deckId}`;
     let cancelled = false;
 
-    Promise.all([getDecks(token), getCardsByDeckId(deckId, token)])
+    Promise.all([getDecksWithStats(token), getCardsByDeckId(deckId, token)])
       .then(([loadedDecks, loadedCards]) => {
         if (cancelled) {
           return;
