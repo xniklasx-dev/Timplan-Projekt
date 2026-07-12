@@ -16,6 +16,24 @@ type DeckEditorProps = {
   onSaveAction: (deck: Deck, options: { isNew: boolean }) => Promise<void>;
 };
 
+const DECK_COLOR_PRESETS = [
+  { label: "Red", value: "#ef4444" },
+  { label: "Blue", value: "#3b82f6" },
+  { label: "Green", value: "#22c55e" },
+  { label: "Yellow", value: "#eab308" },
+  { label: "Orange", value: "#f97316" },
+  { label: "Pink", value: "#ec4899" },
+  { label: "White", value: "#ffffff" },
+  { label: "Black", value: "#000000" },
+  { label: "Brown", value: "#92400e" },
+] as const;
+
+const CUSTOM_COLOR_VALUE = "__custom__";
+
+function isHexColor(value: string): boolean {
+  return /^#[0-9a-fA-F]{6}$/.test(value);
+}
+
 function createDeckId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
@@ -105,6 +123,52 @@ export default function DeckEditor({
     );
   }, [normalizedBaseDeck, draft, tagsInput]);
 
+  const normalizedColor = (draft.color ?? "").toLowerCase();
+
+  const colorPickerValue = isHexColor(normalizedColor)
+    ? normalizedColor
+    : "#ffffff";
+
+  const presetSelectValue = DECK_COLOR_PRESETS.some(
+    (preset) => preset.value === normalizedColor,
+  )
+    ? normalizedColor
+    : normalizedColor
+      ? CUSTOM_COLOR_VALUE
+      : "";
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        if (hasUnsavedChanges) {
+          const shouldClose = window.confirm(
+            "You have unsaved changes.\nDo you really want to close this editor?",
+          );
+
+          if (!shouldClose) {
+            return;
+          }
+        }
+
+        onCloseAction();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+
+      document.body.style.overflow = "";
+    };
+  }, [open, onCloseAction, hasUnsavedChanges]);
+
   useEffect(() => {
     if (!open) return;
 
@@ -133,10 +197,7 @@ export default function DeckEditor({
     };
   }, [open, onCloseAction, hasUnsavedChanges]);
 
-  function updateField(
-    field: "name" | "description" | "color",
-    value: string,
-  ) {
+  function updateField(field: "name" | "description" | "color", value: string) {
     setDraft((current) => ({
       ...current,
       [field]: value,
@@ -288,15 +349,54 @@ export default function DeckEditor({
               />
             </label>
 
-            <label className={styles.field}>
+            <div className={`${styles.field} ${styles.fieldFull}`}>
               <span className={styles.label}>Color</span>
-              <input
-                className={styles.input}
-                value={draft.color ?? ""}
-                onChange={(event) => updateField("color", event.target.value)}
-                placeholder="e.g. #5a0f2e"
-              />
-            </label>
+
+              <div className={styles.colorControls}>
+                <label className={styles.colorPickerGroup}>
+                  <input
+                    type="color"
+                    className={styles.colorPicker}
+                    value={colorPickerValue}
+                    onChange={(event) =>
+                      updateField("color", event.target.value.toLowerCase())
+                    }
+                    aria-label="Choose a custom deck color"
+                  />
+
+                  <span className={styles.colorValue}>
+                    {normalizedColor || "No color selected"}
+                  </span>
+                </label>
+
+                <select
+                  className={`${styles.input} ${styles.colorPresetSelect}`}
+                  value={presetSelectValue}
+                  onChange={(event) => {
+                    const selectedColor = event.target.value;
+
+                    if (selectedColor === CUSTOM_COLOR_VALUE) {
+                      return;
+                    }
+
+                    updateField("color", selectedColor);
+                  }}
+                  aria-label="Choose a preset deck color"
+                >
+                  <option value="">No color</option>
+
+                  <option value={CUSTOM_COLOR_VALUE} disabled>
+                    Custom color
+                  </option>
+
+                  {DECK_COLOR_PRESETS.map((preset) => (
+                    <option key={preset.value} value={preset.value}>
+                      {preset.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
             <label className={`${styles.field} ${styles.fieldFull}`}>
               <span className={styles.label}>Tags</span>
