@@ -5,19 +5,31 @@ import type { Deck, Card } from "@/app/lib/definitions";
 import DeckCard from "../deckCard/DeckCard";
 import SingleCard from "../singleCard/SingleCard";
 import styles from "@/app/(app)/decks/page.module.css";
+import AddItemCard from "../addItemCard/AddItemCard";
+
+type AddItemConfig = {
+  label: string;
+  onClickAction: () => void;
+};
 
 type DeckGridProps = {
   decks?: Deck[];
   cards?: Card[];
   isGridView: boolean;
   onEditCardAction: (cardId: string) => void;
+  addItem?: AddItemConfig;
 };
 
+const EMPTY_DECKS: Deck[] = [];
+const EMPTY_CARDS: Card[] = [];
+
 export default function DeckGrid(props: DeckGridProps) {
-  const decks = props.decks ?? [];
-  const cards = props.cards ?? [];
+  const decks = props.decks ?? EMPTY_DECKS;
+
+  const cards = props.cards ?? EMPTY_CARDS;
   const isGridView = props.isGridView;
   const onEditCardAction = props.onEditCardAction;
+  const addItem = props.addItem;
 
   const itemRefs = useRef<Map<string, HTMLElement>>(new Map());
   const firstRender = useRef(true);
@@ -48,12 +60,7 @@ export default function DeckGrid(props: DeckGridProps) {
         const scaleX = firstRect.width / lastRect.width;
         const scaleY = firstRect.height / lastRect.height;
 
-        if (
-          moveX === 0 &&
-          moveY === 0 &&
-          scaleX === 1 &&
-          scaleY === 1
-        ) {
+        if (moveX === 0 && moveY === 0 && scaleX === 1 && scaleY === 1) {
           return;
         }
 
@@ -75,7 +82,7 @@ export default function DeckGrid(props: DeckGridProps) {
     });
   }, [decks, cards, isGridView]);
 
-  if (decks.length === 0 && cards.length === 0) {
+  if (decks.length === 0 && cards.length === 0 && !addItem) {
     return <p className={styles.subtitle}>No items found</p>;
   }
 
@@ -87,6 +94,14 @@ export default function DeckGrid(props: DeckGridProps) {
 
   return (
     <section className={layoutClass}>
+      {addItem && (
+        <AddItemCard
+          isGridView={isGridView}
+          label={addItem.label}
+          onClickAction={addItem.onClickAction}
+        />
+      )}
+
       {decks.map((deck) => (
         <DeckCard
           key={deck.id}

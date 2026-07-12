@@ -8,7 +8,7 @@ import { useAuth } from "@/app/lib/auth/AuthContext";
 
 import {
   createDeck,
-  getDecks,
+  getDecksWithStats,
   toDeckWriteData,
   updateDeck,
   withChildDeckIds,
@@ -66,7 +66,7 @@ export default function Decks() {
 
     let cancelled = false;
 
-    getDecks(token)
+    getDecksWithStats(token)
       .then((loadedDecks) => {
         if (cancelled) {
           return;
@@ -119,7 +119,12 @@ export default function Decks() {
   };
 
   const openAddDeckEditor = () => {
-    setDeckEditorState({ open: true, deckId: null });
+    setActionError(null);
+
+    setDeckEditorState({
+      open: true,
+      deckId: null,
+    });
   };
 
   const closeDeckEditor = () => {
@@ -187,13 +192,6 @@ export default function Decks() {
         subtitle="Select a deck to start studying"
         isGridView={isGridView}
         onToggleViewAction={toggleView}
-        dropdownButtonLabel="Test"
-        dropdownButtons={[
-          {
-            label: "Add Deck",
-            onClick: openAddDeckEditor,
-          },
-        ]}
       />
 
       {actionError && <p role="alert">{actionError}</p>}
@@ -216,6 +214,10 @@ export default function Decks() {
           decks={topLevelDecks}
           isGridView={isGridView}
           onEditCardAction={editCard}
+          addItem={{
+            label: "Add deck",
+            onClickAction: openAddDeckEditor,
+          }}
         />
       )}
 

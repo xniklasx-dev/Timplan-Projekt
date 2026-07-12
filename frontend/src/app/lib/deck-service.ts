@@ -1,4 +1,5 @@
-import { apiBaseUrl, type Deck } from "./definitions";
+import { apiBaseUrl, type Deck, type Card } from "./definitions";
+import { getCardsByDeckId } from "./card-service";
 
 export type BackendDeck = {
   id: string;
@@ -19,6 +20,47 @@ export type DeckWriteData = {
   tags?: string[] | null;
   color?: string | null;
 };
+
+export function applyCardStatsToDeck(deck: Deck, cards: Card[]): Deck {
+  const endOfToday = new Date();
+
+  endOfToday.setHours(23, 59, 59, 999);
+
+  return {
+    ...deck,
+
+    cardIds: cards.map((card) => card.id),
+
+    totalCards: cards.length,
+
+    newCards: cards.filter((card) => card.state === "new").length,
+
+    learningCards: cards.filter((card) => card.state === "learning").length,
+
+    reviewCards: cards.filter((card) => card.state === "review").length,
+
+    dueToday: cards.filter(
+      (card) =>
+        card.state !== "new" &&
+        card.state !== "suspended" &&
+        card.due <= endOfToday,
+    ).length,
+  };
+}
+
+export async function getDecksWithStats(token: string): Promise<Deck[]> {
+  const decks = await getDecks(token);
+
+  const cardLists = await Promise.all(
+    decks.map((deck) => getCardsByDeckId(deck.id, token)),
+  );
+
+  const decksWithStats = decks.map((deck, index) =>
+    applyCardStatsToDeck(deck, cardLists[index] ?? []),
+  );
+
+  return withChildDeckIds(decksWithStats);
+}
 
 type ApiErrorResponse = {
   status?: string;

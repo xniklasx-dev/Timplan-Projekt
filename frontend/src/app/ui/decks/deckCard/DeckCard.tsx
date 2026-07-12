@@ -20,7 +20,7 @@ export default function DeckCard({
 }: DeckCardProps) {
   const router = useRouter();
 
-  const hasCards = deck.cardIds.length > 0;
+  const hasCards = deck.totalCards > 0;
 
   let cardClassName = styles.deckCard;
 
@@ -88,7 +88,7 @@ export default function DeckCard({
 
       <div className={styles.deckStats}>
         <div className={styles.stat}>
-          <span className={styles.statValue}>{deck.cardIds.length}</span>
+          <span className={styles.statValue}>{deck.totalCards}</span>
           <span className={styles.statLabel}>Cards</span>
         </div>
 

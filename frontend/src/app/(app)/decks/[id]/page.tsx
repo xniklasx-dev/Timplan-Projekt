@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { Deck, Card } from "@/app/lib/definitions";
 import styles from "../page.module.css";
 import { useAuth } from "@/app/lib/auth/AuthContext";
 import {
+  applyCardStatsToDeck,
   createDeck,
   deleteDeck as deleteDeckRequest,
   getDecks,
@@ -41,6 +42,14 @@ export default function Deck() {
 
   const [decks, setDecks] = useState<Deck[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
+
+  const decksWithCurrentStats = useMemo(() => {
+    const updatedDecks = decks.map((deck) =>
+      deck.id === deckId ? applyCardStatsToDeck(deck, cards) : deck,
+    );
+
+    return withChildDeckIds(updatedDecks);
+  }, [decks, cards, deckId]);
 
   const [completedDataRequestKey, setCompletedDataRequestKey] = useState<
     string | null
@@ -128,7 +137,7 @@ export default function Deck() {
     );
   }
 
-  const currentDeck = decks.find((deck) => deck.id === deckId);
+  const currentDeck = decksWithCurrentStats.find((deck) => deck.id === deckId);
 
   if (!currentDeck) {
     return <main className={styles.page}>Deck not found</main>;
@@ -137,7 +146,9 @@ export default function Deck() {
   const childDecks: Deck[] = [];
   if (currentDeck.childDeckIds) {
     for (const childDeckId of currentDeck.childDeckIds) {
-      const foundDeck = decks.find((deck) => deck.id === childDeckId);
+      const foundDeck = decksWithCurrentStats.find(
+        (deck) => deck.id === childDeckId,
+      );
 
       if (foundDeck) {
         childDecks.push(foundDeck);
@@ -297,31 +308,24 @@ export default function Deck() {
         subtitle={currentDeck.description}
         isGridView={isGridView}
         onToggleViewAction={toggleView}
-        dropdownButtonLabel="Test"
-        dropdownButtons={[
+        onAddDeckAction={openAddDeckEditor}
+        editButtons={[
           {
             label: "Edit Cards",
             onClick: () => router.push(`/cards/edit/${currentDeck.id}`),
           },
           {
-            label: "Add Card",
-            onClick: openNewCardEditor,
-          },
-          {
             label: "Edit Deck",
             onClick: openDeckEditor,
           },
-          {
-            label: "Add Deck",
-            onClick: openAddDeckEditor,
-          },
-          {
-            label: "Delete Deck",
-            onClick: () => {
-              void deleteCurrentDeck();
-            },
-          },
         ]}
+        onDeleteDeckAction={() => {
+          void deleteCurrentDeck();
+        }}
+        onStartLessonAction={() => {
+          router.push(`/learning/${currentDeck.id}`);
+        }}
+        startLessonDisabled={cards.length === 0}
       />
 
       {deckActionError && <p role="alert">{deckActionError}</p>}
@@ -331,6 +335,10 @@ export default function Deck() {
         cards={cards}
         isGridView={isGridView}
         onEditCardAction={openExistingCardEditor}
+        addItem={{
+          label: "Add card",
+          onClickAction: openNewCardEditor,
+        }}
       />
 
       <SingleCardAdd
