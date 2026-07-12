@@ -101,6 +101,17 @@ export async function deleteCard(deckId: string, cardId: string, token: string):
   await readResponse<void>(response);
 }
 
+export async function deleteCards(deckId: string, cardIds: string[], token: string): Promise<number> {
+  const response = await fetch(`${cardApiBase}/decks/${deckId}/cards/batch-delete`, {
+    method: "DELETE",
+    headers: createHeaders(token, true),
+    body: JSON.stringify({ cardIds }),
+  });
+
+  const result = await readResponse<{ deletedCount: number }>(response);
+  return result.deletedCount;
+}
+
 function createHeaders(token: string, withBody = false): HeadersInit {
   const headers: Record<string, string> = {
     Accept: "application/json",

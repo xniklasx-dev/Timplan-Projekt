@@ -32,9 +32,6 @@
   opacity: 0.98;
 }
 
-.skeletonWrap {
-  padding-top: clamp(10px, 8.29px + 0.223vw, 14px);
-}
 .empty {
   padding: clamp(12px, 10.29px + 0.223vw, 16px) 0;
   font-size: clamp(13px, 12.43px + 0.075vw, 15px);

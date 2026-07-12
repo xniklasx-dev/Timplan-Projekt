@@ -1,6 +1,7 @@
-import { and, eq, getTableColumns, sql } from "drizzle-orm";
+import { and, eq, getTableColumns, inArray, sql } from "drizzle-orm";
 import { db } from "../../db/client.js";
 import { Card, cards, decks } from "../../db/schema.js";
+import { ApiError } from "../../middleware/errorHandler.js";
 import { BatchUpsertCardsData, CardUpdateData, CreateCardData } from "../../validation/cardSchemas.js";
 import { CardsRepository } from "./cardsRepository.js";
 
@@ -56,6 +57,12 @@ export class DrizzleCardsRepository implements CardsRepository {
   }
 
   async upsertManyCards(cardsData: BatchUpsertCardsData): Promise<Card[]> {
+    const existingCardIds = cardsData.cards.flatMap((card) => card.cardId ? [card.cardId] : []);
+
+    if (!await this.cardsBelongToDeck(existingCardIds, cardsData.deckId)) {
+      throw new ApiError(400, "One or more cards do not belong to this deck");
+    }
+
     const values = cardsData.cards.map((card) => ({
       id: card.cardId,
       deckId: cardsData.deckId,
@@ -82,6 +89,21 @@ export class DrizzleCardsRepository implements CardsRepository {
       .returning();
   }
 
+  async cardsBelongToDeck(cardIds: string[], deckId: string): Promise<boolean> {
+    const uniqueCardIds = Array.from(new Set(cardIds));
+
+    if (uniqueCardIds.length === 0) {
+      return true;
+    }
+
+    const matchingCards = await db
+      .select({ id: cards.id })
+      .from(cards)
+      .where(and(inArray(cards.id, uniqueCardIds), eq(cards.deckId, deckId)));
+
+    return matchingCards.length === uniqueCardIds.length;
+  }
+
   async deleteCard(cardId: string, deckId: string): Promise<boolean> {
     const deletedCards = await db
       .delete(cards)
@@ -89,6 +111,19 @@ export class DrizzleCardsRepository implements CardsRepository {
       .returning({ id: cards.id });
 
     return deletedCards.length > 0;
+  }
+
+  async deleteCardsByIds(deckId: string, cardIds: string[]): Promise<number> {
+    if (cardIds.length === 0) {
+      return 0;
+    }
+
+    const deletedCards = await db
+      .delete(cards)
+      .where(and(eq(cards.deckId, deckId), inArray(cards.id, cardIds)))
+      .returning({ id: cards.id });
+
+    return deletedCards.length;
   }
 
   async batchDeleteCard(deckId: string): Promise<void> {
