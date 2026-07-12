@@ -315,10 +315,6 @@ export default function Deck() {
             onClick: () => router.push(`/cards/edit/${currentDeck.id}`),
           },
           {
-            label: "Add Card",
-            onClick: openNewCardEditor,
-          },
-          {
             label: "Edit Deck",
             onClick: openDeckEditor,
           },
@@ -342,6 +338,10 @@ export default function Deck() {
         cards={cards}
         isGridView={isGridView}
         onEditCardAction={openExistingCardEditor}
+        addItem={{
+          label: "Add card",
+          onClickAction: openNewCardEditor,
+        }}
       />
 
       <SingleCardAdd

@@ -239,3 +239,53 @@
   fill: var(--color-text-muted);
   opacity: 0.7;
 }
+
+.addItemCard {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  border-style: dashed;
+  color: var(--color-text-muted);
+  font: inherit;
+  appearance: none;
+  cursor: pointer;
+}
+
+.addItemCardGrid {
+  min-height: 180px;
+}
+
+.addItemCardLine {
+  min-height: 110px;
+}
+
+.addItemCard:hover {
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+.addItemCard:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.addItemPlus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  font-size: 48px;
+  font-weight: 300;
+  line-height: 1;
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease;
+}
+
+.addItemCard:hover .addItemPlus {
+  transform: scale(1.08);
+}
