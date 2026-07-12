@@ -1,5 +1,6 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import {
+  BatchDeleteCardsSchema,
   BatchUpsertCardsSchema,
   CardProgressSchema,
   CardSchema,
@@ -25,6 +26,11 @@ import {
   ResetPasswordSchema,
   UpdateProfileSchema,
 } from "../validation/userSchemas.js";
+import { registerAuthPaths } from "./authPaths.js";
+import { registerCardPaths } from "./cardPaths.js";
+import { registerDeckPaths } from "./deckPaths.js";
+import { registerHealthPaths } from "./healthPaths.js";
+import { registerSearchPaths } from "./searchPaths.js";
 
 export const registry = new OpenAPIRegistry();
 
@@ -34,6 +40,7 @@ registry.register("CreateCard", CreateCardSchema);
 registry.register("CardUpdate", CardUpdateSchema);
 registry.register("UpsertCard", UpsertCardSchema);
 registry.register("BatchUpsertCards", BatchUpsertCardsSchema);
+registry.register("BatchDeleteCards", BatchDeleteCardsSchema);
 
 registry.register("Deck", DeckSchema);
 registry.register("CreateDeck", CreateDeckSchema);
@@ -49,3 +56,9 @@ registry.register("UpdateProfile", UpdateProfileSchema);
 registry.register("DateData", DateDataSchema);
 registry.register("CreateDateData", CreateDateDataSchema);
 registry.register("DateDataUpdate", DateDataUpdateSchema);
+
+registerHealthPaths(registry);
+registerCardPaths(registry);
+registerDeckPaths(registry);
+registerSearchPaths(registry);
+registerAuthPaths(registry);

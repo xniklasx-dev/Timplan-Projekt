@@ -14,7 +14,11 @@ export interface CardsRepository {
 
   upsertManyCards(cardsData: BatchUpsertCardsData): Promise<Card[]>;
 
+  cardsBelongToDeck(cardIds: string[], deckId: string): Promise<boolean>;
+
   deleteCard(cardId: string, deckId: string): Promise<boolean>;
+
+  deleteCardsByIds(deckId: string, cardIds: string[]): Promise<number>;
 
   batchDeleteCard(deckId: string): Promise<void>;
 }

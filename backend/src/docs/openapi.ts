@@ -1,7 +1,5 @@
 import { OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import { registry } from "./registry.js";
-import "./paths.js";
-import "./deckPaths.js";
 
 export const openapiDocument = new OpenApiGeneratorV3(
   registry.definitions,

@@ -30,7 +30,7 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
 
   const tags = normalizeTags(tagsInput);
   const hasChanges = front.trim() !== "" || back.trim() !== "" || hint.trim() !== "" || tags.length > 0;
-  const canCreate = front.trim() !== "" && back.trim() !== "" && !isSaving;
+  const canCreate = front.trim() !== "" && back.trim() !== "" && Boolean(token) && !isSaving;
 
   useEffect(() => {
     if (!open) return;
@@ -89,7 +89,12 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
   }
 
   async function handleCreate() {
-    if (!canCreate || !token) return;
+    if (!token) {
+      setError("You must be logged in to create a card.");
+      return;
+    }
+
+    if (!canCreate) return;
 
     setIsSaving(true);
     setError(null);

@@ -1,139 +1,125 @@
-import { Router } from "express";
+import type { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
+import { z } from "zod";
 
-import { asyncHandler } from "../middleware/asyncHandler.js";
-import { ApiError } from "../middleware/errorHandler.js";
-import { decksRepository } from "../repositories/repositories.js";
-import { validateDeckParent } from "../services/deckHierarchy.js";
-import { getDeckUserId } from "../utils/deckAuth.js";
 import {
   CreateDeckSchema,
+  DeckSchema,
   DeckUpdateSchema,
 } from "../validation/deckSchemas.js";
-import { UUIDSchema } from "../validation/commonSchemas.js";
+import { AuthHeader, DeckIdParam, ErrorResponseSchema } from "./pathSchemas.js";
 
-const router = Router();
+export function registerDeckPaths(registry: OpenAPIRegistry): void {
+  registry.registerPath({
+    method: "get",
+    path: "/decks",
+    tags: ["decks"],
+    description: "List the current user's decks.",
+    request: { headers: AuthHeader },
+    responses: {
+      200: {
+        description: "Decks owned by the current user.",
+        content: { "application/json": { schema: z.array(DeckSchema) } },
+      },
+      401: {
+        description: "Authentication required.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+    },
+  });
 
-router.get(
-  "/decks",
-  asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
+  registry.registerPath({
+    method: "get",
+    path: "/decks/{deckId}",
+    tags: ["decks"],
+    description: "Get one deck owned by the current user.",
+    request: {
+      headers: AuthHeader,
+      params: DeckIdParam,
+    },
+    responses: {
+      200: {
+        description: "The requested deck.",
+        content: { "application/json": { schema: DeckSchema } },
+      },
+      400: {
+        description: "Invalid deck id.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+      404: {
+        description: "Deck not found.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+    },
+  });
 
-    const userDecks = await decksRepository.getDecksByUserId(userId);
+  registry.registerPath({
+    method: "post",
+    path: "/decks",
+    tags: ["decks"],
+    description: "Create a deck for the current user.",
+    request: {
+      headers: AuthHeader,
+      body: { content: { "application/json": { schema: CreateDeckSchema } } },
+    },
+    responses: {
+      201: {
+        description: "Deck created.",
+        content: { "application/json": { schema: DeckSchema } },
+      },
+      400: {
+        description: "Invalid request body.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+    },
+  });
 
-    return res.status(200).json(userDecks);
-  }),
-);
+  registry.registerPath({
+    method: "patch",
+    path: "/decks/{deckId}",
+    tags: ["decks"],
+    description: "Update a deck owned by the current user.",
+    request: {
+      headers: AuthHeader,
+      params: DeckIdParam,
+      body: { content: { "application/json": { schema: DeckUpdateSchema } } },
+    },
+    responses: {
+      200: {
+        description: "Deck updated.",
+        content: { "application/json": { schema: DeckSchema } },
+      },
+      400: {
+        description: "Invalid request body or deck id.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+      404: {
+        description: "Deck not found.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+    },
+  });
 
-router.get(
-  "/decks/:deckId",
-  asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
-    const deckId = UUIDSchema.parse(req.params.deckId);
-
-    const deck = await decksRepository.getDeckById(deckId, userId);
-
-    if (!deck) {
-      throw new ApiError(404, "Deck not found");
-    }
-
-    return res.status(200).json(deck);
-  }),
-);
-
-router.post(
-  "/decks",
-  asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
-
-    const input = CreateDeckSchema.parse(req.body);
-
-    const normalizedName = input.name.trim();
-
-    if (!normalizedName) {
-      throw new ApiError(400, "Deck name must not be empty");
-    }
-
-    await validateDeckParent({
-      decksRepository,
-      userId,
-      parentDeckId: input.parentDeckId,
-    });
-
-    const createdDeck = await decksRepository.createDeck({
-      ...input,
-      name: normalizedName,
-      userId,
-    });
-
-    return res.status(201).json(createdDeck);
-  }),
-);
-
-router.patch(
-  "/decks/:deckId",
-  asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
-    const deckId = UUIDSchema.parse(req.params.deckId);
-
-    const existingDeck = await decksRepository.getDeckById(deckId, userId);
-
-    if (!existingDeck) {
-      throw new ApiError(404, "Deck not found");
-    }
-
-    const input = DeckUpdateSchema.parse(req.body);
-
-    const updateData = {
-      ...input,
-    };
-
-    if (input.name !== undefined) {
-      const normalizedName = input.name.trim();
-
-      if (!normalizedName) {
-        throw new ApiError(400, "Deck name must not be empty");
-      }
-
-      updateData.name = normalizedName;
-    }
-
-    if (Object.prototype.hasOwnProperty.call(input, "parentDeckId")) {
-      await validateDeckParent({
-        decksRepository,
-        userId,
-        deckId,
-        parentDeckId: input.parentDeckId,
-      });
-    }
-
-    const updatedDeck = await decksRepository.updateDeck(
-      deckId,
-      userId,
-      updateData,
-    );
-
-    if (!updatedDeck) {
-      throw new ApiError(404, "Deck not found");
-    }
-
-    return res.status(200).json(updatedDeck);
-  }),
-);
-
-router.delete(
-  "/decks/:deckId",
-  asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
-    const deckId = UUIDSchema.parse(req.params.deckId);
-
-    const deleted = await decksRepository.deleteDeck(deckId, userId);
-
-    if (!deleted) {
-      throw new ApiError(404, "Deck not found");
-    }
-
-    return res.status(204).send();
-  }),
-);
-
-export default router;
+  registry.registerPath({
+    method: "delete",
+    path: "/decks/{deckId}",
+    tags: ["decks"],
+    description: "Delete a deck owned by the current user.",
+    request: {
+      headers: AuthHeader,
+      params: DeckIdParam,
+    },
+    responses: {
+      204: {
+        description: "Deck deleted.",
+      },
+      400: {
+        description: "Invalid deck id.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+      404: {
+        description: "Deck not found.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+    },
+  });
+}

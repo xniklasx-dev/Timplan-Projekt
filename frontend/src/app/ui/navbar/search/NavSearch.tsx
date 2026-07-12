@@ -55,8 +55,9 @@ export default function NavSearch({ open, onOpen, onClose }: NavSearchProps) {
 
   useEffect(() => {
     const trimmedQuery = query.trim();
+    const token = user?.token;
 
-    if (!open || !trimmedQuery || !user) {
+    if (!open || !trimmedQuery || !token) {
       setItems([]);
       setLoading(false);
       setError(false);
@@ -66,22 +67,31 @@ export default function NavSearch({ open, onOpen, onClose }: NavSearchProps) {
     setLoading(true);
     setError(false);
     setItems([]);
+    let ignoreResult = false;
 
     const timeout = window.setTimeout(async () => {
       try {
-        const results = await search(trimmedQuery, user.token);
-        setItems(results);
+        const results = await search(trimmedQuery, token);
+
+        if (!ignoreResult) {
+          setItems(results);
+        }
       } catch {
-        setError(true);
+        if (!ignoreResult) {
+          setError(true);
+        }
       } finally {
-        setLoading(false);
+        if (!ignoreResult) {
+          setLoading(false);
+        }
       }
     }, 300);
 
     return () => {
+      ignoreResult = true;
       window.clearTimeout(timeout);
     };
-  }, [open, query, user]);
+  }, [open, query, user?.token]);
 
   useEffect(() => {
     if (!open) return;

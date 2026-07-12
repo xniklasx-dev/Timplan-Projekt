@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import type { Card, Deck } from "@/app/lib/definitions";
-import { deleteCard, normalizeTags, upsertCards, type UpsertCardData } from "@/app/lib/card-service";
+import { deleteCards, normalizeTags, upsertCards, type UpsertCardData } from "@/app/lib/card-service";
 import ConfirmDialog from "@/app/ui/confirmDialog/ConfirmDialog";
 import Toast from "@/app/ui/toast/Toast";
 
@@ -182,16 +182,8 @@ export default function DeckCardsEditView({ deck, initialCards, token }: DeckCar
     setIsSaving(true);
 
     try {
-      for (const cardId of deletedCardIds) {
-        try {
-          await deleteCard(deck.id, cardId, token);
-        } catch (error) {
-          const message = error instanceof Error ? error.message : "";
-
-          if (!message.includes("404")) {
-            throw error;
-          }
-        }
+      if (deletedCardIds.length > 0) {
+        await deleteCards(deck.id, deletedCardIds, token);
       }
 
       const saved = cardsToSave.length > 0 ? await upsertCards(deck.id, cardsToSave, token) : [];

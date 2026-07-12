@@ -7,9 +7,9 @@ import { SearchRepository } from "./searchRepository.js";
 export class MemorySearchRepository implements SearchRepository {
   constructor(private readonly cardsRepository: MemoryCardsRepository) {}
 
-  async search(query: string, _userId: string) {
+  async search(query: string, userId: string) {
     const lowerQuery = query.toLowerCase();
-    const cards = this.cardsRepository.getAllCards();
+    const cards = this.cardsRepository.getCardsForUser(userId);
 
     return cards
       .filter((card) => {

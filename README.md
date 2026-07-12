@@ -53,7 +53,7 @@ cd Timplan-Projekt
 Create `frontend/.env`:
 
 ```env
-NEXT_PUBLIC_USE_MOCK=true
+NEXT_PUBLIC_USE_MOCK=false
 NEXT_PUBLIC_API_BASE=http://localhost:3001
 ```
 
@@ -63,9 +63,6 @@ Create `backend/.env`:
 DATA_SOURCE=memory
 ALLOWED_ORIGINS=http://localhost:3000
 ```
-
-This configuration uses the local in-memory data source, so a database
-connection is not required for testing.
 
 ### 3. Install all dependencies
 
