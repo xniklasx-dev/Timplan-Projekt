@@ -10,7 +10,7 @@ import {
   createDeck,
   deleteDeck as deleteDeckRequest,
   getDecksWithStats,
-  toDeckWriteData,
+  DeckWriteData,
   updateDeck,
   withChildDeckIds,
 } from "@/app/lib/deck-service";
@@ -26,10 +26,6 @@ type DeckEditorState = {
   open: boolean;
   deckId: string | null;
   parentDeckId?: string;
-};
-
-type SaveDeckOptions = {
-  isNew: boolean;
 };
 
 export default function Deck() {
@@ -213,28 +209,26 @@ export default function Deck() {
   };
 
   const saveDeck = async (
-    savedDeck: Deck,
-    options: SaveDeckOptions,
+    savedDeckId: string | null,
+    deckData: DeckWriteData,
   ): Promise<void> => {
     if (!user?.token) {
       const error = new Error("You must be logged in to save a deck");
-
       setDeckActionError(error.message);
-
       throw error;
     }
 
     setDeckActionError(null);
 
     try {
-      const requestData = toDeckWriteData(savedDeck);
+      const isNewDeck = savedDeckId === null;
 
-      const persistedDeck = options.isNew
-        ? await createDeck(requestData, user.token)
-        : await updateDeck(savedDeck.id, requestData, user.token);
+      const persistedDeck = isNewDeck
+        ? await createDeck(deckData, user.token)
+        : await updateDeck(savedDeckId, deckData, user.token);
 
       setDecks((currentDecks) => {
-        const updatedDecks = options.isNew
+        const updatedDecks = isNewDeck
           ? [...currentDecks, persistedDeck]
           : currentDecks.map((deck) =>
               deck.id === persistedDeck.id ? persistedDeck : deck,
@@ -243,7 +237,7 @@ export default function Deck() {
         return withChildDeckIds(updatedDecks);
       });
 
-      if (options.isNew) {
+      if (isNewDeck) {
         router.push(`/decks/${persistedDeck.id}`);
       }
     } catch (error) {
@@ -251,7 +245,6 @@ export default function Deck() {
         error instanceof Error ? error.message : "Failed to save deck";
 
       setDeckActionError(message);
-
       throw error;
     }
   };
@@ -282,22 +275,6 @@ export default function Deck() {
       );
     }
   };
-
-  let deckEditorKey = "";
-
-  if (deckEditorState.deckId !== null) {
-    deckEditorKey = deckEditorState.deckId;
-  } else if (deckEditorState.parentDeckId) {
-    deckEditorKey = `new-${deckEditorState.parentDeckId}`;
-  } else {
-    deckEditorKey = "new-root";
-  }
-
-  if (deckEditorState.open) {
-    deckEditorKey += "-open";
-  } else {
-    deckEditorKey += "-closed";
-  }
 
   return (
     <main className={styles.page}>
@@ -360,7 +337,6 @@ export default function Deck() {
       />
 
       <DeckEditor
-        key={deckEditorKey}
         open={deckEditorState.open}
         deckId={deckEditorState.deckId}
         parentDeckId={deckEditorState.parentDeckId}

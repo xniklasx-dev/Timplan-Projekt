@@ -9,7 +9,7 @@ import { useAuth } from "@/app/lib/auth/AuthContext";
 import {
   createDeck,
   getDecksWithStats,
-  toDeckWriteData,
+  DeckWriteData,
   updateDeck,
   withChildDeckIds,
 } from "@/app/lib/deck-service";
@@ -23,10 +23,6 @@ import DeckEditor from "@/app/ui/decks/deckEditor/DeckEditor";
 type DeckEditorState = {
   open: boolean;
   deckId: string | null;
-};
-
-type SaveDeckOptions = {
-  isNew: boolean;
 };
 
 function getErrorMessage(error: unknown): string {
@@ -132,12 +128,11 @@ export default function Decks() {
   };
 
   const saveDeck = async (
-    savedDeck: Deck,
-    options: SaveDeckOptions,
+    savedDeckId: string | null,
+    deckData: DeckWriteData,
   ): Promise<void> => {
     if (!user?.token) {
       const error = new Error("You must be logged in to save a deck");
-
       setActionError(error.message);
       throw error;
     }
@@ -145,14 +140,14 @@ export default function Decks() {
     setActionError(null);
 
     try {
-      const requestData = toDeckWriteData(savedDeck);
+      const isNewDeck = savedDeckId === null;
 
-      const persistedDeck = options.isNew
-        ? await createDeck(requestData, user.token)
-        : await updateDeck(savedDeck.id, requestData, user.token);
+      const persistedDeck = isNewDeck
+        ? await createDeck(deckData, user.token)
+        : await updateDeck(savedDeckId, deckData, user.token);
 
       setDecks((currentDecks) => {
-        const updatedDecks = options.isNew
+        const updatedDecks = isNewDeck
           ? [...currentDecks, persistedDeck]
           : currentDecks.map((deck) =>
               deck.id === persistedDeck.id ? persistedDeck : deck,
@@ -161,29 +156,16 @@ export default function Decks() {
         return withChildDeckIds(updatedDecks);
       });
 
-      if (options.isNew) {
+      if (isNewDeck) {
         router.push(`/decks/${persistedDeck.id}`);
       }
     } catch (error) {
       setActionError(getErrorMessage(error));
-
       throw error;
     }
   };
 
   const topLevelDecks = decks.filter((deck) => !deck.parentDeckId);
-
-  let editorKey = "new-top-level";
-
-  if (deckEditorState.deckId !== null) {
-    editorKey = deckEditorState.deckId;
-  }
-
-  if (deckEditorState.open) {
-    editorKey = editorKey + "-open";
-  } else {
-    editorKey = editorKey + "-closed";
-  }
 
   return (
     <main className={styles.page}>
@@ -222,7 +204,6 @@ export default function Decks() {
       )}
 
       <DeckEditor
-        key={editorKey}
         open={deckEditorState.open}
         deckId={deckEditorState.deckId}
         decks={decks}
