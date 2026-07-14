@@ -37,6 +37,16 @@ export class DrizzleUsersRepository implements UsersRepository {
     return user ?? null;
   }
 
+  async getUserByResetToken(token:string): Promise<User | null> {
+    const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.passwordResetToken, token))
+        .limit(1);
+
+    return user ?? null;
+  }
+
   async createUser(userData: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<User> {
     const [newUser] = await db
         .insert(users)
@@ -46,13 +56,26 @@ export class DrizzleUsersRepository implements UsersRepository {
     return newUser;
   }
 
-  async updateUser(id: string, updates: UpdateProfileData): Promise<User> {
+  async updateUser(id: string, updates: UpdateProfileData & {
+    passwordResetToken?: string | null;
+    passwordResetExpires?: Date | null
+  }): Promise<User> {
+    const updateData: Partial<User> & {
+      passwordResetToken?: string | null;
+      passwordResetExpires?: Date | null } = {
+      updatedAt: new Date(),
+    };
+
+    if (updates.username !== undefined) updateData.username = updates.username;
+    if (updates.email !== undefined) updateData.email = updates.email;
+    if (updates.displayname !== undefined) updateData.displayname = updates.displayname;
+    if (updates.avatarUrl !== undefined) updateData.avatarUrl = updates.avatarUrl;
+    if (updates.passwordResetToken !== undefined) updateData.passwordResetToken = updates.passwordResetToken;
+    if (updates.passwordResetExpires !== undefined) updateData.passwordResetExpires = updates.passwordResetExpires;
+
     const [updatedUser] = await db
         .update(users)
-        .set({
-          ...updates,
-          updatedAt: new Date(),
-        })
+        .set(updateData)
         .where(eq(users.id, id))
         .returning();
 
@@ -82,5 +105,3 @@ export class DrizzleUsersRepository implements UsersRepository {
     await db.delete(users).where(eq(users.id, id));
   }
 }
-
-export const drizzleUsersRepository = new DrizzleUsersRepository();

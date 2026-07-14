@@ -25,6 +25,10 @@ export class MemoryUsersRepository implements UsersRepository {
     return Array.from(this.users.values()).find((u) => u.username === username) ?? null;
   }
 
+  async getUserByResetToken(token:string): Promise<User | null> {
+    return Array.from(this.users.values()).find((u) => u.passwordResetToken === token) ?? null;
+  }
+
   async createUser(user: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<User> {
     const now = new Date();
     const userData:  User = {
@@ -41,7 +45,7 @@ export class MemoryUsersRepository implements UsersRepository {
     const existingUser = this.users.get(id);
 
     if(!existingUser) {
-      throw Error('User ${id} not found');
+      throw Error(`User ${id} not found`);
     }
     const updatedUser: User = {
       ...existingUser,
@@ -77,5 +81,3 @@ function withoutUndefined<T extends Record<string, unknown>>(data: T): Partial<T
       Object.entries(data).filter(([, value]) => value !== undefined),
   ) as Partial<T>;
 }
-
-export const memoryUsersRepository = new MemoryUsersRepository();
