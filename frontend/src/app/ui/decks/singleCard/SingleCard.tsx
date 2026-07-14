@@ -8,14 +8,12 @@ type SingleCardProps = {
   card: Card;
   isGridView: boolean;
   onEditAction: (cardId: string) => void;
-  registerRefAction?: (el: HTMLDivElement | null) => void;
 };
 
 export default function SingleCard(props: SingleCardProps) {
   const card = props.card;
   const isGridView = props.isGridView;
   const onEditAction = props.onEditAction;
-  const registerRefAction = props.registerRefAction;
 
   let cardClassName = styles.deckCard;
 
@@ -26,7 +24,7 @@ export default function SingleCard(props: SingleCardProps) {
   }
 
   return (
-    <div ref={registerRefAction || null} className={cardClassName}>
+    <div className={cardClassName}>
       <div className={styles.startButtonWrapper}>
         <EditButton
           cardId={card.id}

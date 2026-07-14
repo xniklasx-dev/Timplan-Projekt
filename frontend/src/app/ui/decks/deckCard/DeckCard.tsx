@@ -10,14 +10,9 @@ import styles from "@/app/(app)/decks/page.module.css";
 type DeckCardProps = {
   deck: Deck;
   isGridView: boolean;
-  registerRefAction?: (el: HTMLAnchorElement | null) => void;
 };
 
-export default function DeckCard({
-  deck,
-  isGridView,
-  registerRefAction,
-}: DeckCardProps) {
+export default function DeckCard({ deck, isGridView }: DeckCardProps) {
   const router = useRouter();
 
   const hasCards = deck.totalCards > 0;
@@ -66,7 +61,6 @@ export default function DeckCard({
   return (
     <Link
       href={`/decks/${deck.id}`}
-      ref={registerRefAction}
       className={cardClassName}
       style={deckCardStyle}
     >
