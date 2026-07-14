@@ -36,29 +36,31 @@ export default function RegisterPage() {
     setError("");
     setMessage("");
 
-    try {
-      const user = await register({ username, email, password });
-      login(user);
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
 
+    setLoading(true);
+
+    try {
+      await register({ username, email, password });
       setUsername("");
       setEmail("");
       setPassword("");
-
-      setMessage(
-        "Registration successful! A confirmation email has been sent."
-      );
-
+      setMessage("Registration successful! Please log in.");
       setTimeout(() => router.push("/login"), 2000);
-      
+
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
-        setMessage(err.message);
       } else {
-        setError("Registration failed");
+        setError("Registration failed. Please try again.");
       }
     } finally {
-      setLoading(false);
+      if (password.length < 8) {
+        setLoading(false)
+      }
     }
   }
 
@@ -87,7 +89,7 @@ export default function RegisterPage() {
         <input
           className={styles.input}
           type="password"
-          placeholder="Password"
+          placeholder="Password (min. 8 characters)"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
