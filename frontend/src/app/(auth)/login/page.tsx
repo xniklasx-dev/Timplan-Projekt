@@ -8,7 +8,7 @@ import { login } from "@/app/lib/auth/auth.service";
 import { useAuth } from "@/app/lib/auth/AuthContext";
 import Spinner from "@/app/ui/spinner/Spinner";
 import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
-import ForgotPasswordModal from "./ForgotPasswordModal";
+import Page from "./forgot-password/page";
 
 export default function LoginPage() {
   console.log("USE_MOCK:", process.env.NEXT_PUBLIC_USE_MOCK);
@@ -97,7 +97,7 @@ export default function LoginPage() {
       </p>
     
       {showForgotPassword && (
-        <ForgotPasswordModal onClose={() => setShowForgotPassword(false)} />
+        <Page onClose={() => setShowForgotPassword(false)} />
       )}
     </>
   );
