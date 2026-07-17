@@ -1,23 +1,14 @@
 import { Router } from "express";
-import { env } from "../config/env.js";
-
-import { CardProgressSchema } from "../validation/cardProgressSchemas.js";
+import { CreateCardProgressSchema } from "../validation/cardProgressSchemas.js";
 import { parseUUID } from "../utils/apiUtils.js";
 import { ApiError } from "../middleware/errorHandler.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
 
-import { CardProgressRepository } from "../repositories/cardProgress/cardProgressRepository.js";
-import { mockCardProgressRepository } from "../repositories/cardProgress/memoryCardProgressRepository.js";
-import { drizzleCardProgressRepository } from "../repositories/cardProgress/drizzleCardProgressRepository.js";
+import { cardProgressRepository } from "../repositories/repositories.js";
 
 const router = Router();
 
-const cardProgressRepository: CardProgressRepository =
-  env.dataSource === "memory"
-    ? mockCardProgressRepository
-    : drizzleCardProgressRepository;
-
-async function requireCardAccess( cardId: string, userId: string): Promise<void> {
+async function requireCardAccess(cardId: string, userId: string): Promise<void> {
   if (!await cardProgressRepository.hasDeckAccess(cardId, userId)) {
     throw new ApiError(403, "You do not have access to this card");
   }
@@ -48,11 +39,15 @@ router.post("/decks/:deckId/cards/:cardId/progress", asyncHandler(async (req, re
 
   await requireCardAccess(cardId, userId);
 
-  const parsedData = CardProgressSchema.parse(req.body);
+  const parsedData = CreateCardProgressSchema.parse(req.body);
 
-  const updatedProgress = await cardProgressRepository.updateCardProgress(cardId, userId, parsedData);
+  const createdProgress = await cardProgressRepository.createCardProgress(cardId, userId, parsedData);
 
-  return res.json(updatedProgress);
+  if (!createdProgress) {
+    throw new ApiError(409, "Card progress already exists");
+  }
+
+  return res.status(201).json(createdProgress);
 }));
 
 //PATCH update progress of a card
