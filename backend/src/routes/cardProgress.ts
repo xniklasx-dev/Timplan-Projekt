@@ -7,7 +7,7 @@ import { ApiError } from "../middleware/errorHandler.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
 
 import { CardProgressRepository } from "../repositories/cardProgress/cardProgressRepository.js";
-import { mockCardProgressRepository } from "../repositories/cardProgress/mockCardProgressRepository.js";
+import { mockCardProgressRepository } from "../repositories/cardProgress/memoryCardProgressRepository.js";
 import { drizzleCardProgressRepository } from "../repositories/cardProgress/drizzleCardProgressRepository.js";
 
 const router = Router();
@@ -50,7 +50,7 @@ router.post("/decks/:deckId/cards/:cardId/progress", asyncHandler(async (req, re
 
   const parsedData = CardProgressSchema.parse(req.body);
 
-  const updatedProgress = await cardProgressRepository.upsertCardProgress(cardId, userId, parsedData);
+  const updatedProgress = await cardProgressRepository.updateCardProgress(cardId, userId, parsedData);
 
   return res.json(updatedProgress);
 }));

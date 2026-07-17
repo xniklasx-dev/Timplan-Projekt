@@ -1,12 +1,6 @@
 import { z } from "zod";
 import { cardRatingEnum, cardStateEnum } from "../db/schema.js";
-import {
-  DateTimeSchema,
-  NullableStringSchema,
-  OptionalTagsSchema,
-  TagsSchema,
-  UUIDSchema,
-} from "./commonSchemas.js";
+import {DateTimeSchema,NullableStringSchema,OptionalTagsSchema,TagsSchema,UUIDSchema,} from "./commonSchemas.js";
 
 const CardStateSchema = z.enum(cardStateEnum.enumValues);
 const CardRatingSchema = z.enum(cardRatingEnum.enumValues);
@@ -34,6 +28,20 @@ export const CardProgressSchema = z.object({
     example: "2026-05-06T18:53:54.378Z",}),
 }).openapi("CardProgress");
 
+export const CreateCardProgressSchema = z.object({
+  state: CardStateSchema.default("new").openapi({
+    example: "new",}),
+
+  rating: CardRatingSchema.nullable().optional().openapi({
+    example: "good",}),
+
+  due: DateTimeSchema.optional().openapi({
+    example: "2026-05-06T18:53:54.378Z",}),
+
+  totalReviews: z.number().int().nonnegative().default(0).optional().openapi({
+    example: 10,}),
+});
+
 export const CardProgressUpdateSchema = z.object({
   state: CardStateSchema.optional(),
 
@@ -49,5 +57,5 @@ export const CardProgressUpdateSchema = z.object({
 }).openapi("CardProgressUpdate");
 
 export type CardProgressData = z.output<typeof CardProgressSchema>;
-export type CreateCardProgressData = z.input<typeof CardProgressSchema>;
+export type CreateCardProgressData = z.input<typeof CreateCardProgressSchema>;
 export type CardProgressUpdateData = z.input<typeof CardProgressUpdateSchema>;
