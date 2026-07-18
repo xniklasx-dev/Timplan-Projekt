@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 import styles from "./deckEditor.module.css";
@@ -9,10 +9,9 @@ import type { Deck } from "@/app/lib/definitions";
 import type { DeckWriteData } from "@/app/lib/deck-service";
 
 type DeckEditorProps = {
-  open: boolean;
-  deckId: string | null;
+  deck?: Deck;
   parentDeckId?: string;
-  decks: Deck[];
+  parentDeckName?: string;
   onCloseAction: () => void;
   onSaveAction: (
     deckId: string | null,
@@ -45,30 +44,33 @@ function parseTags(tagsInput: string): string[] {
     .filter((tag) => tag.length > 0);
 }
 
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Failed to save deck";
+}
+
 export default function DeckEditor({
-  open,
-  deckId,
+  deck,
   parentDeckId,
-  decks,
+  parentDeckName,
   onCloseAction,
   onSaveAction,
 }: DeckEditorProps) {
-  const selectedDeck =
-    deckId === null ? undefined : decks.find((deck) => deck.id === deckId);
+  const isNewDeck = deck === undefined;
 
-  const isNewDeck = deckId === null;
-  const deckNotFound = !isNewDeck && selectedDeck === undefined;
   const currentParentDeckId = isNewDeck
-    ? parentDeckId
-    : selectedDeck?.parentDeckId;
+    ? (parentDeckId ?? null)
+    : (deck.parentDeckId ?? null);
 
-  const [name, setName] = useState(selectedDeck?.name ?? "");
-  const [description, setDescription] = useState(
-    selectedDeck?.description ?? "",
-  );
-  const [color, setColor] = useState(selectedDeck?.color ?? "");
+  const [name, setName] = useState(deck?.name ?? "");
+  const [description, setDescription] = useState(deck?.description ?? "");
+  const [color, setColor] = useState(deck?.color ?? "");
+  const [tagsInput, setTagsInput] = useState(deck?.tags.join(", ") ?? "");
 
-  const normalizedColor = color.toLowerCase();
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const trimmedName = name.trim();
+  const normalizedColor = color.trim().toLowerCase();
 
   const colorPickerValue = isHexColor(normalizedColor)
     ? normalizedColor
@@ -82,74 +84,36 @@ export default function DeckEditor({
       ? CUSTOM_COLOR_VALUE
       : "";
 
-  const [tagsInput, setTagsInput] = useState(
-    selectedDeck?.tags.join(", ") ?? "",
-  );
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    setName(selectedDeck?.name ?? "");
-    setDescription(selectedDeck?.description ?? "");
-    setColor(selectedDeck?.color ?? "");
-    setTagsInput(selectedDeck?.tags.join(", ") ?? "");
-    setSaveError(null);
-    setIsSaving(false);
-  }, [open, deckId, parentDeckId, selectedDeck]);
+  const title =
+    trimmedName || (isNewDeck ? "Untitled new deck" : "Untitled deck");
 
   async function handleSave() {
-    const trimmedName = name.trim();
-
-    if (deckNotFound || isSaving || trimmedName.length === 0) {
+    if (isSaving || trimmedName.length === 0) {
       return;
     }
 
     const tags = parseTags(tagsInput);
 
     const deckData: DeckWriteData = {
-      parentDeckId: currentParentDeckId ?? null,
+      parentDeckId: currentParentDeckId,
       name: trimmedName,
       description: description.trim() || null,
       tags: tags.length > 0 ? tags : null,
-      color: color.trim() || null,
+      color: normalizedColor || null,
     };
 
     setSaveError(null);
     setIsSaving(true);
 
     try {
-      await onSaveAction(deckId, deckData);
+      await onSaveAction(deck?.id ?? null, deckData);
       onCloseAction();
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to save deck";
-
-      setSaveError(message);
+      setSaveError(getErrorMessage(error));
     } finally {
       setIsSaving(false);
     }
   }
-
-  if (!open) {
-    return null;
-  }
-
-  let title = name.trim();
-  if (deckNotFound) {
-    title = "Deck not found";
-  } else if (title.length === 0) {
-    title = isNewDeck ? "Untitled new deck" : "Untitled deck";
-  }
-
-  const deckTypeLabel = isNewDeck
-    ? currentParentDeckId
-      ? "New child deck"
-      : "New top-level deck"
-    : `Deck ID: ${deckId}`;
 
   return (
     <div className={styles.overlay} onClick={onCloseAction}>
@@ -174,26 +138,11 @@ export default function DeckEditor({
               {title}
             </h2>
 
-            {!deckNotFound && (
+            {isNewDeck && parentDeckName && (
               <div className={styles.metaRow}>
-                <span className={styles.metaPill}>{deckTypeLabel}</span>
-
-                {selectedDeck && (
-                  <>
-                    <span className={styles.metaPill}>
-                      Cards: {selectedDeck.totalCards}
-                    </span>
-                    <span className={styles.metaPill}>
-                      Due today: {selectedDeck.dueToday}
-                    </span>
-                  </>
-                )}
-
-                {currentParentDeckId && (
-                  <span className={styles.metaPill}>
-                    Parent: {currentParentDeckId}
-                  </span>
-                )}
+                <span className={styles.metaPill}>
+                  New subdeck of {parentDeckName}
+                </span>
               </div>
             )}
           </div>
@@ -204,118 +153,117 @@ export default function DeckEditor({
             onClick={onCloseAction}
             aria-label="Close modal"
           >
-            <Image src="/close_icon.svg" alt="" width={20} height={20} />
+            <Image
+              src="/close_icon.svg"
+              alt=""
+              width={20}
+              height={20}
+              aria-hidden="true"
+            />
           </button>
         </div>
 
-        {deckNotFound ? (
-          <div className={styles.content}>
-            <p className={styles.notFoundText}>
-              The requested deck could not be found.
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className={styles.content}>
-              <div className={styles.fieldGrid}>
-                <div className={`${styles.field} ${styles.fieldFull}`}>
-                  <label className={styles.label} htmlFor="deck-name">
-                    Deck name
-                  </label>
+        <div className={styles.content}>
+          <div className={styles.fieldGrid}>
+            <div className={`${styles.field} ${styles.fieldFull}`}>
+              <label className={styles.label} htmlFor="deck-name">
+                Deck name
+              </label>
+
+              <input
+                id="deck-name"
+                name="name"
+                className={styles.input}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Enter the deck name"
+                required
+              />
+            </div>
+
+            <div className={`${styles.field} ${styles.fieldFull}`}>
+              <label className={styles.label} htmlFor="deck-description">
+                Description
+              </label>
+
+              <textarea
+                id="deck-description"
+                name="description"
+                className={styles.textareaLarge}
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Optional deck description"
+              />
+            </div>
+
+            <div className={`${styles.field} ${styles.fieldFull}`}>
+              <span className={styles.label}>Color</span>
+
+              <div className={styles.colorControls}>
+                <label className={styles.colorPickerGroup}>
                   <input
-                    id="deck-name"
-                    name="name"
-                    className={styles.input}
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    placeholder="Enter the deck name"
-                    required
+                    type="color"
+                    className={styles.colorPicker}
+                    value={colorPickerValue}
+                    onChange={(event) => {
+                      setColor(event.target.value.toLowerCase());
+                    }}
+                    aria-label="Choose a custom deck color"
                   />
-                </div>
 
-                <div className={`${styles.field} ${styles.fieldFull}`}>
-                  <label className={styles.label} htmlFor="deck-description">
-                    Description
-                  </label>
-                  <textarea
-                    id="deck-description"
-                    name="description"
-                    className={styles.textareaLarge}
-                    value={description}
-                    onChange={(event) => setDescription(event.target.value)}
-                    placeholder="Optional deck description"
-                  />
-                </div>
+                  <span className={styles.colorValue}>
+                    {normalizedColor || "No color selected"}
+                  </span>
+                </label>
 
-                <div className={`${styles.field} ${styles.fieldFull}`}>
-                  <span className={styles.label}>Color</span>
+                <select
+                  className={`${styles.input} ${styles.colorPresetSelect}`}
+                  value={presetSelectValue}
+                  onChange={(event) => {
+                    const selectedColor = event.target.value;
 
-                  <div className={styles.colorControls}>
-                    <label className={styles.colorPickerGroup}>
-                      <input
-                        type="color"
-                        className={styles.colorPicker}
-                        value={colorPickerValue}
-                        onChange={(event) => {
-                          setColor(event.target.value.toLowerCase());
-                        }}
-                        aria-label="Choose a custom deck color"
-                      />
+                    if (selectedColor !== CUSTOM_COLOR_VALUE) {
+                      setColor(selectedColor);
+                    }
+                  }}
+                  aria-label="Choose a preset deck color"
+                >
+                  <option value="">No color</option>
 
-                      <span className={styles.colorValue}>
-                        {normalizedColor || "No color selected"}
-                      </span>
-                    </label>
+                  <option value={CUSTOM_COLOR_VALUE} disabled>
+                    Custom color
+                  </option>
 
-                    <select
-                      className={`${styles.input} ${styles.colorPresetSelect}`}
-                      value={presetSelectValue}
-                      onChange={(event) => {
-                        const selectedColor = event.target.value;
-
-                        if (selectedColor !== CUSTOM_COLOR_VALUE) {
-                          setColor(selectedColor);
-                        }
-                      }}
-                      aria-label="Choose a preset deck color"
-                    >
-                      <option value="">No color</option>
-
-                      <option value={CUSTOM_COLOR_VALUE} disabled>
-                        Custom color
-                      </option>
-
-                      {DECK_COLOR_PRESETS.map((preset) => (
-                        <option key={preset.value} value={preset.value}>
-                          {preset.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className={`${styles.field} ${styles.fieldFull}`}>
-                  <label className={styles.label} htmlFor="deck-tags">
-                    Tags
-                  </label>
-                  <textarea
-                    id="deck-tags"
-                    name="tags"
-                    className={styles.textareaSmall}
-                    value={tagsInput}
-                    onChange={(event) => setTagsInput(event.target.value)}
-                    placeholder="Separate tags with commas"
-                  />
-                </div>
+                  {DECK_COLOR_PRESETS.map((preset) => (
+                    <option key={preset.value} value={preset.value}>
+                      {preset.label}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            {saveError && (
-              <p className={styles.notFoundText} role="alert">
-                {saveError}
-              </p>
-            )}
-          </>
+            <div className={`${styles.field} ${styles.fieldFull}`}>
+              <label className={styles.label} htmlFor="deck-tags">
+                Tags
+              </label>
+
+              <textarea
+                id="deck-tags"
+                name="tags"
+                className={styles.textareaSmall}
+                value={tagsInput}
+                onChange={(event) => setTagsInput(event.target.value)}
+                placeholder="Separate tags with commas"
+              />
+            </div>
+          </div>
+        </div>
+
+        {saveError && (
+          <p className={styles.notFoundText} role="alert">
+            {saveError}
+          </p>
         )}
 
         <div className={styles.footer}>
@@ -327,21 +275,19 @@ export default function DeckEditor({
             Close
           </button>
 
-          {!deckNotFound && (
-            <button
-              type="submit"
-              className={`${styles.primaryButton} ${
-                name.trim().length > 0 ? styles.primaryButtonActive : ""
-              }`}
-              disabled={isSaving || name.trim().length === 0}
-            >
-              {isSaving
-                ? "Saving..."
-                : isNewDeck
-                  ? "Create deck"
-                  : "Save changes"}
-            </button>
-          )}
+          <button
+            type="submit"
+            className={`${styles.primaryButton} ${
+              trimmedName.length > 0 ? styles.primaryButtonActive : ""
+            }`}
+            disabled={isSaving || trimmedName.length === 0}
+          >
+            {isSaving
+              ? "Saving..."
+              : isNewDeck
+                ? "Create deck"
+                : "Save changes"}
+          </button>
         </div>
       </form>
     </div>

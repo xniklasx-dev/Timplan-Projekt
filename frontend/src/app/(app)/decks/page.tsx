@@ -142,13 +142,7 @@ export default function Decks() {
       )}
 
       {deckEditorIsOpen && (
-        <DeckEditor
-          open
-          deckId={null}
-          decks={decks}
-          onCloseAction={closeDeckEditor}
-          onSaveAction={saveDeck}
-        />
+        <DeckEditor onCloseAction={closeDeckEditor} onSaveAction={saveDeck} />
       )}
     </main>
   );

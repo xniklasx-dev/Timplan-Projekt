@@ -314,10 +314,11 @@ export default function DeckPage() {
 
       {deckEditorMode !== null && (
         <DeckEditor
-          open
-          deckId={deckEditorMode === "edit" ? currentDeckId : null}
+          deck={deckEditorMode === "edit" ? currentDeck : undefined}
           parentDeckId={deckEditorMode === "create" ? currentDeckId : undefined}
-          decks={displayedDecks}
+          parentDeckName={
+            deckEditorMode === "create" ? currentDeck.name : undefined
+          }
           onCloseAction={closeDeckEditor}
           onSaveAction={saveDeck}
         />
