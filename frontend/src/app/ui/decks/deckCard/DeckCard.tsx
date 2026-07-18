@@ -5,25 +5,16 @@ import { useRouter } from "next/navigation";
 import type { Deck } from "@/app/lib/definitions";
 import type { MouseEvent } from "react";
 import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
-import styles from "@/app/(app)/decks/page.module.css";
+import styles from "../decks.module.css";
 
 type DeckCardProps = {
   deck: Deck;
-  isGridView: boolean;
 };
 
-export default function DeckCard({ deck, isGridView }: DeckCardProps) {
+export default function DeckCard({ deck }: DeckCardProps) {
   const router = useRouter();
 
   const hasCards = deck.totalCards > 0;
-
-  let cardClassName = styles.deckCard;
-
-  if (isGridView) {
-    cardClassName += " " + styles.deckCardGrid;
-  } else {
-    cardClassName += " " + styles.deckCardLine;
-  }
 
   const deckCardStyle = deck.color
     ? {
@@ -61,7 +52,7 @@ export default function DeckCard({ deck, isGridView }: DeckCardProps) {
   return (
     <Link
       href={`/decks/${deck.id}`}
-      className={cardClassName}
+      className={styles.deckCard}
       style={deckCardStyle}
     >
       <div className={styles.startButtonWrapper}>

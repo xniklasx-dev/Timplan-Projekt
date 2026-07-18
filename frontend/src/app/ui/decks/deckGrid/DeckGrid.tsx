@@ -6,7 +6,7 @@ import DeckCard from "../deckCard/DeckCard";
 import SingleCard from "../singleCard/SingleCard";
 import AddItemCard from "../addItemCard/AddItemCard";
 
-import styles from "@/app/(app)/decks/page.module.css";
+import styles from "../decks.module.css";
 
 type AddItemConfig = {
   label: string;
@@ -45,14 +45,13 @@ export default function DeckGrid({
       )}
 
       {decks.map((deck) => (
-        <DeckCard key={`deck-${deck.id}`} deck={deck} isGridView={isGridView} />
+        <DeckCard key={`deck-${deck.id}`} deck={deck} />
       ))}
 
       {cards.map((card) => (
         <SingleCard
           key={`card-${card.id}`}
           card={card}
-          isGridView={isGridView}
           onEditAction={onEditCardAction ?? (() => {})}
         />
       ))}

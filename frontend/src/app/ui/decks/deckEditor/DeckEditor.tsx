@@ -115,6 +115,10 @@ export default function DeckEditor({
     }
   }
 
+  /////////////////////////////////////////////////////////////
+  // FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION //
+  /////////////////////////////////////////////////////////////
+
   return (
     <div className={styles.overlay} onClick={onCloseAction}>
       <form
@@ -165,7 +169,7 @@ export default function DeckEditor({
 
         <div className={styles.content}>
           <div className={styles.fieldGrid}>
-            <div className={`${styles.field} ${styles.fieldFull}`}>
+            <div className={styles.field}>
               <label className={styles.label} htmlFor="deck-name">
                 Deck name
               </label>
@@ -181,7 +185,7 @@ export default function DeckEditor({
               />
             </div>
 
-            <div className={`${styles.field} ${styles.fieldFull}`}>
+            <div className={styles.field}>
               <label className={styles.label} htmlFor="deck-description">
                 Description
               </label>
@@ -196,7 +200,7 @@ export default function DeckEditor({
               />
             </div>
 
-            <div className={`${styles.field} ${styles.fieldFull}`}>
+            <div className={styles.field}>
               <span className={styles.label}>Color</span>
 
               <div className={styles.colorControls}>
@@ -243,7 +247,7 @@ export default function DeckEditor({
               </div>
             </div>
 
-            <div className={`${styles.field} ${styles.fieldFull}`}>
+            <div className={styles.field}>
               <label className={styles.label} htmlFor="deck-tags">
                 Tags
               </label>
@@ -292,4 +296,10 @@ export default function DeckEditor({
       </form>
     </div>
   );
+}
+
+{
+  /*
+  END OF AI PART 
+*/
 }

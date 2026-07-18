@@ -100,10 +100,6 @@ export default function Decks() {
       throw new Error("You must be logged in to save a deck");
     }
 
-    if (deckId !== null) {
-      throw new Error("This page can only create new decks");
-    }
-
     const createdDeck = await createDeck(deckData, token);
 
     setDecks((currentDecks) => [...currentDecks, createdDeck]);
