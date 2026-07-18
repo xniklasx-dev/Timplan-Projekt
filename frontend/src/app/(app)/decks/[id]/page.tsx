@@ -151,10 +151,6 @@ export default function DeckPage() {
     return <main className={styles.page}>Deck not found</main>;
   }
 
-  /*
-   * Separate constants ensure that TypeScript keeps the narrowed types
-   * inside callbacks that may execute later.
-   */
   const authToken = token;
   const currentDeckId = currentDeck.id;
 
@@ -250,10 +246,7 @@ export default function DeckPage() {
       await deleteDeckRequest(currentDeckId, authToken);
       router.push("/decks");
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to delete deck";
-
-      setDeleteError(message);
+      setDeleteError(getErrorMessage(error, "Failed to delete deck"));
     }
   }
 
