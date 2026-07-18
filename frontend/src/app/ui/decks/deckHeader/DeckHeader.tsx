@@ -14,7 +14,7 @@ type DropdownItem = {
 };
 
 type DeckHeaderProps = {
-  title?: string;
+  title: string;
   subtitle?: string;
 
   isGridView: boolean;
