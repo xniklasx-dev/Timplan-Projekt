@@ -25,14 +25,9 @@ function createPageDeck(deckId: string, cards: Card[]): Deck {
     cardIds: cards.map((card) => card.id),
     totalCards: cards.length,
     newCards: 0,
-    learningCards: 0,
-    reviewCards: 0,
     dueToday: 0,
-    studiedToday: 0,
     createdAt: now,
     updatedAt: now,
-    deleted: false,
-    revision: 1,
   };
 }
 
@@ -72,7 +67,9 @@ export default function EditDeckCardsPage() {
         }
       } catch (error) {
         if (!ignoreResult) {
-          setError(error instanceof Error ? error.message : "Could not load cards.");
+          setError(
+            error instanceof Error ? error.message : "Could not load cards.",
+          );
         }
       } finally {
         if (!ignoreResult) {
@@ -88,14 +85,18 @@ export default function EditDeckCardsPage() {
     };
   }, [authIsLoading, deckId, user?.token]);
 
-  const deck = decks.find((entry) => entry.id === deckId) ?? createPageDeck(deckId, deckCards);
+  const deck =
+    decks.find((entry) => entry.id === deckId) ??
+    createPageDeck(deckId, deckCards);
 
   if (isLoading) {
     return (
       <main className={styles.page}>
         <section className={styles.emptyState}>
           <h1 className={styles.title}>Loading cards...</h1>
-          <p className={styles.description}>Fetching this deck&apos;s cards from the backend.</p>
+          <p className={styles.description}>
+            Fetching this deck&apos;s cards from the backend.
+          </p>
         </section>
       </main>
     );
@@ -114,7 +115,12 @@ export default function EditDeckCardsPage() {
 
   return (
     <main className={styles.page}>
-      <DeckCardsEditView key={deck.id} deck={deck} initialCards={deckCards} token={user?.token ?? ""} />
+      <DeckCardsEditView
+        key={deck.id}
+        deck={deck}
+        initialCards={deckCards}
+        token={user?.token ?? ""}
+      />
     </main>
   );
 }

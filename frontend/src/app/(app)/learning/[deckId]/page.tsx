@@ -10,7 +10,11 @@ import cardsData from "@/app/lib/placeholder-cards.json";
 import dateData from "@/app/lib/placeholder-dateData.json";
 
 import { Deck, Card, StatsMap } from "../../../lib/definitions";
-import { getDeckById, getCardsForDeck, rateCard } from "../../../lib/learning-service";
+import {
+  getDeckById,
+  getCardsForDeck,
+  rateCard,
+} from "../../../lib/learning-service";
 
 type RawCard = Omit<Card, "due" | "createdAt" | "updatedAt" | "lastReview"> & {
   due: string;
@@ -39,9 +43,6 @@ function hydrateDeck(raw: RawDeck): Deck {
     ...raw,
     createdAt: new Date(raw.createdAt),
     updatedAt: new Date(raw.updatedAt),
-    lastStudied: raw.lastStudied
-      ? new Date(raw.lastStudied)
-      : undefined,
   };
 }
 
@@ -50,22 +51,22 @@ const decks: Deck[] = rawDecks.map(hydrateDeck);
 const rawCards = cardsData as RawCard[];
 const cards: Card[] = rawCards.map(hydrateCard);
 
-
-
 export default function Learning() {
   const params = useParams();
   const deckId = String(params.deckId);
 
   const selectedDeck = getDeckById(decks, deckId);
   const initialDeckCards: Card[] = selectedDeck
-    ? getCardsForDeck(selectedDeck, cards).filter((card) => card.due <= new Date())
+    ? getCardsForDeck(selectedDeck, cards).filter(
+        (card) => card.due <= new Date(),
+      )
     : [];
 
   const [sessionCards, setSessionCards] = useState(initialDeckCards);
   const [resultCards, setResultCards] = useState<Card[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [learnedCount, setLearnedCount] = useState(0);
-  const [stats, setStats]= useState<StatsMap>(dateData);
+  const [stats, setStats] = useState<StatsMap>(dateData);
   const [isFinished, setIsFinished] = useState(false);
   if (!selectedDeck) {
     return <div>Deck not found</div>;
@@ -76,58 +77,76 @@ export default function Learning() {
   const changeIndex = (index: number) => {
     if (index >= 0 && index < sessionCards.length) {
       setCurrentIndex(index);
-    }};
+    }
+  };
 
   const handlePrev = () => {
     setLearnedCount((prev) => prev - 1);
     changeIndex(currentIndex - 1);
-  }
+  };
 
   const handleSkip = () => {
     setLearnedCount((prev) => prev + 1);
 
     if (currentIndex >= initialDeckCards.length) {
       setIsFinished(true);
-      return;}
+      return;
+    }
 
     setCurrentIndex((prev) => prev + 1);
-  }
-  
+  };
+
   const handleRate = (rating: 0 | 1 | 2 | 3) => {
     const { updatedCard, updatedStats } = rateCard(currentCard, rating, stats);
 
     setStats(updatedStats);
 
     if (rating === 0) {
-    const updatedCards = [...sessionCards];
-    updatedCards[currentIndex] = updatedCard;
-    updatedCards.push(updatedCard);
+      const updatedCards = [...sessionCards];
+      updatedCards[currentIndex] = updatedCard;
+      updatedCards.push(updatedCard);
 
-    setSessionCards(updatedCards);
-  } else {
-    const updatedCards = [...sessionCards];
-    updatedCards[currentIndex] = updatedCard;
-    setSessionCards(updatedCards);
+      setSessionCards(updatedCards);
+    } else {
+      const updatedCards = [...sessionCards];
+      updatedCards[currentIndex] = updatedCard;
+      setSessionCards(updatedCards);
 
-    setResultCards((prev) => [...prev, updatedCard]);
-    setLearnedCount((prev) => prev + 1);
-  }
+      setResultCards((prev) => [...prev, updatedCard]);
+      setLearnedCount((prev) => prev + 1);
+    }
 
+    setCurrentIndex((prev) => prev + 1);
+  };
 
-    setCurrentIndex((prev) => prev + 1);}
-  
-  if (isFinished||!currentCard) {
+  if (isFinished || !currentCard) {
     return (
       <div className={styles.page}>
         <main className={styles.main}>
-          <LearningEndPage deckCards={resultCards} selectedDeck={selectedDeck} />
+          <LearningEndPage
+            deckCards={resultCards}
+            selectedDeck={selectedDeck}
+          />
         </main>
-      </div>);}
+      </div>
+    );
+  }
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>{selectedDeck.name} {learnedCount}/{initialDeckCards.length}</h1>
-        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} onRate={handleRate} onPrev={handlePrev} onSkip={handleSkip} changeIndex={changeIndex} deckLength={initialDeckCards.length} />
+        <h1>
+          {selectedDeck.name} {learnedCount}/{initialDeckCards.length}
+        </h1>
+        <LearnCard
+          key={currentCard.id + "-" + currentIndex}
+          card={currentCard}
+          currentIndex={currentIndex}
+          onRate={handleRate}
+          onPrev={handlePrev}
+          onSkip={handleSkip}
+          changeIndex={changeIndex}
+          deckLength={initialDeckCards.length}
+        />
       </main>
     </div>
   );
