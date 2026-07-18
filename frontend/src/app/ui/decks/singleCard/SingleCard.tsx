@@ -2,7 +2,7 @@
 
 import type { Card } from "@/app/lib/definitions";
 import EditButton from "@/app/ui/buttons/editButton/EditButton";
-import styles from "@/app/(app)/decks/page.module.css";
+import styles from "../decks.module.css";
 
 type SingleCardProps = {
   card: Card;

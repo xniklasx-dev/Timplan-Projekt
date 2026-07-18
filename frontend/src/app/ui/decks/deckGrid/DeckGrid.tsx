@@ -6,7 +6,7 @@ import DeckCard from "../deckCard/DeckCard";
 import SingleCard from "../singleCard/SingleCard";
 import AddItemCard from "../addItemCard/AddItemCard";
 
-import styles from "@/app/(app)/decks/page.module.css";
+import styles from "../decks.module.css";
 
 type AddItemConfig = {
   label: string;

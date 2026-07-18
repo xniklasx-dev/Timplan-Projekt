@@ -5,7 +5,7 @@ import type { ChangeEvent } from "react";
 import DropdownButton from "../../buttons/dropdownButton/DropdownButton";
 import StartLessonButton from "../../buttons/startLessonButton/StartLessonButton";
 
-import styles from "@/app/(app)/decks/page.module.css";
+import styles from "../decks.module.css";
 
 type DropdownItem = {
   label: string;

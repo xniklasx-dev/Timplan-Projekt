@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import styles from "@/app/(app)/decks/page.module.css";
+import styles from "../decks.module.css";
 
 type AddItemCardProps = {
   isGridView: boolean;

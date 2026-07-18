@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Deck } from "@/app/lib/definitions";
 import type { MouseEvent } from "react";
 import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
-import styles from "@/app/(app)/decks/page.module.css";
+import styles from "../decks.module.css";
 
 type DeckCardProps = {
   deck: Deck;
