@@ -20,7 +20,7 @@ type DeckHeaderProps = {
 
   isGridView: boolean;
 
-  onToggleViewAction: (event: ChangeEvent<HTMLInputElement>) => void;
+  onToggleViewAction: (event: ChangeEvent<HTMLInputElement>) => void; // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
 
   onAddDeckAction?: () => void;
 
@@ -37,7 +37,7 @@ export default function DeckHeader({
   title = "",
   subtitle = "",
   isGridView,
-  onToggleViewAction,
+  onToggleViewAction, // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
   onAddDeckAction,
   editButtons = [],
   onDeleteDeckAction,
@@ -125,6 +125,10 @@ export default function DeckHeader({
             </div>
           )}
 
+          {/*
+              FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION 
+          */}
+
           <label className={styles.viewToggle}>
             <input
               type="checkbox"
@@ -163,6 +167,10 @@ export default function DeckHeader({
               </span>
             </div>
           </label>
+
+          {/*
+              END OF AI PART 
+          */}
         </div>
       </div>
 
