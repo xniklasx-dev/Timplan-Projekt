@@ -45,14 +45,13 @@ export default function DeckGrid({
       )}
 
       {decks.map((deck) => (
-        <DeckCard key={`deck-${deck.id}`} deck={deck} isGridView={isGridView} />
+        <DeckCard key={`deck-${deck.id}`} deck={deck} />
       ))}
 
       {cards.map((card) => (
         <SingleCard
           key={`card-${card.id}`}
           card={card}
-          isGridView={isGridView}
           onEditAction={onEditCardAction ?? (() => {})}
         />
       ))}

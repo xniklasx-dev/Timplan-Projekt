@@ -5,6 +5,7 @@ import type { ChangeEvent } from "react";
 import DropdownButton from "../../buttons/dropdownButton/DropdownButton";
 import StartLessonButton from "../../buttons/startLessonButton/StartLessonButton";
 
+import buttonStyles from "../../buttons/buttons.module.css";
 import styles from "../decks.module.css";
 
 type DropdownItem = {
@@ -60,7 +61,9 @@ export default function DeckHeader({
               {onAddDeckAction && (
                 <button
                   type="button"
-                  className={styles.headerIconButton}
+                  className={[buttonStyles.base, buttonStyles.iconButton].join(
+                    " ",
+                  )}
                   onClick={onAddDeckAction}
                   aria-label="Add subdeck"
                   title="Add subdeck"
@@ -88,8 +91,9 @@ export default function DeckHeader({
                 <button
                   type="button"
                   className={[
-                    styles.headerIconButton,
-                    styles.deleteDeckButton,
+                    buttonStyles.base,
+                    buttonStyles.iconButton,
+                    buttonStyles.dangerIconButton,
                   ].join(" ")}
                   onClick={onDeleteDeckAction}
                   aria-label="Delete deck"

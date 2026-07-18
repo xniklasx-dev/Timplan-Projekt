@@ -165,7 +165,7 @@ export default function DeckEditor({
 
         <div className={styles.content}>
           <div className={styles.fieldGrid}>
-            <div className={`${styles.field} ${styles.fieldFull}`}>
+            <div className={styles.field}>
               <label className={styles.label} htmlFor="deck-name">
                 Deck name
               </label>
@@ -181,7 +181,7 @@ export default function DeckEditor({
               />
             </div>
 
-            <div className={`${styles.field} ${styles.fieldFull}`}>
+            <div className={styles.field}>
               <label className={styles.label} htmlFor="deck-description">
                 Description
               </label>
@@ -196,7 +196,7 @@ export default function DeckEditor({
               />
             </div>
 
-            <div className={`${styles.field} ${styles.fieldFull}`}>
+            <div className={styles.field}>
               <span className={styles.label}>Color</span>
 
               <div className={styles.colorControls}>
@@ -243,7 +243,7 @@ export default function DeckEditor({
               </div>
             </div>
 
-            <div className={`${styles.field} ${styles.fieldFull}`}>
+            <div className={styles.field}>
               <label className={styles.label} htmlFor="deck-tags">
                 Tags
               </label>
