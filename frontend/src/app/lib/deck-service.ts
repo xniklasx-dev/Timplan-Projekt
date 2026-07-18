@@ -83,6 +83,14 @@ function toFrontendDeck(backendDeck: BackendDeck): Deck {
   };
 }
 
+async function readDeckResponse(response: Response): Promise<Deck> {
+  await checkResponse(response);
+
+  const backendDeck = (await response.json()) as BackendDeck;
+
+  return toFrontendDeck(backendDeck);
+}
+
 export function applyCardStatsToDeck(deck: Deck, cards: Card[]): Deck {
   const endOfToday = new Date();
   endOfToday.setHours(23, 59, 59, 999);
@@ -142,11 +150,7 @@ export async function getDeck(deckId: string, token: string): Promise<Deck> {
     },
   );
 
-  await checkResponse(response);
-
-  const backendDeck = (await response.json()) as BackendDeck;
-
-  return toFrontendDeck(backendDeck);
+  return readDeckResponse(response);
 }
 
 export async function getDecksWithStats(token: string): Promise<Deck[]> {
@@ -171,11 +175,7 @@ export async function createDeck(
     body: JSON.stringify(deckData),
   });
 
-  await checkResponse(response);
-
-  const backendDeck = (await response.json()) as BackendDeck;
-
-  return toFrontendDeck(backendDeck);
+  return readDeckResponse(response);
 }
 
 export async function updateDeck(
@@ -192,11 +192,7 @@ export async function updateDeck(
     },
   );
 
-  await checkResponse(response);
-
-  const backendDeck = (await response.json()) as BackendDeck;
-
-  return toFrontendDeck(backendDeck);
+  return readDeckResponse(response);
 }
 
 export async function deleteDeck(deckId: string, token: string): Promise<void> {
