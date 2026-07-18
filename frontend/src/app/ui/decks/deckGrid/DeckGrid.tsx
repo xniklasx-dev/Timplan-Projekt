@@ -17,7 +17,7 @@ type DeckGridProps = {
   decks?: Deck[];
   cards?: Card[];
   isGridView: boolean;
-  onEditCardAction: (cardId: string) => void;
+  onEditCardAction?: (cardId: string) => void;
   addItem?: AddItemConfig;
 };
 
@@ -53,7 +53,7 @@ export default function DeckGrid({
           key={`card-${card.id}`}
           card={card}
           isGridView={isGridView}
-          onEditAction={onEditCardAction}
+          onEditAction={onEditCardAction ?? (() => {})}
         />
       ))}
     </section>
