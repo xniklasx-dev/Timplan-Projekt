@@ -2,12 +2,12 @@ import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import {
   BatchDeleteCardsSchema,
   BatchUpsertCardsSchema,
-  CardProgressSchema,
   CardSchema,
   CardUpdateSchema,
   CreateCardSchema,
   UpsertCardSchema,
 } from "../validation/cardSchemas.js";
+import { CardProgressSchema } from "../validation/cardProgressSchemas.js";
 import {
   CreateDateDataSchema,
   DateDataSchema,
