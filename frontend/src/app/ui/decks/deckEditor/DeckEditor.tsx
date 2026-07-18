@@ -115,6 +115,10 @@ export default function DeckEditor({
     }
   }
 
+  /////////////////////////////////////////////////////////////
+  // FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION //
+  /////////////////////////////////////////////////////////////
+
   return (
     <div className={styles.overlay} onClick={onCloseAction}>
       <form
@@ -292,4 +296,10 @@ export default function DeckEditor({
       </form>
     </div>
   );
+}
+
+{
+  /*
+  END OF AI PART 
+*/
 }
