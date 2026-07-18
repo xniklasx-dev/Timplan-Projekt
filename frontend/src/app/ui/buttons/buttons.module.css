@@ -1,3 +1,5 @@
+/* Styles for multiple features */
+
 .base {
   border: 1px solid var(--color-accent);
   background: var(--color-accent);
@@ -35,18 +37,6 @@
     0 0 0 4px color-mix(in srgb, var(--color-accent) 25%, transparent);
 }
 
-.fullWidth {
-  width: 100%;
-}
-
-.accent {
-  padding: 1rem;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
 .accent:not(:disabled):hover,
 .dropdownTrigger:hover {
   box-shadow: 0 0 0 1px var(--color-glow);
@@ -56,40 +46,6 @@
 .dropdownTrigger:active,
 .dropdownItem:active {
   transform: translateY(1px) scale(0.99);
-}
-
-.dangerIconButton {
-  border-color: #ef4444;
-  background: transparent;
-  color: #ef4444;
-}
-
-.dangerIconButton:not(:disabled):hover {
-  border-color: #ef4444;
-  background: #ef4444;
-  color: #ffffff;
-  box-shadow: 0 0 0 2px color-mix(in srgb, #ef4444 30%, transparent);
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdownTrigger {
-  min-height: 48px;
-  padding: 10px 16px;
-  border-radius: 999px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  line-height: 1;
 }
 
 .iconButton,
@@ -113,6 +69,58 @@
 
 .iconButton:not(:disabled):active {
   transform: translateY(1px) scale(0.95);
+}
+
+/* AccentButton */
+
+.fullWidth {
+  width: 100%;
+}
+
+.accent {
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* DeckHeader */
+
+.dangerIconButton {
+  border-color: #ef4444;
+  background: transparent;
+  color: #ef4444;
+}
+
+.dangerIconButton:not(:disabled):hover {
+  border-color: #ef4444;
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #ef4444 30%, transparent);
+}
+
+/* DropdownButton */
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownTrigger {
+  min-height: 48px;
+  padding: 10px 16px;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1;
 }
 
 .dropdownTriggerOpen {
@@ -150,7 +158,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  
+
   box-shadow:
     0 12px 24px rgba(0, 0, 0, 0.28),
     0 0 0 1px rgba(255, 255, 255, 0.02);
@@ -183,7 +191,7 @@
 
   cursor: pointer;
   user-select: none;
-  
+
   transition:
     background 0.15s ease,
     border-color 0.15s ease,
