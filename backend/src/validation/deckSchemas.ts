@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+
 import { z } from "zod";
 import {
   DateTimeSchema,
@@ -6,6 +10,8 @@ import {
   TagsSchema,
   UUIDSchema,
 } from "./commonSchemas.js";
+
+const DeckNameSchema = z.string().trim().min(1, "Deck name must not be empty");
 
 export const DeckSchema = z
   .object({
@@ -21,7 +27,7 @@ export const DeckSchema = z
       example: "1fd82b13-9e3e-4b5e-a29f-d7cc772e66e1",
     }),
 
-    name: z.string().min(1).openapi({
+    name: DeckNameSchema.openapi({
       example: "TypeScript Basics",
     }),
 
@@ -67,9 +73,11 @@ export const CreateDeckSchema = DeckSchema.pick({
       example: "Learn TypeScript fundamentals",
     }),
 
-    tags: TagsSchema.nullable().optional().openapi({
-      example: ["typescript"],
-    }),
+    tags: TagsSchema.nullable()
+      .optional()
+      .openapi({
+        example: ["typescript"],
+      }),
 
     color: z
       .string()
@@ -91,5 +99,7 @@ export const DeckUpdateSchema = CreateDeckSchema.partial()
   .openapi("DeckUpdate");
 
 export type DeckData = z.output<typeof DeckSchema>;
-export type CreateDeckData = z.input<typeof CreateDeckSchema> & { userId: string };
+export type CreateDeckData = z.input<typeof CreateDeckSchema> & {
+  userId: string;
+};
 export type DeckUpdateData = z.input<typeof DeckUpdateSchema>;

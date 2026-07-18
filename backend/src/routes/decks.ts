@@ -46,12 +46,6 @@ router.post(
 
     const input = CreateDeckSchema.parse(req.body);
 
-    const normalizedName = input.name.trim();
-
-    if (!normalizedName) {
-      throw new ApiError(400, "Deck name must not be empty");
-    }
-
     await validateDeckParent({
       decksRepository,
       userId,
@@ -60,7 +54,6 @@ router.post(
 
     const createdDeck = await decksRepository.createDeck({
       ...input,
-      name: normalizedName,
       userId,
     });
 
@@ -82,21 +75,7 @@ router.patch(
 
     const input = DeckUpdateSchema.parse(req.body);
 
-    const updateData = {
-      ...input,
-    };
-
-    if (input.name !== undefined) {
-      const normalizedName = input.name.trim();
-
-      if (!normalizedName) {
-        throw new ApiError(400, "Deck name must not be empty");
-      }
-
-      updateData.name = normalizedName;
-    }
-
-    if (Object.prototype.hasOwnProperty.call(input, "parentDeckId")) {
+    if (input.parentDeckId !== undefined) {
       await validateDeckParent({
         decksRepository,
         userId,
@@ -105,11 +84,7 @@ router.patch(
       });
     }
 
-    const updatedDeck = await decksRepository.updateDeck(
-      deckId,
-      userId,
-      updateData,
-    );
+    const updatedDeck = await decksRepository.updateDeck(deckId, userId, input);
 
     if (!updatedDeck) {
       throw new ApiError(404, "Deck not found");
