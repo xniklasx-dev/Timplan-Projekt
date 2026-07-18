@@ -86,10 +86,6 @@ router.patch(
 
     const updatedDeck = await decksRepository.updateDeck(deckId, userId, input);
 
-    if (!updatedDeck) {
-      throw new ApiError(404, "Deck not found");
-    }
-
     return res.status(200).json(updatedDeck);
   }),
 );
