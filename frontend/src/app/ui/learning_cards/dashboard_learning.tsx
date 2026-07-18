@@ -1,5 +1,5 @@
 "use client";
-import styles from './dashboard_learning.module.css';
+import styles from "./dashboard_learning.module.css";
 
 import decksData from "@/app/lib/placeholder-decks.json";
 import cardsData from "@/app/lib/placeholder-cards.json";
@@ -34,9 +34,6 @@ function hydrateDeck(raw: RawDeck): Deck {
     ...raw,
     createdAt: new Date(raw.createdAt),
     updatedAt: new Date(raw.updatedAt),
-    lastStudied: raw.lastStudied
-      ? new Date(raw.lastStudied)
-      : undefined,
   };
 }
 
@@ -45,22 +42,22 @@ const decks: Deck[] = rawDecks.map(hydrateDeck);
 const rawCards = cardsData as RawCard[];
 const cards: Card[] = rawCards.map(hydrateCard);
 
-
-
 export default function DashboardLearning() {
   const router = useRouter();
-    const recentlyStudiedDecks = decks
+
+  /*
+  const recentlyStudiedDecks = decks
     .filter(deck => deck.lastStudied)
     .sort(
       (a, b) =>
         b.lastStudied!.getTime() - a.lastStudied!.getTime()
     )
     .slice(0, 5);
+*/
 
-
-    
-    return (
-        <div className={styles.outer}>
+  return (
+    <div className={styles.outer}>
+      {/*
             <div className={styles.recentlyStudied}>
               {recentlyStudiedDecks.map(deck => {
                 const deckCards = cards.filter(c => c.deckId === deck.id);
@@ -108,7 +105,7 @@ export default function DashboardLearning() {
                   </div>
                 );
             })}
-            </div>
-        </div>
-    );
+            </div> */}
+    </div>
+  );
 }

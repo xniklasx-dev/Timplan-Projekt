@@ -10,7 +10,6 @@ import {
   createDeck,
   getDecksWithStats,
   DeckWriteData,
-  withChildDeckIds,
 } from "@/app/lib/deck-service";
 
 import styles from "./page.module.css";
@@ -83,10 +82,6 @@ export default function Decks() {
     setIsGridView(event.target.checked);
   }
 
-  function editCard(cardId: string) {
-    console.log("Edit card with ID:", cardId);
-  }
-
   function openAddDeckEditor() {
     setDeckEditorIsOpen(true);
   }
@@ -111,9 +106,7 @@ export default function Decks() {
 
     const createdDeck = await createDeck(deckData, token);
 
-    setDecks((currentDecks) =>
-      withChildDeckIds([...currentDecks, createdDeck]),
-    );
+    setDecks((currentDecks) => [...currentDecks, createdDeck]);
 
     router.push(`/decks/${createdDeck.id}`);
   }
@@ -141,7 +134,6 @@ export default function Decks() {
         <DeckGrid
           decks={topLevelDecks}
           isGridView={isGridView}
-          onEditCardAction={editCard}
           addItem={{
             label: "Add deck",
             onClickAction: openAddDeckEditor,
@@ -150,13 +142,7 @@ export default function Decks() {
       )}
 
       {deckEditorIsOpen && (
-        <DeckEditor
-          open
-          deckId={null}
-          decks={decks}
-          onCloseAction={closeDeckEditor}
-          onSaveAction={saveDeck}
-        />
+        <DeckEditor onCloseAction={closeDeckEditor} onSaveAction={saveDeck} />
       )}
     </main>
   );

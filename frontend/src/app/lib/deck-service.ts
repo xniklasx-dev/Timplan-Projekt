@@ -76,18 +76,19 @@ function toFrontendDeck(backendDeck: BackendDeck): Deck {
 
     totalCards: 0,
     newCards: 0,
-    learningCards: 0,
-    reviewCards: 0,
     dueToday: 0,
-    studiedToday: 0,
-    lastStudied: undefined,
 
     createdAt: new Date(backendDeck.createdAt),
     updatedAt: new Date(backendDeck.updatedAt),
-
-    deleted: false,
-    revision: 1,
   };
+}
+
+async function readDeckResponse(response: Response): Promise<Deck> {
+  await checkResponse(response);
+
+  const backendDeck = (await response.json()) as BackendDeck;
+
+  return toFrontendDeck(backendDeck);
 }
 
 export function applyCardStatsToDeck(deck: Deck, cards: Card[]): Deck {
@@ -102,10 +103,6 @@ export function applyCardStatsToDeck(deck: Deck, cards: Card[]): Deck {
     totalCards: cards.length,
 
     newCards: cards.filter((card) => card.state === "new").length,
-
-    learningCards: cards.filter((card) => card.state === "learning").length,
-
-    reviewCards: cards.filter((card) => card.state === "review").length,
 
     dueToday: cards.filter(
       (card) =>
@@ -153,11 +150,7 @@ export async function getDeck(deckId: string, token: string): Promise<Deck> {
     },
   );
 
-  await checkResponse(response);
-
-  const backendDeck = (await response.json()) as BackendDeck;
-
-  return toFrontendDeck(backendDeck);
+  return readDeckResponse(response);
 }
 
 export async function getDecksWithStats(token: string): Promise<Deck[]> {
@@ -182,11 +175,7 @@ export async function createDeck(
     body: JSON.stringify(deckData),
   });
 
-  await checkResponse(response);
-
-  const backendDeck = (await response.json()) as BackendDeck;
-
-  return toFrontendDeck(backendDeck);
+  return readDeckResponse(response);
 }
 
 export async function updateDeck(
@@ -203,11 +192,7 @@ export async function updateDeck(
     },
   );
 
-  await checkResponse(response);
-
-  const backendDeck = (await response.json()) as BackendDeck;
-
-  return toFrontendDeck(backendDeck);
+  return readDeckResponse(response);
 }
 
 export async function deleteDeck(deckId: string, token: string): Promise<void> {

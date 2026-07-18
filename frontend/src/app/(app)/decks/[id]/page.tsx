@@ -10,10 +10,10 @@ import {
   applyCardStatsToDeck,
   createDeck,
   deleteDeck as deleteDeckRequest,
-  getDecksWithStats,
+  getDecks,
   updateDeck,
   withChildDeckIds,
-  DeckWriteData,
+  type DeckWriteData,
 } from "@/app/lib/deck-service";
 
 import { getCardsByDeckId } from "@/app/lib/card-service";
@@ -30,6 +30,10 @@ import SingleCardEditor from "@/app/ui/cards/singleCardEditor/SingleCardEditor";
 
 type DeckEditorMode = "create" | "edit" | null;
 
+function getErrorMessage(error: unknown, fallback: string): string {
+  return error instanceof Error ? error.message : fallback;
+}
+
 export default function DeckPage() {
   const params = useParams();
   const router = useRouter();
@@ -42,7 +46,7 @@ export default function DeckPage() {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
 
-  const [dataAreLoading, setDataAreLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -51,9 +55,7 @@ export default function DeckPage() {
   const [activeEditorCardId, setActiveEditorCardId] = useState<string | null>(
     null,
   );
-
   const [isCardAddOpen, setIsCardAddOpen] = useState(false);
-
   const [deckEditorMode, setDeckEditorMode] = useState<DeckEditorMode>(null);
 
   useEffect(() => {
@@ -61,36 +63,49 @@ export default function DeckPage() {
       setDecks([]);
       setCards([]);
       setLoadError(null);
-      setDataAreLoading(false);
+      setIsLoading(false);
       return;
     }
 
+    const authToken = token;
     let cancelled = false;
 
     async function loadDeckData() {
-      setDataAreLoading(true);
+      setIsLoading(true);
       setLoadError(null);
 
       try {
-        const [loadedDecks, loadedCards] = await Promise.all([
-          getDecksWithStats(token!),
-          getCardsByDeckId(deckId, token!),
-        ]);
+        const loadedDecks = await getDecks(authToken);
 
-        if (!cancelled) {
-          setDecks(loadedDecks);
-          setCards(loadedCards);
+        const loadedDeckData = await Promise.all(
+          loadedDecks.map(async (deck) => {
+            const deckCards = await getCardsByDeckId(deck.id, authToken);
+
+            return {
+              deck: applyCardStatsToDeck(deck, deckCards),
+              cards: deckCards,
+            };
+          }),
+        );
+
+        if (cancelled) {
+          return;
         }
+
+        setDecks(loadedDeckData.map((item) => item.deck));
+
+        const currentDeckData = loadedDeckData.find(
+          (item) => item.deck.id === deckId,
+        );
+
+        setCards(currentDeckData?.cards ?? []);
       } catch (error) {
         if (!cancelled) {
-          const message =
-            error instanceof Error ? error.message : "Failed to load deck data";
-
-          setLoadError(message);
+          setLoadError(getErrorMessage(error, "Failed to load deck data"));
         }
       } finally {
         if (!cancelled) {
-          setDataAreLoading(false);
+          setIsLoading(false);
         }
       }
     }
@@ -101,12 +116,6 @@ export default function DeckPage() {
       cancelled = true;
     };
   }, [token, deckId]);
-
-  const decksWithUpdatetStats = withChildDeckIds(
-    decks.map((deck) =>
-      deck.id === deckId ? applyCardStatsToDeck(deck, cards) : deck,
-    ),
-  );
 
   if (authIsLoading) {
     return <main className={styles.page}>Loading deck...</main>;
@@ -120,7 +129,7 @@ export default function DeckPage() {
     );
   }
 
-  if (dataAreLoading) {
+  if (isLoading) {
     return <main className={styles.page}>Loading deck...</main>;
   }
 
@@ -132,14 +141,21 @@ export default function DeckPage() {
     );
   }
 
-  const currentDeck = decksWithUpdatetStats.find((deck) => deck.id === deckId);
+  const displayedDecks = decks.map((deck) =>
+    deck.id === deckId ? applyCardStatsToDeck(deck, cards) : deck,
+  );
+
+  const currentDeck = displayedDecks.find((deck) => deck.id === deckId);
 
   if (!currentDeck) {
     return <main className={styles.page}>Deck not found</main>;
   }
 
-  const childDecks = decksWithUpdatetStats.filter(
-    (deck) => deck.parentDeckId === currentDeck.id,
+  const authToken = token;
+  const currentDeckId = currentDeck.id;
+
+  const childDecks = displayedDecks.filter(
+    (deck) => deck.parentDeckId === currentDeckId,
   );
 
   function toggleView(event: ChangeEvent<HTMLInputElement>) {
@@ -197,8 +213,8 @@ export default function DeckPage() {
     const isNewDeck = savedDeckId === null;
 
     const persistedDeck = isNewDeck
-      ? await createDeck(deckData, token!)
-      : await updateDeck(savedDeckId, deckData, token!);
+      ? await createDeck(deckData, authToken)
+      : await updateDeck(savedDeckId, deckData, authToken);
 
     setDecks((currentDecks) => {
       const updatedDecks = isNewDeck
@@ -215,7 +231,7 @@ export default function DeckPage() {
     }
   }
 
-  async function deleteCurrentDeck(): Promise<void> {
+  async function deleteCurrentDeck() {
     const confirmed = window.confirm(
       "Are you sure you want to delete this deck?",
     );
@@ -227,19 +243,16 @@ export default function DeckPage() {
     setDeleteError(null);
 
     try {
-      await deleteDeckRequest(currentDeck!.id, token!);
+      await deleteDeckRequest(currentDeckId, authToken);
       router.push("/decks");
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to delete deck";
-
-      setDeleteError(message);
+      setDeleteError(getErrorMessage(error, "Failed to delete deck"));
     }
   }
 
   return (
     <main className={styles.page}>
-      <DeckNavigator decks={decksWithUpdatetStats} />
+      <DeckNavigator decks={displayedDecks} />
 
       <DeckHeader
         title={currentDeck.name}
@@ -251,7 +264,7 @@ export default function DeckPage() {
           {
             label: "Edit Cards",
             onClick: () => {
-              router.push(`/cards/edit/${currentDeck.id}`);
+              router.push(`/cards/edit/${currentDeckId}`);
             },
           },
           {
@@ -263,7 +276,7 @@ export default function DeckPage() {
           void deleteCurrentDeck();
         }}
         onStartLessonAction={() => {
-          router.push(`/learning/${currentDeck.id}`);
+          router.push(`/learning/${currentDeckId}`);
         }}
         startLessonDisabled={cards.length === 0}
       />
@@ -283,8 +296,8 @@ export default function DeckPage() {
 
       <SingleCardAdd
         open={isCardAddOpen}
-        deckId={deckId}
-        token={token}
+        deckId={currentDeckId}
+        token={authToken}
         onClose={closeCardAdd}
         onCreated={handleCardCreated}
       />
@@ -292,21 +305,20 @@ export default function DeckPage() {
       <SingleCardEditor
         key={activeEditorCardId ?? "closed"}
         open={activeEditorCardId !== null}
-        deckId={deckId}
+        deckId={currentDeckId}
         cardId={activeEditorCardId ?? ""}
-        token={token}
+        token={authToken}
         onClose={closeCardEditor}
         onSaved={closeCardEditor}
       />
 
       {deckEditorMode !== null && (
         <DeckEditor
-          open
-          deckId={deckEditorMode === "edit" ? currentDeck.id : null}
-          parentDeckId={
-            deckEditorMode === "create" ? currentDeck.id : undefined
+          deck={deckEditorMode === "edit" ? currentDeck : undefined}
+          parentDeckId={deckEditorMode === "create" ? currentDeckId : undefined}
+          parentDeckName={
+            deckEditorMode === "create" ? currentDeck.name : undefined
           }
-          decks={decks}
           onCloseAction={closeDeckEditor}
           onSaveAction={saveDeck}
         />
