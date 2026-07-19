@@ -48,7 +48,7 @@ export default function Toast({ message, title = "Saved", durationMs = 3000, onC
         </button>
       )}
 
-      <span className={styles.timerBar} aria-hidden="true" />
+      {onClose && <span className={styles.timerBar} aria-hidden="true" />}
     </div>
   );
 }

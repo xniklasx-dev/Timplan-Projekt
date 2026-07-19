@@ -1,3 +1,8 @@
+/*
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+*/
 .card {
   position: relative;
   display: flex;
@@ -6,8 +11,11 @@
   padding: 16px;
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  background: var(--color-surface);
-  transition: 0.14s ease;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 36%),
+    var(--color-surface);
+  box-shadow: inset 0 1px 0 var(--color-subtle-overlay);
+  transition: background 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease, transform 0.14s ease;
 }
 
 .card:hover {
@@ -19,7 +27,10 @@
 
 .cardNew {
   border-style: dashed;
-  background: var(--color-surface);
+  border-color: color-mix(in srgb, var(--color-accent-hover) 58%, var(--color-border));
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 34%),
+    var(--color-surface);
 }
 
 .header {
@@ -40,6 +51,7 @@
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .title {
@@ -67,7 +79,8 @@
 }
 
 .deleteButton:hover {
-  background: var(--color-subtle-overlay);
+  background: color-mix(in srgb, var(--color-error) 14%, transparent);
+  color: color-mix(in srgb, var(--color-error) 78%, white);
   transform: translateY(-1px);
 }
 
@@ -105,7 +118,7 @@
   padding: 10px 11px;
   border: 1px solid var(--color-border);
   border-radius: 10px;
-  background: #111111;
+  background: linear-gradient(145deg, #111111, #0e0e0e);
   color: var(--color-text);
   font: inherit;
   font-size: 14px;
@@ -127,11 +140,22 @@
   outline: none;
   border-color: var(--color-accent-hover);
   background: #141414;
-  box-shadow: 0 0 0 3px rgba(90, 15, 46, 0.18);
+  box-shadow:
+    0 0 0 3px rgba(90, 15, 46, 0.18),
+    0 10px 24px rgba(0, 0, 0, 0.24);
 }
 
 @media (max-width: 900px) {
   .fields {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .deleteButton,
+  .textareaLarge,
+  .textareaSmall {
+    transition: none;
   }
 }
