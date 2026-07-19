@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+
 import { Router } from "express";
 import swaggerUi from "swagger-ui-express";
 import { getOpenApiDocument } from "../docs/openapi.js";

@@ -8,16 +8,6 @@ import { CardsRepository } from "./cardsRepository.js";
 const cardColumns = getTableColumns(cards);
 
 export class DrizzleCardsRepository implements CardsRepository {
-  async hasDeckAccess(deckId: string, userId: string): Promise<boolean> {
-    const result = await db
-      .select({ id: decks.id })
-      .from(decks)
-      .where(and(eq(decks.id, deckId), eq(decks.userId, userId)))
-      .limit(1);
-
-    return result.length > 0;
-  }
-
   async getCardsByDeckId(deckId: string, userId: string): Promise<Card[]> {
     return db
       .select(cardColumns)

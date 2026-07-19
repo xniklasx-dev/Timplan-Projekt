@@ -31,13 +31,14 @@ function createRepositories(): Repositories {
     loadMockData({
       //pass your memory repository to the mock loader here
       cardsRepository,
+      decksRepository,
       usersRepository,
     });
 
     return {
       //return your memory repository here
       cardsRepository,
-      searchRepository: new MemorySearchRepository(cardsRepository),
+      searchRepository: new MemorySearchRepository(cardsRepository, decksRepository),
       usersRepository,
       decksRepository,
     };
