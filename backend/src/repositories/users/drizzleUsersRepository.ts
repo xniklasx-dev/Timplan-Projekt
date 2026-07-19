@@ -82,5 +82,3 @@ export class DrizzleUsersRepository implements UsersRepository {
     await db.delete(users).where(eq(users.id, id));
   }
 }
-
-export const drizzleUsersRepository = new DrizzleUsersRepository();

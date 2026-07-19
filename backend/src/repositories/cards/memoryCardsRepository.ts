@@ -11,7 +11,6 @@ import { CardsRepository } from "./cardsRepository.js";
 
 export class MemoryCardsRepository implements CardsRepository {
   private readonly cards = new Map<string, Card>();
-  private readonly deckOwners = new Map<string, string>();
 
   loadCards(cards: Card[]): void {
     for (const card of cards) {
@@ -23,34 +22,11 @@ export class MemoryCardsRepository implements CardsRepository {
     return Array.from(this.cards.values());
   }
 
-  getCardsForUser(userId: string): Card[] {
-    return this.getAllCards().filter((card) => this.deckOwners.get(card.deckId) === userId);
-  }
-
-  async hasDeckAccess(deckId: string, userId: string): Promise<boolean> {
-    const ownerId = this.deckOwners.get(deckId);
-
-    if (!ownerId) {
-      this.deckOwners.set(deckId, userId);
-      return true;
-    }
-
-    return ownerId === userId;
-  }
-
-  async getCardsByDeckId(deckId: string, userId: string): Promise<Card[]> {
-    if (!await this.hasDeckAccess(deckId, userId)) {
-      return [];
-    }
-
+  async getCardsByDeckId(deckId: string, _userId: string): Promise<Card[]> {
     return Array.from(this.cards.values()).filter((card) => card.deckId === deckId);
   }
 
-  async getCardById(cardId: string, deckId: string, userId: string): Promise<Card | null> {
-    if (!await this.hasDeckAccess(deckId, userId)) {
-      return null;
-    }
-
+  async getCardById(cardId: string, deckId: string, _userId: string): Promise<Card | null> {
     const card = this.cards.get(cardId);
 
     if (!card || card.deckId !== deckId) {

@@ -1,3 +1,6 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import {
   BatchDeleteCardsSchema,

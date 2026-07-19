@@ -77,5 +77,3 @@ function withoutUndefined<T extends Record<string, unknown>>(data: T): Partial<T
       Object.entries(data).filter(([, value]) => value !== undefined),
   ) as Partial<T>;
 }
-
-export const memoryUsersRepository = new MemoryUsersRepository();
