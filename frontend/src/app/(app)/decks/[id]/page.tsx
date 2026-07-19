@@ -185,6 +185,14 @@ export default function DeckPage() {
     });
   }
 
+  function handleCardSaved(updatedCard: Card) {
+    setCards((currentCards) =>
+      currentCards.map((card) =>
+        card.id === updatedCard.id ? updatedCard : card,
+      ),
+    );
+  }
+
   function openExistingCardEditor(cardId: string) {
     setIsCardAddOpen(false);
     setActiveEditorCardId(cardId);
@@ -303,13 +311,12 @@ export default function DeckPage() {
       />
 
       <SingleCardEditor
-        key={activeEditorCardId ?? "closed"}
         open={activeEditorCardId !== null}
         deckId={currentDeckId}
         cardId={activeEditorCardId ?? ""}
         token={authToken}
         onClose={closeCardEditor}
-        onSaved={closeCardEditor}
+        onSaved={handleCardSaved}
       />
 
       {deckEditorMode !== null && (

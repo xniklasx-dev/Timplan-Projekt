@@ -12,7 +12,6 @@ const links = [
   { href: "/decks", label: "Decks" },
   { href: "/learning", label: "Learning" },
   { href: "/statistic", label: "Stats" },
-  { href: "/testing", label: "Testing" },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -30,7 +29,10 @@ export default function Navbar() {
           Timplan
         </Link>
 
-        <nav className={`${styles.nav} ${searchOpen ? styles.navSearchOpen : ""}`} aria-label="Main navigation">
+        <nav
+          className={`${styles.nav} ${searchOpen ? styles.navSearchOpen : ""}`}
+          aria-label="Main navigation"
+        >
           <div className={styles.navLinks}>
             {links.map((link) => {
               const active = isActive(pathname, link.href);
@@ -48,7 +50,11 @@ export default function Navbar() {
             })}
           </div>
 
-          <NavSearch open={searchOpen} onOpen={() => setSearchOpen(true)} onClose={() => setSearchOpen(false)} />
+          <NavSearch
+            open={searchOpen}
+            onOpen={() => setSearchOpen(true)}
+            onClose={() => setSearchOpen(false)}
+          />
         </nav>
 
         <div className={styles.right}>
