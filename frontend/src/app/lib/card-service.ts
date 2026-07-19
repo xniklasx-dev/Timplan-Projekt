@@ -28,10 +28,8 @@ type ApiErrorResponse = {
   error?: string;
 };
 
-const cardApiBase = apiBaseUrl.replace(/\/+$/, "");
-
 export async function getCardsByDeckId(deckId: string, token: string): Promise<Card[]> {
-  const response = await fetch(`${cardApiBase}/decks/${deckId}/cards`, {
+  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards`, {
     headers: createHeaders(token),
     cache: "no-store",
   });
@@ -41,9 +39,7 @@ export async function getCardsByDeckId(deckId: string, token: string): Promise<C
 }
 
 export async function getCardById(deckId: string, cardId: string, token: string): Promise<Card> {
-  const response = await fetch(
-    `${cardApiBase}/decks/${deckId}/cards/${cardId}`,
-    {
+  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards/${cardId}`, {
       headers: createHeaders(token),
       cache: "no-store",
     },
@@ -54,7 +50,7 @@ export async function getCardById(deckId: string, cardId: string, token: string)
 }
 
 export async function createCard(cardData: CreateCardData, token: string): Promise<Card> {
-  const response = await fetch(`${cardApiBase}/decks/${cardData.deckId}/cards`, {
+  const response = await fetch(`${apiBaseUrl}/decks/${cardData.deckId}/cards`, {
     method: "POST",
     headers: createHeaders(token, true),
     body: JSON.stringify(toCardFormat(cardData)),
@@ -65,9 +61,7 @@ export async function createCard(cardData: CreateCardData, token: string): Promi
 }
 
 export async function updateCard(deckId: string, cardId: string, cardData: CardFormData, token: string): Promise<Card> {
-  const response = await fetch(
-    `${cardApiBase}/decks/${deckId}/cards/${cardId}`,
-    {
+  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards/${cardId}`, {
       method: "PATCH",
       headers: createHeaders(token, true),
       body: JSON.stringify(toCardFormat(cardData)),
@@ -79,7 +73,7 @@ export async function updateCard(deckId: string, cardId: string, cardData: CardF
 }
 
 export async function upsertCards(deckId: string, cardsData: UpsertCardData[], token: string): Promise<Card[]> {
-  const response = await fetch(`${cardApiBase}/decks/${deckId}/cards`, {
+  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards`, {
     method: "PUT",
     headers: createHeaders(token, true),
     body: JSON.stringify({ cards: cardsData.map(toUpsertBody) }),
@@ -90,9 +84,7 @@ export async function upsertCards(deckId: string, cardsData: UpsertCardData[], t
 }
 
 export async function deleteCard(deckId: string, cardId: string, token: string): Promise<void> {
-  const response = await fetch(
-    `${cardApiBase}/decks/${deckId}/cards/${cardId}`,
-    {
+  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards/${cardId}`, {
       method: "DELETE",
       headers: createHeaders(token),
     },
@@ -102,7 +94,7 @@ export async function deleteCard(deckId: string, cardId: string, token: string):
 }
 
 export async function deleteCards(deckId: string, cardIds: string[], token: string): Promise<number> {
-  const response = await fetch(`${cardApiBase}/decks/${deckId}/cards/batch-delete`, {
+  const response = await fetch(`${apiBaseUrl}/decks/${deckId}/cards/batch-delete`, {
     method: "DELETE",
     headers: createHeaders(token, true),
     body: JSON.stringify({ cardIds }),
@@ -143,14 +135,9 @@ async function readResponse<T>(response: Response): Promise<T> {
 
   if (!response.ok) {
     const errorData =
-      typeof responseData === "object" && responseData !== null
-        ? (responseData as ApiErrorResponse)
-        : null;
+      typeof responseData === "object" && responseData !== null ? (responseData as ApiErrorResponse) : null;
 
-    const message =
-      errorData?.message ??
-      errorData?.error ??
-      `Card request failed with status ${response.status}`;
+    const message = errorData?.message ?? errorData?.error ?? `Card request failed with status ${response.status}`;
 
     throw new Error(message);
   }
@@ -158,16 +145,11 @@ async function readResponse<T>(response: Response): Promise<T> {
   return responseData as T;
 }
 
-export function normalizeTags(value: string | string[] | null | undefined): string[] {
-  const tags = Array.isArray(value) ? value : value?.split(",");
-
-  return Array.from(
-    new Set(
-      (tags ?? [])
-        .map((tag) => tag.trim())
-        .filter(Boolean),
-    ),
-  );
+export function normalizeTags(value: string): string[] {
+  return value
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter((tag) => tag !== "");
 }
 
 export function toCardFormat(card: CardFormData): CardFormData {
@@ -175,7 +157,7 @@ export function toCardFormat(card: CardFormData): CardFormData {
     front: card.front.trim(),
     back: card.back.trim(),
     hint: card.hint?.trim() || null,
-    tags: normalizeTags(card.tags),
+    tags: card.tags,
   };
 }
 
@@ -190,7 +172,7 @@ function toFrontendCard(card: BackendCard): Card {
   return {
     ...card,
     hint: card.hint ?? null,
-    tags: normalizeTags(card.tags),
+    tags: card.tags,
     state: "new",
     due: new Date(),
     rating: null,

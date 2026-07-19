@@ -4,9 +4,8 @@
   z-index: 240;
   display: grid;
   place-items: center;
-  padding: clamp(14px, 10px + 0.7vw, 24px);
+  padding: 16px;
   background: rgba(0, 0, 0, 0.62);
-  backdrop-filter: blur(8px);
 }
 
 .modal {
@@ -20,13 +19,7 @@
   border: 1px solid var(--color-border);
   border-radius: 18px;
   background: var(--color-surface);
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.52),
-    inset 0 0 0 1px var(--color-subtle-overlay);
-}
-
-.modal::before {
-  display: none;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.52);
 }
 
 .header {
@@ -73,23 +66,12 @@
 
 .closeButton:hover {
   border-color: var(--color-divider);
-  background: var(--color-subtle-overlay);
-  transform: translateY(-1px);
 }
 
 .content {
   min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
-}
-
-.content::-webkit-scrollbar {
-  width: 8px;
-}
-
-.content::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 999px;
 }
 
 .fieldGrid {
@@ -201,7 +183,6 @@
 .secondaryButton:hover {
   background: var(--color-surface-hover);
   border-color: var(--color-divider);
-  transform: translateY(-1px);
 }
 
 .primaryButton {
@@ -225,8 +206,6 @@
 .primaryButtonActive:hover {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(66, 4, 32, 0.28);
 }
 
 @media (max-width: 760px) {

@@ -30,12 +30,10 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
 
   const tags = normalizeTags(tagsInput);
   const hasChanges = front.trim() !== "" || back.trim() !== "" || hint.trim() !== "" || tags.length > 0;
-  const canCreate = front.trim() !== "" && back.trim() !== "" && Boolean(token) && !isSaving;
+  const canCreate = front.trim() !== "" && back.trim() !== "" && !isSaving;
 
   useEffect(() => {
     if (!open) return;
-
-    document.body.style.overflow = "hidden";
 
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
@@ -53,10 +51,11 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
     }
 
     document.addEventListener("keydown", closeOnEscape);
+    document.body.style.overflow = "hidden";
 
     return () => {
-      document.body.style.overflow = "";
       document.removeEventListener("keydown", closeOnEscape);
+      document.body.style.overflow = "";
     };
   }, [open, hasChanges, isSaving, onClose, showCloseConfirm]);
 
@@ -72,7 +71,7 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
     setShowCloseConfirm(false);
   }, [open, deckId]);
 
-  function requestClose() {
+  function handleClose() {
     if (isSaving) return;
 
     if (hasChanges) {
@@ -100,13 +99,7 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
     setError(null);
 
     try {
-      const createdCard = await createCard({
-        deckId,
-        front,
-        back,
-        hint,
-        tags,
-      }, token);
+      const createdCard = await createCard({ deckId, front, back, hint, tags }, token);
 
       onCreated?.(createdCard);
       setToastMessage("Card created successfully.");
@@ -132,7 +125,7 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
         onCancel={() => setShowCloseConfirm(false)}
       />
 
-      {open && deckId && (
+      {open && (
         <div className={styles.overlay}>
           <div className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="single-card-add-title">
             <div className={styles.header}>
@@ -144,7 +137,7 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
                 </h2>
               </div>
 
-              <button type="button" className={styles.closeButton} onClick={requestClose} aria-label="Close modal">
+              <button type="button" className={styles.closeButton} onClick={handleClose} aria-label="Close modal">
                 <Image src="/close_icon.svg" alt="" width={20} height={20} />
               </button>
             </div>
@@ -158,6 +151,7 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
                     value={front}
                     onChange={(event) => setFront(event.target.value)}
                     placeholder="Enter the card question"
+                    autoFocus
                   />
                 </label>
 
@@ -194,8 +188,8 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
 
                     {tags.length > 0 && (
                       <div className={styles.tagPreview}>
-                        {tags.map((tag) => (
-                          <span key={tag} className={styles.tag}>
+                        {tags.map((tag, index) => (
+                          <span key={`${tag}-${index}`} className={styles.tag}>
                             {tag}
                           </span>
                         ))}
@@ -205,11 +199,11 @@ export default function SingleCardAdd({ open, deckId, token, onClose, onCreated 
                 </label>
               </div>
 
-              {error && <p className={styles.errorText}>{error}</p>}
+              {error && <p className={styles.errorText} role="alert">{error}</p>}
             </div>
 
             <div className={styles.footer}>
-              <button type="button" className={styles.secondaryButton} onClick={requestClose}>
+              <button type="button" className={styles.secondaryButton} onClick={handleClose}>
                 Cancel
               </button>
 

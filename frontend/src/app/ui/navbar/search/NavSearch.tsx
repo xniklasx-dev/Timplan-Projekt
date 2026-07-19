@@ -1,13 +1,17 @@
-'use client';
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
-import styles from './NavSearch.module.css';
-import ResultBox from './resultBox/ResultBox';
-import { useAuth } from '@/app/lib/auth/AuthContext';
-import { search, type SearchResult } from '@/app/lib/search-service';
+import { useAuth } from "@/app/lib/auth/AuthContext";
+import { search, type SearchResult } from "@/app/lib/search-service";
+
+import styles from "./NavSearch.module.css";
+import ResultBox from "./resultBox/ResultBox";
 
 type NavSearchProps = {
   open: boolean;
@@ -25,25 +29,41 @@ export default function NavSearch({ open, onOpen, onClose }: NavSearchProps) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
 
-  const [query, setQuery] = useState(searchParams.get('q') ?? '');
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [items, setItems] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const showResults = open && query.trim().length > 0;
 
-  const writeQueryToUrl = (nextQuery: string, mode: 'push' | 'replace' = 'replace') => {
+  function writeQueryToUrl(nextQuery: string) {
     const params = new URLSearchParams(searchParams.toString());
 
     const trimmed = nextQuery.trim();
-    if (!trimmed) params.delete('q');
-    else params.set('q', trimmed);
+    if (!trimmed) params.delete("q");
+    else params.set("q", trimmed);
 
     const queryString = params.toString();
     const nextUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
-    if (mode === 'push') router.push(nextUrl);
-    else router.replace(nextUrl);
-  };
+    router.replace(nextUrl);
+  }
+
+  function handleQueryChange(event: ChangeEvent<HTMLInputElement>) {
+    const nextQuery = event.target.value;
+    setQuery(nextQuery);
+    writeQueryToUrl(nextQuery);
+  }
+
+  function handleClose() {
+    setQuery("");
+    writeQueryToUrl("");
+    onClose();
+  }
+
+  function handleResultClick() {
+    setQuery("");
+    onClose();
+  }
 
   useEffect(() => {
     if (open) {
@@ -96,32 +116,58 @@ export default function NavSearch({ open, onOpen, onClose }: NavSearchProps) {
   useEffect(() => {
     if (!open) return;
 
-    const onPointerDown = (evt: PointerEvent) => {
-      const target = evt.target as Node | null;
+    function closeSearch() {
+      setQuery("");
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("q");
+      const queryString = params.toString();
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname);
+      onClose();
+    }
+
+    function onPointerDown(event: PointerEvent) {
+      const target = event.target as Node | null;
       if (!target) return;
 
       if (buttonRef.current?.contains(target)) return;
       if (overlayRef.current?.contains(target)) return;
 
-      setQuery('');
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete('q');
-      const queryString = params.toString();
-      router.replace(queryString ? `${pathname}?${queryString}` : pathname);
-      onClose();
-    };
+      closeSearch();
+    }
 
-    document.addEventListener('pointerdown', onPointerDown, true);
-    return () => document.removeEventListener('pointerdown', onPointerDown, true);
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") closeSearch();
+    }
+
+    document.addEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [open, onClose, pathname, router, searchParams]);
 
   return (
     <>
-      <button ref={buttonRef} type="button" className={styles.searchButton} onClick={onOpen} aria-label="Open search">
+      <button
+        ref={buttonRef}
+        type="button"
+        className={styles.searchButton}
+        onClick={onOpen}
+        aria-label="Open search"
+        aria-expanded={open}
+        aria-controls="navbar-search"
+      >
         <Image src="/search_icon.svg" alt="" width={20} height={20} />
       </button>
 
-      <div ref={overlayRef} className={`${styles.searchOverlay} ${open ? styles.searchOpen : ''}`}>
+      <div
+        id="navbar-search"
+        ref={overlayRef}
+        className={`${styles.searchOverlay} ${open ? styles.searchOpen : ""}`}
+        role="search"
+      >
         <Image src="/search_icon.svg" alt="" width={20} height={20} />
 
         <input
@@ -129,12 +175,9 @@ export default function NavSearch({ open, onOpen, onClose }: NavSearchProps) {
           className={styles.searchInput}
           type="search"
           value={query}
-          onChange={(evt) => {
-            const nextQuery = evt.target.value;
-            setQuery(nextQuery);
-            writeQueryToUrl(nextQuery, 'replace');
-          }}
+          onChange={handleQueryChange}
           placeholder="Search..."
+          aria-label="Search decks and cards"
           autoComplete="off"
           spellCheck={false}
         />
@@ -142,30 +185,19 @@ export default function NavSearch({ open, onOpen, onClose }: NavSearchProps) {
         <button
           type="button"
           className={styles.searchClose}
-          onClick={() => {
-            setQuery('');
-            writeQueryToUrl('', 'replace');
-            onClose();
-          }}
+          onClick={handleClose}
           aria-label="Close search"
         >
           <Image src="/close_icon.svg" alt="" width={20} height={20} />
         </button>
 
         <div
-          className={`${styles.resultBoxWrap} ${showResults ? styles.resultBoxOpen : ''}`}
+          className={`${styles.resultBoxWrap} ${showResults ? styles.resultBoxOpen : ""}`}
           aria-hidden={!showResults}
         >
-          <ResultBox
-            query={query}
-            loading={loading}
-            error={error}
-            items={items}
-            onResultClick={() => {
-              setQuery('');
-              onClose();
-            }}
-          />
+          {showResults && (
+            <ResultBox query={query} loading={loading} error={error} items={items} onResultClick={handleResultClick} />
+          )}
         </div>
       </div>
     </>
