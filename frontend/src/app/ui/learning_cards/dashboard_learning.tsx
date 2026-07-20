@@ -121,19 +121,34 @@ export default function DashboardLearning() {
     return <div>{error}</div>;
   }
 
-  const displayedDecks = [...decks]
+  // Da Nik diese Funktion für lastStudied in decks nicht bereitstellen wollte, habe ich mir nun einen Umweg mit einer dadurch schlechteren Laufzeit von Codex generieren lassen
+  const displayedDecks = decks
+    .flatMap((deck) => {
+      const deckCards = cards.filter((card) => card.deckId === deck.id);
+
+      if (deckCards.length === 0) return [];
+
+      const studiedCards = deckCards.filter((card) => card.totalReviews > 0);
+
+      if (studiedCards.length === 0) return [];
+
+      const lastStudied = new Date(
+        Math.max(...studiedCards.map((card) => card.updatedAt.getTime())),
+      );
+
+      return [{ deck, deckCards, lastStudied }];
+    })
     .sort(
       (first, second) =>
-        (second.lastStudied?.getTime() ?? 0) -
-        (first.lastStudied?.getTime() ?? 0),
+        second.lastStudied.getTime() - first.lastStudied.getTime(),
     )
     .slice(0, 5);
-
+  //KI-Teil Ende
+  
   return (
     <div className={styles.outer}>
       <div className={styles.recentlyStudied}>
-        {displayedDecks.map((deck) => {
-          const deckCards = cards.filter((card) => card.deckId === deck.id);
+        {displayedDecks.map(({ deck, deckCards, lastStudied }) => {
           const cardCounts = countCards(deckCards);
           const totalCards = deckCards.length;
           const dueToday = deckCards.filter(
@@ -175,7 +190,7 @@ export default function DashboardLearning() {
               </div>
 
               <p className={styles.lastLearned}>
-                Last learned: {deck.lastStudied?.toLocaleDateString() ?? "Never"}
+                Last learned: {lastStudied.toLocaleDateString()}
               </p>
               <p className={styles.cardsDueToday}>
                 Cards due today: {dueToday}
