@@ -47,6 +47,7 @@ export type Deck = {
   totalCards: number;
   newCards: number;
   dueToday: number;
+  lastStudied?: Date;
 
   createdAt: Date;
   updatedAt: Date;
