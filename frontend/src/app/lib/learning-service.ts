@@ -14,12 +14,12 @@ export function getNextCard(cards: Card[], currentIndex: number): Card | null {
 }
 
 
-export function rateCard(card: Card, rating: 0 | 1 | 2 | 3, stats: StatsMap): { updatedCard: Card; updatedStats: StatsMap } {
+export function rateCard(card: Card, rating: NonNullable<Card["rating"]>, stats: StatsMap): { updatedCard: Card; updatedStats: StatsMap } {
   const now = new Date();
   const todayKey = now.toISOString().split("T")[0];
 
   const difficulty: "easy" | "medium" | "hard" =
-    rating >= 3 ? "hard" : rating === 2 ? "medium" : "easy";
+    rating === "easy" ? "easy" : rating === "good" ? "medium" : "hard";
 
   const todayEntry = stats[todayKey];
   let updatedStats = stats;
@@ -59,13 +59,13 @@ export function rateCard(card: Card, rating: 0 | 1 | 2 | 3, stats: StatsMap): { 
   return { updatedCard, updatedStats };
 }
 
-function calculateNextDueDate(rating: 0 | 1 | 2 | 3): Date {
+function calculateNextDueDate(rating: NonNullable<Card["rating"]>): Date {
   const now = new Date();
   const daysMap = {
-    0: 0, 
-    1: 1, 
-    2: 3,
-    3: 7,
+    again: 0,
+    hard: 1,
+    good: 3,
+    easy: 7,
   };
 
   const days = daysMap[rating];
@@ -74,8 +74,7 @@ function calculateNextDueDate(rating: 0 | 1 | 2 | 3): Date {
 }
 
 
-function getNewState(rating: 0 | 1 | 2 | 3): Card["state"] {
-  if (rating === 0) return "learning";
-  if (rating === 1) return "learning";
+function getNewState(rating: NonNullable<Card["rating"]>): Card["state"] {
+  if (rating === "again" || rating === "hard") return "learning";
   return "review";
 }

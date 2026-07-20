@@ -23,7 +23,7 @@ export type Card = {
   state: "new" | "learning" | "review" | "suspended";
 
   due: Date;
-  rating: "again" | "hard" | "good" | "easy" | 0 | 1 | 2 | 3 | null;
+  rating: "again" | "hard" | "good" | "easy" | null;
 
   totalReviews: number;
 

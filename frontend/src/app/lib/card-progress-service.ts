@@ -14,6 +14,13 @@ export type CardProgress = {
 
 export type CardProgressRating = "again" | "hard" | "good" | "easy" | null;
 
+export class CardProgressApiError extends Error {
+    constructor(message: string, public readonly status: number) {
+        super(message);
+        this.name = "CardProgressApiError";
+    }
+}
+
 export type CreateCardProgressData = {
     state?: Card["state"];
     rating?: CardProgressRating;
@@ -59,7 +66,10 @@ async function readResponse<T>(response: Response): Promise<T> {
     }
     if (!response.ok) {
         const errorData = typeof responseData === "object" && responseData !== null? (responseData as { message?: string; error?: string }) : null;
-        throw new Error(errorData?.message ?? errorData?.error ?? `CardProgress request failed with status ${response.status}`);
+        throw new CardProgressApiError(
+            errorData?.message ?? errorData?.error ?? `CardProgress request failed with status ${response.status}`,
+            response.status,
+        );
     }
     return responseData as T;
 }
