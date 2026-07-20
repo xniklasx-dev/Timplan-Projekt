@@ -22,6 +22,13 @@
       "when": 1783862866128,
       "tag": "0002_remove_deck_icon",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1784556000000,
+      "tag": "0003_add_deck_last_studied",
+      "breakpoints": true
     }
   ]
 }

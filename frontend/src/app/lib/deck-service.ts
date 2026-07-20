@@ -11,6 +11,7 @@ export type BackendDeck = {
   color: string | null;
   createdAt: string;
   updatedAt: string;
+  lastStudied: string | null;
 };
 
 export type DeckWriteData = {
@@ -77,6 +78,9 @@ function toFrontendDeck(backendDeck: BackendDeck): Deck {
     totalCards: 0,
     newCards: 0,
     dueToday: 0,
+    lastStudied: backendDeck.lastStudied
+      ? new Date(backendDeck.lastStudied)
+      : undefined,
 
     createdAt: new Date(backendDeck.createdAt),
     updatedAt: new Date(backendDeck.updatedAt),

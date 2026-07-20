@@ -23,9 +23,10 @@ type MockUser = Omit<User, "createdAt" | "updatedAt"> & {
   updatedAt: string;
 };
 
-type MockDeck = Omit<Deck, "createdAt" | "updatedAt"> & {
+type MockDeck = Omit<Deck, "createdAt" | "updatedAt" | "lastStudied"> & {
   createdAt: string;
   updatedAt: string;
+  lastStudied?: string | null;
 };
 
 export function loadMockData(repositories: MemoryRepositories): void {
@@ -61,5 +62,6 @@ function toDeck(mockDeck: MockDeck): Deck {
     ...mockDeck,
     createdAt: new Date(mockDeck.createdAt),
     updatedAt: new Date(mockDeck.updatedAt),
+    lastStudied: mockDeck.lastStudied ? new Date(mockDeck.lastStudied) : null,
   };
 }

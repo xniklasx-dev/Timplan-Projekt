@@ -34,6 +34,7 @@ function hydrateDeck(raw: RawDeck): Deck {
     ...raw,
     createdAt: new Date(raw.createdAt),
     updatedAt: new Date(raw.updatedAt),
+    lastStudied: raw.lastStudied ? new Date(raw.lastStudied) : undefined,
   };
 }
 

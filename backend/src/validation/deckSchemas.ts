@@ -54,6 +54,10 @@ export const DeckSchema = z
     updatedAt: DateTimeSchema.openapi({
       example: "2026-05-06T18:53:54.378Z",
     }),
+
+    lastStudied: DateTimeSchema.nullable().openapi({
+      example: "2026-05-06T18:53:54.378Z",
+    }),
   })
   .openapi("Deck");
 
