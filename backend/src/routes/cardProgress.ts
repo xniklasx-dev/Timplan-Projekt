@@ -4,12 +4,12 @@ import { getUserId, parseUUID } from "../utils/apiUtils.js";
 import { ApiError } from "../middleware/errorHandler.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
 
-import {cardProgressRepository,cardsRepository,} from "../repositories/repositories.js";
+import { cardProgressRepository, cardsRepository, decksRepository } from "../repositories/repositories.js";
 
 const router = Router();
 
 async function requireCardAccess(cardId: string,deckId: string,userId: string,): Promise<void> {
-  if (!await cardsRepository.hasDeckAccess(deckId, userId)) {
+  if (!await decksRepository.hasDeckAccess(deckId, userId)) {
     throw new ApiError(403, "You do not have access to this deck", true, "forbidden");}
 
   const card = await cardsRepository.getCardById(cardId, deckId, userId);

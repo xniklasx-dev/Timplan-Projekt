@@ -1,0 +1,110 @@
+[
+  {
+    "cardId": "fd326a60-abdf-4077-a8f0-289679ee1ef3",
+    "state": "learning",
+    "rating": "hard",
+    "due": "2026-07-20T09:00:00.000Z",
+    "totalReviews": 2,
+    "createdAt": "2026-01-21T09:00:00.000Z",
+    "updatedAt": "2026-07-18T09:00:00.000Z"
+  },
+  {
+    "cardId": "32357d2e-479c-4fe4-8258-fb118d83b382",
+    "state": "new",
+    "rating": null,
+    "due": "2026-07-21T09:00:00.000Z",
+    "totalReviews": 0,
+    "createdAt": "2026-01-22T09:00:00.000Z",
+    "updatedAt": "2026-01-22T09:00:00.000Z"
+  },
+  {
+    "cardId": "48f88f94-6660-4a45-a8d5-e36683f8d335",
+    "state": "review",
+    "rating": "good",
+    "due": "2026-07-22T09:00:00.000Z",
+    "totalReviews": 6,
+    "createdAt": "2026-01-23T09:00:00.000Z",
+    "updatedAt": "2026-07-17T09:00:00.000Z"
+  },
+  {
+    "cardId": "1518cdae-26b5-4721-a48a-6aea958f091b",
+    "state": "learning",
+    "rating": "again",
+    "due": "2026-07-19T14:00:00.000Z",
+    "totalReviews": 3,
+    "createdAt": "2026-01-24T09:00:00.000Z",
+    "updatedAt": "2026-07-19T08:00:00.000Z"
+  },
+  {
+    "cardId": "59f3914c-3d61-4921-afe4-509e0a8dc04f",
+    "state": "review",
+    "rating": "easy",
+    "due": "2026-07-25T09:00:00.000Z",
+    "totalReviews": 10,
+    "createdAt": "2026-01-25T09:00:00.000Z",
+    "updatedAt": "2026-07-15T09:00:00.000Z"
+  },
+  {
+    "cardId": "f7d3cd87-77e2-40d5-9621-27140c00d539",
+    "state": "suspended",
+    "rating": null,
+    "due": "2026-08-01T09:00:00.000Z",
+    "totalReviews": 4,
+    "createdAt": "2026-01-26T09:00:00.000Z",
+    "updatedAt": "2026-07-10T09:00:00.000Z"
+  },
+  {
+    "cardId": "86afc1f2-aaff-4a6a-900c-d9e16ff3ba42",
+    "state": "review",
+    "rating": "good",
+    "due": "2026-07-23T09:00:00.000Z",
+    "totalReviews": 8,
+    "createdAt": "2026-01-27T09:00:00.000Z",
+    "updatedAt": "2026-07-16T09:00:00.000Z"
+  },
+  {
+    "cardId": "e55c4e65-540c-43da-8de4-77da503746b2",
+    "state": "learning",
+    "rating": "hard",
+    "due": "2026-07-20T12:00:00.000Z",
+    "totalReviews": 1,
+    "createdAt": "2026-01-28T09:00:00.000Z",
+    "updatedAt": "2026-07-19T07:30:00.000Z"
+  },
+  {
+    "cardId": "b3ce299a-41c2-4d53-80cc-b3524cdb34f2",
+    "state": "new",
+    "rating": null,
+    "due": "2026-07-24T09:00:00.000Z",
+    "totalReviews": 0,
+    "createdAt": "2026-01-29T09:00:00.000Z",
+    "updatedAt": "2026-01-29T09:00:00.000Z"
+  },
+  {
+    "cardId": "3e311228-37b1-4024-9101-f325b5584100",
+    "state": "review",
+    "rating": "easy",
+    "due": "2026-07-27T09:00:00.000Z",
+    "totalReviews": 12,
+    "createdAt": "2026-01-30T09:00:00.000Z",
+    "updatedAt": "2026-07-14T09:00:00.000Z"
+  },
+  {
+    "cardId": "2e3bcbc7-e13c-449b-bb18-301573f76f6b",
+    "state": "learning",
+    "rating": "good",
+    "due": "2026-07-21T12:00:00.000Z",
+    "totalReviews": 5,
+    "createdAt": "2026-01-31T09:00:00.000Z",
+    "updatedAt": "2026-07-18T11:00:00.000Z"
+  },
+  {
+    "cardId": "0e2838a0-2f75-4f89-b5bb-bc3a6a17d451",
+    "state": "new",
+    "rating": null,
+    "due": "2026-07-22T12:00:00.000Z",
+    "totalReviews": 0,
+    "createdAt": "2026-02-01T09:00:00.000Z",
+    "updatedAt": "2026-02-01T09:00:00.000Z"
+  }
+]

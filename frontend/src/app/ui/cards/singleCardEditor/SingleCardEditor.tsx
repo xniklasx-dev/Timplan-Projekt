@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import type { Card } from "@/app/lib/definitions";
-import { getCardById, normalizeTags, toCardFormat, updateCard } from "@/app/lib/card-service";
+import { getCardById, normalizeTags, updateCard } from "@/app/lib/card-service";
 import ConfirmDialog from "@/app/ui/confirmDialog/ConfirmDialog";
 import Toast from "@/app/ui/toast/Toast";
 
@@ -84,6 +84,8 @@ export default function SingleCardEditor({ open, deckId, cardId, token, onClose,
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
 
+      if (isSaving) return;
+
       if (showCloseConfirm) return;
 
       if (hasChanges) {
@@ -101,9 +103,11 @@ export default function SingleCardEditor({ open, deckId, cardId, token, onClose,
       document.removeEventListener("keydown", closeOnEscape);
       document.body.style.overflow = "";
     };
-  }, [open, hasChanges, onClose, showCloseConfirm]);
+  }, [open, hasChanges, isSaving, onClose, showCloseConfirm]);
 
   function handleClose() {
+    if (isSaving) return;
+
     if (hasChanges) {
       setShowCloseConfirm(true);
       return;
@@ -141,7 +145,7 @@ export default function SingleCardEditor({ open, deckId, cardId, token, onClose,
     });
   }
 
-  async function saveCard() {
+  async function handleSave() {
     if (!draftCard || !token || !hasChanges || isSaving) return;
 
     if (draftCard.front.trim() === "" || draftCard.back.trim() === "") {
@@ -153,7 +157,7 @@ export default function SingleCardEditor({ open, deckId, cardId, token, onClose,
     setError(null);
 
     try {
-      const savedCard = await updateCard(deckId, cardId, toCardFormat(draftCard), token);
+      const savedCard = await updateCard(deckId, cardId, draftCard, token);
 
       setOriginalCard(savedCard);
       setDraftCard(savedCard);
@@ -170,56 +174,11 @@ export default function SingleCardEditor({ open, deckId, cardId, token, onClose,
 
   if (!open && !toastMessage) return null;
 
-  if (isLoading || !draftCard) {
-    return (
-      <>
-        <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
-        <ConfirmDialog
-          open={showCloseConfirm}
-          title="Close without saving?"
-          message="This card has unsaved changes. If you close now, your edits will be lost."
-          confirmLabel="Close anyway"
-          onConfirm={closeWithoutSaving}
-          onCancel={() => setShowCloseConfirm(false)}
-        />
+  const cardIsLoading = isLoading || (!draftCard && !error);
+  let title = "Card unavailable";
 
-        <div className={styles.overlay}>
-          <div className={styles.modal} role="dialog" aria-modal="true">
-            <div className={styles.header}>
-              <div className={styles.headerMain}>
-                <span className={styles.eyebrow}>Card Edit</span>
-                <h2 className={styles.title}>{isLoading ? "Loading card..." : "Card unavailable"}</h2>
-              </div>
-
-              <button type="button" className={styles.closeButton} onClick={handleClose} aria-label="Close modal">
-                <Image src="/close_icon.svg" alt="" width={20} height={20} />
-              </button>
-            </div>
-
-            <div className={styles.content}>
-              <p className={styles.notFoundText}>
-                {isLoading ? (
-                  "Loading card data..."
-                ) : error ? (
-                  error
-                ) : (
-                  <>
-                    No card was found for id: <strong>{cardId}</strong>
-                  </>
-                )}
-              </p>
-            </div>
-
-            <div className={styles.footer}>
-              <button type="button" className={styles.secondaryButton} onClick={handleClose}>
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
+  if (cardIsLoading) title = "Loading card...";
+  if (draftCard) title = draftCard.front.trim() || "Untitled card";
 
   return (
     <>
@@ -233,7 +192,7 @@ export default function SingleCardEditor({ open, deckId, cardId, token, onClose,
         onCancel={() => setShowCloseConfirm(false)}
       />
 
-      {open && deckId && cardId && (
+      {open && (
         <div className={styles.overlay}>
           <div className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="single-card-edit-title">
             <div className={styles.header}>
@@ -241,7 +200,7 @@ export default function SingleCardEditor({ open, deckId, cardId, token, onClose,
                 <span className={styles.eyebrow}>Card Edit</span>
 
                 <h2 id="single-card-edit-title" className={styles.title}>
-                  {draftCard.front.trim() || "Untitled card"}
+                  {title}
                 </h2>
               </div>
 
@@ -251,62 +210,79 @@ export default function SingleCardEditor({ open, deckId, cardId, token, onClose,
             </div>
 
             <div className={styles.content}>
-              <div className={styles.fieldGrid}>
-                <label className={`${styles.field} ${styles.fieldLarge}`}>
-                  <span className={styles.label}>Question</span>
-                  <textarea
-                    className={styles.textareaLarge}
-                    value={draftCard.front}
-                    onChange={(event) => changeField("front", event.target.value)}
-                    placeholder="Enter the card question"
-                  />
-                </label>
+              {draftCard ? (
+                <>
+                  <div className={styles.fieldGrid}>
+                    <label className={`${styles.field} ${styles.fieldLarge}`}>
+                      <span className={styles.label}>Question</span>
+                      <textarea
+                        className={styles.textareaLarge}
+                        value={draftCard.front}
+                        onChange={(event) => changeField("front", event.target.value)}
+                        placeholder="Enter the card question"
+                        autoFocus
+                      />
+                    </label>
 
-                <label className={`${styles.field} ${styles.fieldLarge}`}>
-                  <span className={styles.label}>Answer</span>
-                  <textarea
-                    className={styles.textareaLarge}
-                    value={draftCard.back}
-                    onChange={(event) => changeField("back", event.target.value)}
-                    placeholder="Enter the card answer"
-                  />
-                </label>
+                    <label className={`${styles.field} ${styles.fieldLarge}`}>
+                      <span className={styles.label}>Answer</span>
+                      <textarea
+                        className={styles.textareaLarge}
+                        value={draftCard.back}
+                        onChange={(event) => changeField("back", event.target.value)}
+                        placeholder="Enter the card answer"
+                      />
+                    </label>
 
-                <label className={styles.field}>
-                  <span className={styles.label}>Hint</span>
-                  <textarea
-                    className={styles.textareaSmall}
-                    value={draftCard.hint ?? ""}
-                    onChange={(event) => changeField("hint", event.target.value)}
-                    placeholder="Optional hint"
-                  />
-                </label>
+                    <label className={styles.field}>
+                      <span className={styles.label}>Hint</span>
+                      <textarea
+                        className={styles.textareaSmall}
+                        value={draftCard.hint ?? ""}
+                        onChange={(event) => changeField("hint", event.target.value)}
+                        placeholder="Optional hint"
+                      />
+                    </label>
 
-                <label className={styles.field}>
-                  <span className={styles.label}>Tags</span>
-                  <div className={styles.tagControl}>
-                    <textarea
-                      className={styles.textareaSmall}
-                      value={tagsInput}
-                      onChange={(event) => changeTags(event.target.value)}
-                      onBlur={() => setTagsInput(draftCard.tags.join(", "))}
-                      placeholder="Enter tags separated by commas"
-                    />
+                    <label className={styles.field}>
+                      <span className={styles.label}>Tags</span>
+                      <div className={styles.tagControl}>
+                        <textarea
+                          className={styles.textareaSmall}
+                          value={tagsInput}
+                          onChange={(event) => changeTags(event.target.value)}
+                          onBlur={() => setTagsInput(draftCard.tags.join(", "))}
+                          placeholder="Enter tags separated by commas"
+                        />
 
-                    {draftCard.tags.length > 0 && (
-                      <div className={styles.tagPreview}>
-                        {draftCard.tags.map((tag) => (
-                          <span key={tag} className={styles.tag}>
-                            {tag}
-                          </span>
-                        ))}
+                        {draftCard.tags.length > 0 && (
+                          <div className={styles.tagPreview}>
+                            {draftCard.tags.map((tag, index) => (
+                              <span key={`${tag}-${index}`} className={styles.tag}>
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </label>
                   </div>
-                </label>
-              </div>
 
-              {error && <p className={styles.errorText}>{error}</p>}
+                  {error && <p className={styles.errorText} role="alert">{error}</p>}
+                </>
+              ) : (
+                <p className={styles.notFoundText} role={cardIsLoading ? "status" : "alert"}>
+                  {cardIsLoading ? (
+                    "Loading card data..."
+                  ) : error ? (
+                    error
+                  ) : (
+                    <>
+                      No card was found for id: <strong>{cardId}</strong>
+                    </>
+                  )}
+                </p>
+              )}
             </div>
 
             <div className={styles.footer}>
@@ -314,14 +290,16 @@ export default function SingleCardEditor({ open, deckId, cardId, token, onClose,
                 Close
               </button>
 
-              <button
-                type="button"
-                className={`${styles.primaryButton} ${hasChanges ? styles.primaryButtonActive : ""}`}
-                onClick={saveCard}
-                disabled={!hasChanges || isSaving}
-              >
-                {isSaving ? "Saving..." : "Save changes"}
-              </button>
+              {draftCard && (
+                <button
+                  type="button"
+                  className={`${styles.primaryButton} ${hasChanges ? styles.primaryButtonActive : ""}`}
+                  onClick={handleSave}
+                  disabled={!hasChanges || isSaving}
+                >
+                  {isSaving ? "Saving..." : "Save changes"}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -346,5 +324,5 @@ function hintKey(hint: string | null | undefined) {
 }
 
 function tagsKey(tags: string[]) {
-  return normalizeTags(tags).join("\u0000");
+  return tags.join(",");
 }

@@ -50,6 +50,7 @@ cd Timplan-Projekt
 
 ### 2. Configure the local environment
 
+#### Environment with memoryRepository
 Create `frontend/.env`:
 
 ```env
@@ -61,6 +62,21 @@ Create `backend/.env`:
 
 ```env
 DATA_SOURCE=memory
+ALLOWED_ORIGINS=http://localhost:3000
+```
+
+#### Environtment with drizzleRepository
+
+```env
+NEXT_PUBLIC_USE_MOCK=false
+NEXT_PUBLIC_API_BASE=http://localhost:3001
+```
+
+Create `backend/.env`:
+
+```env
+DATABASE_URL=""
+DATA_SOURCE=postgres
 ALLOWED_ORIGINS=http://localhost:3000
 ```
 
@@ -87,14 +103,6 @@ This command builds both applications and then starts them together.
 - Frontend: http://localhost:3000
 - Backend: http://localhost:3001
 - Swagger API documentation: http://localhost:3001/docs
-
-## Development
-
-During development, start both applications with file watching and automatic
-reloading:
-
-```bash
-npm run dev
 ```
 
 ## Deployment

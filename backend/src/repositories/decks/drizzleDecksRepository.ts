@@ -1,12 +1,16 @@
 import { and, asc, eq } from "drizzle-orm";
 
 import { db } from "../../db/client.js";
-import { decks, type Deck } from "../../db/schema.js";
-import type {
+import { decks, Deck } from "../../db/schema.js";
+import {
   CreateDeckData,
   DeckUpdateData,
 } from "../../validation/deckSchemas.js";
-import type { DecksRepository } from "./decksRepository.js";
+import { DecksRepository } from "./decksRepository.js";
+
+function deckBelongsToUser(deckId: string, userId: string) {
+  return and(eq(decks.id, deckId), eq(decks.userId, userId));
+}
 
 export class DrizzleDecksRepository implements DecksRepository {
   async hasDeckAccess(deckId: string, userId: string): Promise<boolean> {
@@ -15,7 +19,7 @@ export class DrizzleDecksRepository implements DecksRepository {
         id: decks.id,
       })
       .from(decks)
-      .where(and(eq(decks.id, deckId), eq(decks.userId, userId)))
+      .where(deckBelongsToUser(deckId, userId))
       .limit(1);
 
     return result.length > 0;
@@ -33,7 +37,7 @@ export class DrizzleDecksRepository implements DecksRepository {
     const [deck] = await db
       .select()
       .from(decks)
-      .where(and(eq(decks.id, deckId), eq(decks.userId, userId)))
+      .where(deckBelongsToUser(deckId, userId))
       .limit(1);
 
     return deck ?? null;
@@ -70,7 +74,7 @@ export class DrizzleDecksRepository implements DecksRepository {
         ...deckData,
         updatedAt: new Date(),
       })
-      .where(and(eq(decks.id, deckId), eq(decks.userId, userId)))
+      .where(deckBelongsToUser(deckId, userId))
       .returning();
 
     return updatedDeck ?? null;
@@ -79,7 +83,7 @@ export class DrizzleDecksRepository implements DecksRepository {
   async deleteDeck(deckId: string, userId: string): Promise<boolean> {
     const deletedDecks = await db
       .delete(decks)
-      .where(and(eq(decks.id, deckId), eq(decks.userId, userId)))
+      .where(deckBelongsToUser(deckId, userId))
       .returning({
         id: decks.id,
       });

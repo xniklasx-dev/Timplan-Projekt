@@ -1,3 +1,6 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
 import type { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
@@ -6,7 +9,7 @@ export function registerHealthPaths(registry: OpenAPIRegistry): void {
     method: "get",
     path: "/health",
     tags: ["system"],
-    description: "Health check – returns backend and database status.",
+    description: "Health check – returns the current backend status.",
     responses: {
       200: {
         description: "OK",
@@ -14,9 +17,6 @@ export function registerHealthPaths(registry: OpenAPIRegistry): void {
           "application/json": {
             schema: z.object({
               status: z.string(),
-              backend: z.string(),
-              database: z.string(),
-              durationMs: z.number(),
               timestamp: z.string(),
             }),
           },

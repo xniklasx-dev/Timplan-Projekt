@@ -3,8 +3,7 @@ import type {CardProgressData, CreateCardProgressData, CardProgressUpdateData} f
 import type {CardProgressRepository} from "./cardProgressRepository.js";
 
 type CardsReader = {
-    getAllCards(): Card[];
-    hasDeckAccess(deckId: string, userId: string,): Promise<boolean>;}
+    getAllCards(): Card[];}
 
 export class MemoryCardProgressRepository implements CardProgressRepository {
     private readonly progressByCardId= new Map<string, CardProgress>();
@@ -65,7 +64,7 @@ export class MemoryCardProgressRepository implements CardProgressRepository {
         if (!card) {
             return false;}
 
-    return this.cardsRepository.hasDeckAccess(card.deckId,userId,);
+    return true;
 }}
 
 

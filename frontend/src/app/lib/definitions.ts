@@ -1,5 +1,6 @@
 //This file contains type defitions
-export const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
+export const apiBaseUrl =
+  process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
 
 export type User = {
   id: number;
@@ -45,18 +46,11 @@ export type Deck = {
 
   totalCards: number;
   newCards: number;
-  learningCards: number;
-  reviewCards: number;
   dueToday: number;
-
-  studiedToday: number;
   lastStudied?: Date;
 
   createdAt: Date;
   updatedAt: Date;
-  deleted: boolean;
-
-  revision: number;
 };
 
 export type DateData = {
@@ -65,6 +59,6 @@ export type DateData = {
   easy: number;
   medium: number;
   hard: number;
-}
+};
 
 export type StatsMap = Record<string, DateData>;

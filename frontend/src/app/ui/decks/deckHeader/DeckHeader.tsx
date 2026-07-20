@@ -5,7 +5,8 @@ import type { ChangeEvent } from "react";
 import DropdownButton from "../../buttons/dropdownButton/DropdownButton";
 import StartLessonButton from "../../buttons/startLessonButton/StartLessonButton";
 
-import styles from "@/app/(app)/decks/page.module.css";
+import buttonStyles from "../../buttons/buttons.module.css";
+import styles from "../decks.module.css";
 
 type DropdownItem = {
   label: string;
@@ -14,12 +15,12 @@ type DropdownItem = {
 };
 
 type DeckHeaderProps = {
-  title?: string;
+  title: string;
   subtitle?: string;
 
   isGridView: boolean;
 
-  onToggleViewAction: (event: ChangeEvent<HTMLInputElement>) => void;
+  onToggleViewAction: (event: ChangeEvent<HTMLInputElement>) => void; // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
 
   onAddDeckAction?: () => void;
 
@@ -36,7 +37,7 @@ export default function DeckHeader({
   title = "",
   subtitle = "",
   isGridView,
-  onToggleViewAction,
+  onToggleViewAction, // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
   onAddDeckAction,
   editButtons = [],
   onDeleteDeckAction,
@@ -60,7 +61,9 @@ export default function DeckHeader({
               {onAddDeckAction && (
                 <button
                   type="button"
-                  className={styles.headerIconButton}
+                  className={[buttonStyles.base, buttonStyles.iconButton].join(
+                    " ",
+                  )}
                   onClick={onAddDeckAction}
                   aria-label="Add subdeck"
                   title="Add subdeck"
@@ -88,8 +91,9 @@ export default function DeckHeader({
                 <button
                   type="button"
                   className={[
-                    styles.headerIconButton,
-                    styles.deleteDeckButton,
+                    buttonStyles.base,
+                    buttonStyles.iconButton,
+                    buttonStyles.dangerIconButton,
                   ].join(" ")}
                   onClick={onDeleteDeckAction}
                   aria-label="Delete deck"
@@ -120,6 +124,10 @@ export default function DeckHeader({
               )}
             </div>
           )}
+
+          {/*
+              FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION 
+          */}
 
           <label className={styles.viewToggle}>
             <input
@@ -159,6 +167,10 @@ export default function DeckHeader({
               </span>
             </div>
           </label>
+
+          {/*
+              END OF AI PART 
+          */}
         </div>
       </div>
 

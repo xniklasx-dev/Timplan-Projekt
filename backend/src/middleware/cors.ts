@@ -16,6 +16,6 @@ export function corsMiddleware(): RequestHandler {
       if (allowAll) return callback(null, true);
       return callback(null, allowed.has(origin));
     },
-    credentials: true,
+    credentials: true
   });
 }

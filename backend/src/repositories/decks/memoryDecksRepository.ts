@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+
 import { randomUUID } from "node:crypto";
 
 import type { Deck } from "../../db/schema.js";
@@ -64,6 +68,7 @@ export class MemoryDecksRepository implements DecksRepository {
       color: deckData.color ?? null,
       createdAt: now,
       updatedAt: now,
+      lastStudied: null,
     };
 
     this.decks.set(deck.id, deck);
@@ -145,5 +150,6 @@ function cloneDeck(deck: Deck): Deck {
     tags: deck.tags ? [...deck.tags] : null,
     createdAt: new Date(deck.createdAt),
     updatedAt: new Date(deck.updatedAt),
+    lastStudied: deck.lastStudied ? new Date(deck.lastStudied) : null,
   };
 }
