@@ -22,6 +22,10 @@ export type DeckWriteData = {
   color?: string | null;
 };
 
+export type DeckUpdateLastStudied = {
+  lastStudied: Date;
+};
+
 type ApiErrorResponse = {
   message?: string;
   error?: string;
@@ -184,7 +188,7 @@ export async function createDeck(
 
 export async function updateDeck(
   deckId: string,
-  deckData: DeckWriteData,
+  deckData: DeckWriteData | DeckUpdateLastStudied,
   token: string,
 ): Promise<Deck> {
   const response = await fetch(

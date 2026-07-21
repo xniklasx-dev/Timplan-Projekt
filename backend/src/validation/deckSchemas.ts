@@ -96,6 +96,9 @@ export const CreateDeckSchema = DeckSchema.pick({
   .openapi("CreateDeck");
 
 export const DeckUpdateSchema = CreateDeckSchema.partial()
+  .extend({
+    lastStudied: DateTimeSchema.transform((value) => new Date(value)).optional(),
+  })
   .strict()
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provided",
@@ -106,4 +109,4 @@ export type DeckData = z.output<typeof DeckSchema>;
 export type CreateDeckData = z.input<typeof CreateDeckSchema> & {
   userId: string;
 };
-export type DeckUpdateData = z.input<typeof DeckUpdateSchema>;
+export type DeckUpdateData = z.output<typeof DeckUpdateSchema>;
