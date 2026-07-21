@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -11,7 +11,7 @@ import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { user, login } = useAuth();
+  const { user } = useAuth();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -30,7 +30,7 @@ export default function RegisterPage() {
   if (user) return null;
   
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");

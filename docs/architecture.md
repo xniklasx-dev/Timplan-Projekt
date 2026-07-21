@@ -2,20 +2,21 @@
 
 ## Überblick
 
-Timplan ist eine Lernkarten-Webanwendung mit getrenntem Frontend (Next.js 15) und Backend (Express.js). Die Kommunikation läuft über eine REST-API. Für die Entwicklung ohne Backend gibt es einen Mock-Modus.
+Timplan is a learning anki web app with seperated frontend (by Next.js 15) and backend (by Express.js). 
+The communication is about a REST-API. For the development without the backen we first used a Mock-Modus.
 
 ---
 
 ## Tech Stack
 
-| Bereich    | Technologie                                    |
-| ---------- | ---------------------------------------------- |
-| Frontend   | Next.js 15, React, TypeScript                  |
-| Styling    | CSS Modules, CSS Custom Properties             |
-| Backend    | Node.js, Express.js, TypeScript                |
-| API-Docs   | OpenAPI 3.0, zod-to-openapi, Swagger UI        |
-| Auth       | Token-basiert (Mock), localStorage für Session |
-| Deployment | Azure App Service (Backend)                    |
+| Bereich    | Technologie                                     |
+| ---------- |-------------------------------------------------|
+| Frontend   | Next.js 15, React, TypeScript                   |
+| Styling    | CSS Modules, CSS Custom Properties              |
+| Backend    | Node.js, Express.js, TypeScript                 |
+| API-Docs   | OpenAPI 3.0, zod-to-openapi, Swagger UI         |
+| Auth       | Token-based (Mock), localStorage für Session |
+| Deployment | Azure App Service (Backend)                     |
 
 ---
 
@@ -38,105 +39,163 @@ Timplan-Projekt/
 
 ---
 
-## Ordnerstruktur Frontend
+## Folder-structure Frontend
 
 ```
 frontend/src/app/
-  (app)/                        → Eingeloggte Seiten (mit Navbar)
+  (app)/                        → LoggedInPage (with Navbar)
     layout.tsx                  → App-Shell (Navbar + Main)
     layout.module.css
-    page.tsx                    → Startseite
+    page.tsx                    → StartPage
     page.module.css
     cards/
-      edit/[deckid]/            → Karten eines Decks bearbeiten
+      edit/[deckid]/            → Cards of Decks editing
     decks/
-      page.tsx                  → Deck-Übersicht
-      [id]/                     → Einzelnes Deck
+      page.tsx                  → DeckPage
+      [id]/                     → idDeck
         page.tsx
-        edit/                   → Deck bearbeiten
+        edit/                   → Deck editing
     learning/
-      page.tsx                  → Lern-Übersicht
-      [deckId]/                 → Lernmodus für ein Deck
+      page.tsx                  → LearningPage
+      [deckId]/                 → Learnmode for Decks
     settings/
-      page.tsx                  → Settings-Übersicht
-      account/                  → Account-Einstellungen
-    sharing/                    → Teilen-Seite
-    statistic/                  → Statistiken
+      page.tsx                  → SettingsPage
+      account/                  → AccountSettingsPage
+    sharing/                    → SharingPage
+    statistic/                  → Statistics
 
-  (auth)/                       → Auth-Seiten (ohne Navbar)
-    layout.tsx                  → Zweispaltiges Auth-Layout
-    auth.css
+  (auth)/                       → Auth-Pages (without Navbar)
     login/
+      forgot-password/          → ForgotPasswordPage
       page.tsx                  → LoginPage
-      ForgotPasswordModal.tsx
+      page.module.css
     register/
       page.tsx                  → RegisterPage
+      page.module.css
+    reset-password/
+      page.tsx                  → ResetPasswordPage
+    layout.tsx                  → Auth-Layout
+    auth.css
 
   lib/
-    definitions.ts              → Globale Typ-Definitionen
-    learning-service.ts         → Lernlogik
-    search-function.ts          → Suchfunktion
-    placeholder-cards.json      → Platzhalter-Karteidaten
-    placeholder-decks.json      → Platzhalter-Deckdaten
-    placeholder-users.json      → Platzhalter-Nutzerdaten
-    placeholder-dateData.json   → Platzhalter-Datumsdaten
     auth/
-      AuthContext.tsx           → Globaler Auth-State
-      auth.service.ts           → API-Abstraktionsschicht
-      auth.types.ts             → TypeScript-Interfaces
-
+      AuthContext.tsx           → Global AuthContext
+      auth.service.ts           → authService
+      auth.types.ts             → authInterfaces
+    card-service.ts             → cardService
+    deck-service.ts             → deckService
+    definitions.ts              → Global Type-Definitionen
+    learning-service.ts         → learningService
+    search-function.ts          → searchfunktion
+    placeholder-cards.json     
+    placeholder-dateData.json   
+    placeholder-decks.json      
+    placeholder-users.json      
+    search-service.ts           → searchService
+    weather-service.ts          → weatherService
+    
   mocks/
-    users.mock.ts               → Mock-Nutzer für Entwicklung
+    users.mock.ts               → Mock-User for first developing
 
   ui/
-    globals.css                 → Design Tokens
     buttons/
       accentButton/             → AccentButton
+      dropdownButton/           → DropdownButton
+      editButton/               → EditButton
       startLessonButton/        → StartLessonButton
+      buttons.module.css        
     cards/
       deckCardsEditView/        → DeckCardsEditView + DeckCardsEditItem
+      singleCardAdd/            → SingleCardAdd
       singleCardEditor/         → SingleCardEditor
     chart/
-      Chart.tsx                 → Statistik-Diagramm
+      Chart.tsx                 → StatisticDiagramm
+    confirmDialog/             
+    decks/
+      deckCard/                 → DeckCard
+      deckEditor/               → EditDeck
+      deckGrid/                 → DeckGrid
+      deckHeader/               → DeckHeader
+      deckNavigator/            → NavigateDeck
+      singleCard/               → singleCard
     learning_cards/
-      dashboard_learning.tsx    → Lern-Dashboard
-      learning_cards.tsx        → Lernkarten-Komponente
+      dashboard_learning.tsx    → LearningDashboard 
+      learning_cards.tsx        → LearningCard
+      learning_end_page.tsx     → LearningEndPage
     navbar/
       Navbar.tsx
+      accountMenu/              → AccountMenu with Dropdown
+      search/                   → SearchComponent
       navbar.module.css
-      accountMenu/              → AccountMenu mit Dropdown
-      search/                   → Suchkomponente
+      Navbar.tsx
     spinner/
       Spinner.tsx
-
+    toast/
+      Toast.tsx
+    globals.css                 → GlobalDesign
+    
   layout.tsx                    → Root Layout (AuthProvider, Fonts)
   global.d.ts                   → Globale TypeScript-Deklarationen
 ```
 
 ---
 
-## Ordnerstruktur Backend
+## Folder-structure Backend
 
 ```
 backend/src/
-  app.ts                        → Express-App erstellen
-  server.ts                     → Server starten
   config/
-    env.ts                      → Umgebungsvariablen
-  middleware/
-    cors.ts                     → CORS-Konfiguration
-  routes/
-    index.ts                    → Router-Sammlung
-    auth.ts                     → /auth/*
-    decks.ts                    → /decks/*
-    health.ts                   → /health
-    docs.ts                     → /docs (Swagger UI)
+    env.ts                      → environment variables
+  db/
+    client.ts                   → 
+    schema.ts                   → 
   docs/
-    openapi.ts                  → OpenAPI-Dokument generieren
-    paths.ts                    → Endpunkt-Definitionen
-    registry.ts                 → Schema-Registry
-    schemas.ts                  → Zod-Schemas (Card, Deck, Media)
-    swagger.ts                  → Swagger UI mounten
+    authPath.ts                 → authEndpoints
+    cardPath.ts                 → cardEndpoints
+    deckPath.ts                 → deckEndpoints
+    healthPath.ts               → healthEndpoint
+    openapi.ts                  → generate openApiDocument
+    pathSchemas.ts              → Endpoint Definition
+    registry.ts                 → registrySchema
+    searchPaths.ts              → searchEndpoints
+  middleware/
+    asyncHandler.ts             → 
+    cors.ts                     → CORS-Configuration
+    requireJson.ts              → 
+    tokenVerifier.ts            → 
+  repositories/
+    cards/                      → 
+    decks/                      → 
+    search/                     → 
+    users/                      → 
+    loadMockData.ts             → 
+    repositories.ts             → 
+  routes/
+    auth.ts                     → /auth/*
+    cards.ts                    → /cards/*
+    decks.ts                    → /decks/*
+    docs.ts                     → /docs (Swagger UI)
+    health.ts                   → /health
+    index.ts                    → Routers
+    search.ts                   → /search/*
+  services/
+    deckHierachy.ts             → 
+  utils/
+    apiUtils.ts                 → 
+    deckAuth.ts                 → 
+    envUtils.ts                 → 
+    mailUtils.ts                → 
+  validation/
+    cardSchemas.ts              → 
+    commonSchemas.ts            → 
+    dateDataSchemas.ts          → 
+    deckSchemas.ts              → 
+    schemas.ts                  → 
+    searchSchemas.ts            → 
+    userSchemas.ts              → 
+  
+  app.ts                        → Express-App creates
+  server.ts                     → Server start
 
 backend/mockData/
   mockUsers.json
@@ -145,7 +204,7 @@ backend/mockData/
 
 ---
 
-## Next.js Route-Gruppen
+## Next.js Routes
 
 Das Projekt nutzt Next.js Route-Gruppen um zwei Layout-Bereiche zu trennen:
 

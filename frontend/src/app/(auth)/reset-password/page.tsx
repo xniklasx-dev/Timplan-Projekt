@@ -41,7 +41,7 @@ export default function Page() {
 
         try {
             await resetPassword({ token: token as string, newPassword: password });
-            setMessage("Password successfully reseted. Redirecting to login...");
+            setMessage("Password reset successfully. Redirecting to login...");
             setTimeout(() => router.push("/login"), 2000);
             setPassword("");
             setConfirmPassword("");

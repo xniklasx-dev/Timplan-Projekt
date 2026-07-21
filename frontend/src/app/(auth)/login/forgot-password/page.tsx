@@ -31,7 +31,7 @@ export default function Page({ onClose }: Props) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("SOmething went wrong. Please try again.");
+        setError("Something went wrong. Please try again.");
       }
     } finally {
       setLoading(false);

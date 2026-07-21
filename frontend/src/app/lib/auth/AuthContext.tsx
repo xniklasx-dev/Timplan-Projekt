@@ -17,8 +17,7 @@ const STORAGE_KEY = "timplan_user";
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-
+  
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);

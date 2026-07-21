@@ -9,7 +9,8 @@ export async function sendResetEmail(email: string, resetToken: string): Promise
     const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
 
     await resend.emails.send({
-        from: "no-replay@timplan.com",
+        // later: no-reply@timplan.app
+        from: "onboarding@resend.dev",
         to: email,
         subject: "Reset your password",
         html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
