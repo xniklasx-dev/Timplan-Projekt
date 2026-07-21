@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 
 import { useAuth } from "@/app/lib/auth/AuthContext";
-import {
-  CardProgressApiError,
-  createCardProgress,
-  getCardProgress,
-  updateCardProgress,
-} from "@/app/lib/card-progress-service";
+import {CardProgressApiError,createCardProgress,getCardProgress,updateCardProgress} from "@/app/lib/card-progress-service";
 import { getCardsByDeckId } from "@/app/lib/card-service";
-import { getDeck } from "@/app/lib/deck-service";
+import { getDeck, updateDeck } from "@/app/lib/deck-service";
 import dateData from "@/app/lib/placeholder-dateData.json";
 import LearningEndPage from "@/app/ui/learning_cards/learning_end_page";
 import LearnCard from "../../../ui/learning_cards/learning_cards";
@@ -58,6 +53,9 @@ export default function Learning() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const lastStudiedWasSaved = useRef(false);
+  const currentCard = sessionCards[currentIndex];
 
   useEffect(() => {
     if (authIsLoading) return;
@@ -111,7 +109,20 @@ export default function Learning() {
     };
   }, [authIsLoading, deckId, token]);
 
-  const currentCard = sessionCards[currentIndex];
+  useEffect(() => {
+    if (!token || !selectedDeck || currentCard || resultCards.length === 0 || lastStudiedWasSaved.current) return;
+
+    lastStudiedWasSaved.current = true;
+
+    void updateDeck(deckId, { lastStudied: new Date() }, token).catch((caughtError) => {
+      lastStudiedWasSaved.current = false;
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Last studied could not be saved. Please try again later.",
+      );
+    });
+  }, [currentCard, deckId, resultCards.length, selectedDeck, token]);
 
   const changeIndex = (index: number) => {
     if (index >= 0 && index < sessionCards.length) {

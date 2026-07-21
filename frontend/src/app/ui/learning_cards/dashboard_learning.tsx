@@ -78,15 +78,20 @@ export default function DashboardLearning() {
         setError(null);
 
         const loadedDecks = await getDecks(authToken);
-        const cardLists = await Promise.all(
-          loadedDecks.map((deck) => getCardsByDeckId(deck.id, authToken)),
-        );
+
+        const recentDecks = loadedDecks
+          .filter((deck): deck is Deck & { lastStudied: Date } => deck.lastStudied instanceof Date && !isNaN(deck.lastStudied.getTime()))
+          .sort((first, second) => second.lastStudied.getTime() - first.lastStudied.getTime())
+          .slice(0, 5);
+        
+        const cardLists = await Promise.all(recentDecks.map((deck) => getCardsByDeckId(deck.id, authToken)));
+
         const cardsWithProgress = await Promise.all(
           cardLists.flat().map((card) => addProgressToCard(card, authToken)),
         );
 
         if (!cancelled) {
-          setDecks(loadedDecks);
+          setDecks(recentDecks);
           setCards(cardsWithProgress);
         }
       } catch (caughtError) {
@@ -121,30 +126,10 @@ export default function DashboardLearning() {
     return <div>{error}</div>;
   }
 
-  // Da Nik diese Funktion für lastStudied in decks nicht bereitstellen wollte, habe ich mir nun einen Umweg mit einer dadurch schlechteren Laufzeit von Codex generieren lassen
   const displayedDecks = decks
-    .flatMap((deck) => {
-      const deckCards = cards.filter((card) => card.deckId === deck.id);
+    .filter((deck): deck is Deck & { lastStudied: Date } => deck.lastStudied instanceof Date)
+    .map((deck) => ({deck, deckCards: cards.filter((card) => card.deckId === deck.id), lastStudied: deck.lastStudied!})); 
 
-      if (deckCards.length === 0) return [];
-
-      const studiedCards = deckCards.filter((card) => card.totalReviews > 0);
-
-      if (studiedCards.length === 0) return [];
-
-      const lastStudied = new Date(
-        Math.max(...studiedCards.map((card) => card.updatedAt.getTime())),
-      );
-
-      return [{ deck, deckCards, lastStudied }];
-    })
-    .sort(
-      (first, second) =>
-        second.lastStudied.getTime() - first.lastStudied.getTime(),
-    )
-    .slice(0, 5);
-  //KI-Teil Ende
-  
   return (
     <div className={styles.outer}>
       <div className={styles.recentlyStudied}>
