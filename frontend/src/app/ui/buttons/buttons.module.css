@@ -1,3 +1,5 @@
+/* Styles for multiple features */
+
 .base {
   border: 1px solid var(--color-accent);
   background: var(--color-accent);
@@ -10,7 +12,8 @@
     background 0.15s ease,
     transform 0.08s ease,
     box-shadow 0.15s ease,
-    border-color 0.15s ease;
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .base:hover {
@@ -26,6 +29,50 @@
   box-shadow: none;
 }
 
+.base:focus-visible,
+.dropdownItem:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-glow),
+    0 0 0 4px color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+
+.accent:not(:disabled):hover,
+.dropdownTrigger:hover {
+  box-shadow: 0 0 0 1px var(--color-glow);
+}
+
+.accent:not(:disabled):active,
+.dropdownTrigger:active,
+.dropdownItem:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.iconButton,
+.dropdownTriggerIconOnly {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton:not(:disabled):hover {
+  box-shadow: 0 0 0 2px var(--color-glow);
+}
+
+.iconButton:not(:disabled):active {
+  transform: translateY(1px) scale(0.95);
+}
+
+/* AccentButton */
+
 .fullWidth {
   width: 100%;
 }
@@ -33,42 +80,31 @@
 .accent {
   padding: 1rem;
   border-radius: 12px;
-
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.3px;
-  font-size: 1rem;
 }
 
-.accent:hover {
-  box-shadow: 0 0 0 1px var(--color-glow);
+/* DeckHeader */
+
+.dangerIconButton {
+  border-color: #ef4444;
+  background: transparent;
+  color: #ef4444;
 }
 
-.accent:active {
-  transform: translateY(1px) scale(0.99);
+.dangerIconButton:not(:disabled):hover {
+  border-color: #ef4444;
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #ef4444 30%, transparent);
 }
 
-.iconButton {
-  width: 48px;
-  height: 48px;
-  padding: 0;
-  border-radius: 50%;
+/* DropdownButton */
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.iconButton:hover {
-  box-shadow: 0 0 0 2px var(--color-glow);
-}
-
-.iconButton:active {
-  transform: translateY(1px) scale(0.95);
-}
-
-.buttonText {
-  margin-left: 8px;
-}
+/*
+ * FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION
+ */
 
 .dropdown {
   position: relative;
@@ -89,14 +125,6 @@
   font-weight: 600;
   letter-spacing: 0.3px;
   line-height: 1;
-}
-
-.dropdownTrigger:hover {
-  box-shadow: 0 0 0 1px var(--color-glow);
-}
-
-.dropdownTrigger:active {
-  transform: translateY(1px) scale(0.99);
 }
 
 .dropdownTriggerOpen {
@@ -162,7 +190,6 @@
   align-items: center;
 
   text-align: left;
-  text-decoration: none;
   font-size: 14px;
   font-weight: 500;
 
@@ -182,10 +209,6 @@
   box-shadow: 0 0 0 1px var(--color-glow);
 }
 
-.dropdownItem:active {
-  transform: translateY(1px) scale(0.99);
-}
-
 .dropdownItem:disabled,
 .dropdownItemDisabled {
   opacity: 0.55;
@@ -193,10 +216,19 @@
   pointer-events: none;
 }
 
-.dropdownTrigger:focus-visible,
-.dropdownItem:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 2px var(--color-glow),
-    0 0 0 4px color-mix(in srgb, var(--color-accent) 25%, transparent);
+.dropdownTriggerIconOnly {
+  gap: 4px;
 }
+
+.dropdownTriggerIcon {
+  flex-shrink: 0;
+}
+
+.dropdownTriggerIconOnly .dropdownChevron {
+  margin-left: -1px;
+  font-size: 10px;
+}
+
+/*
+ * END OF AI PART
+ */

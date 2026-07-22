@@ -27,7 +27,8 @@ export const cardRatingEnum = pgEnum("card_rating", [
   "easy",
 ]);
 
-export const users = pgTable("users",
+export const users = pgTable(
+  "users",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     email: text("email").notNull(),
@@ -45,12 +46,11 @@ export const users = pgTable("users",
       .notNull()
       .defaultNow(),
   },
-  (table) => [
-    uniqueIndex("users_email_unique").on(table.email),
-  ],
+  (table) => [uniqueIndex("users_email_unique").on(table.email)],
 );
 
-export const decks = pgTable("decks",
+export const decks = pgTable(
+  "decks",
   {
     id: uuid("id").primaryKey().defaultRandom(),
 
@@ -75,12 +75,12 @@ export const decks = pgTable("decks",
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+
+    lastStudied: timestamp("last_studied", { withTimezone: true }),
   },
   (table) => [
     index("decks_user_id_idx").on(table.userId),
-    index("decks_parent_deck_id_idx").on(
-      table.parentDeckId,
-    ),
+    index("decks_parent_deck_id_idx").on(table.parentDeckId),
   ],
 );
 
@@ -114,10 +114,7 @@ export const cards = pgTable(
       .defaultNow(),
   },
   (table) => [
-    index("cards_deck_id_created_at_idx").on(
-      table.deckId,
-      table.createdAt,
-    ),
+    index("cards_deck_id_created_at_idx").on(table.deckId, table.createdAt),
 
     index("cards_tags_idx").using("gin", table.tags),
   ],
@@ -133,19 +130,13 @@ export const cardProgress = pgTable(
         onUpdate: "cascade",
       }),
 
-    state: cardStateEnum("state")
-      .notNull()
-      .default("new"),
+    state: cardStateEnum("state").notNull().default("new"),
 
     rating: cardRatingEnum("rating"),
 
-    due: timestamp("due", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    due: timestamp("due", { withTimezone: true }).notNull().defaultNow(),
 
-    totalReviews: integer("total_reviews")
-      .notNull()
-      .default(0),
+    totalReviews: integer("total_reviews").notNull().default(0),
 
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -158,14 +149,12 @@ export const cardProgress = pgTable(
   (table) => [
     index("card_progress_due_idx").on(table.due),
 
-    index("card_progress_state_due_idx").on(
-      table.state,
-      table.due,
-    ),
+    index("card_progress_state_due_idx").on(table.state, table.due),
   ],
 );
 
-export const dateData = pgTable("date_data",
+export const dateData = pgTable(
+  "date_data",
   {
     id: uuid("id").primaryKey().defaultRandom(),
 
@@ -173,17 +162,16 @@ export const dateData = pgTable("date_data",
       .notNull()
       .references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
-    date: date("date").notNull().default(sql`date(now())`),
+    date: date("date")
+      .notNull()
+      .default(sql`date(now())`),
 
     easy: bigint("easy", { mode: "number" }).notNull().default(0),
     medium: bigint("medium", { mode: "number" }).notNull().default(0),
     hard: bigint("hard", { mode: "number" }).notNull().default(0),
   },
   (table) => [
-    uniqueIndex("date_data_user_id_date_unique").on(
-      table.userId,
-      table.date,
-    ),
+    uniqueIndex("date_data_user_id_date_unique").on(table.userId, table.date),
 
     index("date_data_user_id_idx").on(table.userId),
   ],

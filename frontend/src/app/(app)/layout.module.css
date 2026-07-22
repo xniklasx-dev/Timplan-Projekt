@@ -1,14 +1,12 @@
 .shell {
   display: flex;
   flex-direction: column;
-  min-height: 100svh;
+  height: 100svh;
 }
 
-.navbar {
-  height: 10svh;
-}
-
-.main {
-  height: 90svh;
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
   padding: 24px;
 }

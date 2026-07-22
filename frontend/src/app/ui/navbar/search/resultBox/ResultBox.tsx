@@ -1,30 +1,31 @@
-'use client';
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+"use client";
 
-import Link from 'next/link';
-import styles from './ResultBox.module.css';
+import Link from "next/link";
 
-interface Props {
+import type { SearchResult } from "@/app/lib/search-service";
+
+import styles from "./ResultBox.module.css";
+
+type ResultBoxProps = {
   query: string;
   loading: boolean;
   error: boolean;
-  items: Array<{
-    id: string;
-    title: string;
-    link: string;
-    type: 'deck' | 'card';
-  }>;
+  items: SearchResult[];
   onResultClick: () => void;
-}
+};
 
-export default function ResultBox({ query, loading, error, items, onResultClick }: Props) {
+export default function ResultBox({ query, loading, error, items, onResultClick }: ResultBoxProps) {
   const trimmedQuery = query.trim();
   const resultAmount = items.length;
 
-  let statusText = '';
+  let statusText = "";
   if (loading) {
     statusText = `Searching for "${trimmedQuery}"…`;
   } else if (error) {
-    statusText = 'Search could not be loaded.';
+    statusText = "Search could not be loaded.";
   } else if (resultAmount === 0) {
     statusText = `No results for "${trimmedQuery}".`;
   } else {
@@ -57,7 +58,7 @@ export default function ResultBox({ query, loading, error, items, onResultClick 
               <li key={`${item.type}-${item.id}`}>
                 <Link className={styles.link} href={item.link} onClick={onResultClick}>
                   <span className={styles.title}>{item.title}</span>
-                  <span className={styles.type}>{item.type}</span>
+                  <span className={styles.type} data-type={item.type}>{item.type}</span>
                 </Link>
               </li>
             ))}

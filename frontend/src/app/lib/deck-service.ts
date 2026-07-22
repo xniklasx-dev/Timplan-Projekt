@@ -1,4 +1,5 @@
-import { apiBaseUrl, type Deck } from "./definitions";
+import { apiBaseUrl, type Card, type Deck } from "./definitions";
+import { getCardsByDeckId } from "./card-service";
 
 export type BackendDeck = {
   id: string;
@@ -10,6 +11,7 @@ export type BackendDeck = {
   color: string | null;
   createdAt: string;
   updatedAt: string;
+  lastStudied: string | null;
 };
 
 export type DeckWriteData = {
@@ -20,59 +22,50 @@ export type DeckWriteData = {
   color?: string | null;
 };
 
+export type DeckUpdateLastStudied = {
+  lastStudied: Date;
+};
+
 type ApiErrorResponse = {
-  status?: string;
   message?: string;
   error?: string;
 };
 
 const deckApiBase = apiBaseUrl.replace(/\/+$/, "");
 
-function createHeaders(token: string, withBody = false): HeadersInit {
+function createHeaders(token: string, includeContentType = false): HeadersInit {
   const headers: Record<string, string> = {
     Accept: "application/json",
     Authorization: `Bearer ${token}`,
   };
 
-  if (withBody) {
+  if (includeContentType) {
     headers["Content-Type"] = "application/json";
   }
 
   return headers;
 }
 
-async function readResponse<T>(response: Response): Promise<T> {
-  if (response.status === 204) {
-    return undefined as T;
+async function checkResponse(response: Response): Promise<void> {
+  if (response.ok) {
+    return;
   }
+
+  let message = `Deck request failed with status ${response.status}`;
 
   const responseText = await response.text();
 
-  let responseData: unknown;
-
   if (responseText) {
     try {
-      responseData = JSON.parse(responseText);
+      const errorData = JSON.parse(responseText) as ApiErrorResponse;
+
+      message = errorData.message ?? errorData.error ?? message;
     } catch {
-      responseData = responseText;
+      message = responseText;
     }
   }
 
-  if (!response.ok) {
-    const errorData =
-      typeof responseData === "object" && responseData !== null
-        ? (responseData as ApiErrorResponse)
-        : null;
-
-    const message =
-      errorData?.message ??
-      errorData?.error ??
-      `Deck request failed with status ${response.status}`;
-
-    throw new Error(message);
-  }
-
-  return responseData as T;
+  throw new Error(message);
 }
 
 function toFrontendDeck(backendDeck: BackendDeck): Deck {
@@ -80,7 +73,7 @@ function toFrontendDeck(backendDeck: BackendDeck): Deck {
     id: backendDeck.id,
     name: backendDeck.name,
     description: backendDeck.description ?? "",
-    tags: backendDeck.tags ? [...backendDeck.tags] : [],
+    tags: backendDeck.tags ?? [],
     cardIds: [],
     color: backendDeck.color ?? "",
     parentDeckId: backendDeck.parentDeckId ?? undefined,
@@ -88,53 +81,57 @@ function toFrontendDeck(backendDeck: BackendDeck): Deck {
 
     totalCards: 0,
     newCards: 0,
-    learningCards: 0,
-    reviewCards: 0,
     dueToday: 0,
-    studiedToday: 0,
-    lastStudied: undefined,
+    lastStudied: backendDeck.lastStudied
+      ? new Date(backendDeck.lastStudied)
+      : undefined,
 
     createdAt: new Date(backendDeck.createdAt),
     updatedAt: new Date(backendDeck.updatedAt),
+  };
+}
 
-    deleted: false,
-    revision: 1,
+async function readDeckResponse(response: Response): Promise<Deck> {
+  await checkResponse(response);
+
+  const backendDeck = (await response.json()) as BackendDeck;
+
+  return toFrontendDeck(backendDeck);
+}
+
+export function applyCardStatsToDeck(deck: Deck, cards: Card[]): Deck {
+  const endOfToday = new Date();
+  endOfToday.setHours(23, 59, 59, 999);
+
+  return {
+    ...deck,
+
+    cardIds: cards.map((card) => card.id),
+
+    totalCards: cards.length,
+
+    newCards: cards.filter((card) => card.state === "new").length,
+
+    dueToday: cards.filter(
+      (card) =>
+        card.state !== "new" &&
+        card.state !== "suspended" &&
+        card.due <= endOfToday,
+    ).length,
   };
 }
 
 export function withChildDeckIds(decks: Deck[]): Deck[] {
-  const childIdsByParent = new Map<string, string[]>();
+  return decks.map((deck) => {
+    const childDeckIds = decks
+      .filter((childDeck) => childDeck.parentDeckId === deck.id)
+      .map((childDeck) => childDeck.id);
 
-  for (const deck of decks) {
-    if (!deck.parentDeckId) {
-      continue;
-    }
-
-    const currentChildIds = childIdsByParent.get(deck.parentDeckId) ?? [];
-
-    currentChildIds.push(deck.id);
-
-    childIdsByParent.set(deck.parentDeckId, currentChildIds);
-  }
-
-  return decks.map((deck) => ({
-    ...deck,
-    childDeckIds: childIdsByParent.get(deck.id) ?? [],
-  }));
-}
-
-export function toDeckWriteData(deck: Deck): DeckWriteData {
-  const description = deck.description?.trim() ?? "";
-
-  const color = deck.color?.trim() ?? "";
-
-  return {
-    parentDeckId: deck.parentDeckId ?? null,
-    name: deck.name.trim(),
-    description: description || null,
-    tags: deck.tags.length > 0 ? [...deck.tags] : null,
-    color: color || null,
-  };
+    return {
+      ...deck,
+      childDeckIds,
+    };
+  });
 }
 
 export async function getDecks(token: string): Promise<Deck[]> {
@@ -144,7 +141,9 @@ export async function getDecks(token: string): Promise<Deck[]> {
     cache: "no-store",
   });
 
-  const backendDecks = await readResponse<BackendDeck[]>(response);
+  await checkResponse(response);
+
+  const backendDecks = (await response.json()) as BackendDeck[];
 
   return withChildDeckIds(backendDecks.map(toFrontendDeck));
 }
@@ -159,9 +158,19 @@ export async function getDeck(deckId: string, token: string): Promise<Deck> {
     },
   );
 
-  const backendDeck = await readResponse<BackendDeck>(response);
+  return readDeckResponse(response);
+}
 
-  return toFrontendDeck(backendDeck);
+export async function getDecksWithStats(token: string): Promise<Deck[]> {
+  const decks = await getDecks(token);
+
+  return Promise.all(
+    decks.map(async (deck) => {
+      const cards = await getCardsByDeckId(deck.id, token);
+
+      return applyCardStatsToDeck(deck, cards);
+    }),
+  );
 }
 
 export async function createDeck(
@@ -174,14 +183,12 @@ export async function createDeck(
     body: JSON.stringify(deckData),
   });
 
-  const backendDeck = await readResponse<BackendDeck>(response);
-
-  return toFrontendDeck(backendDeck);
+  return readDeckResponse(response);
 }
 
 export async function updateDeck(
   deckId: string,
-  deckData: DeckWriteData,
+  deckData: DeckWriteData | DeckUpdateLastStudied,
   token: string,
 ): Promise<Deck> {
   const response = await fetch(
@@ -193,9 +200,7 @@ export async function updateDeck(
     },
   );
 
-  const backendDeck = await readResponse<BackendDeck>(response);
-
-  return toFrontendDeck(backendDeck);
+  return readDeckResponse(response);
 }
 
 export async function deleteDeck(deckId: string, token: string): Promise<void> {
@@ -207,5 +212,5 @@ export async function deleteDeck(deckId: string, token: string): Promise<void> {
     },
   );
 
-  await readResponse<void>(response);
+  await checkResponse(response);
 }

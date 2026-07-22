@@ -4,19 +4,18 @@ import { asyncHandler } from "../middleware/asyncHandler.js";
 import { ApiError } from "../middleware/errorHandler.js";
 import { decksRepository } from "../repositories/repositories.js";
 import { validateDeckParent } from "../services/deckHierarchy.js";
-import { getDeckUserId } from "../utils/deckAuth.js";
+import { getUserId, parseUUID } from "../utils/apiUtils.js";
 import {
   CreateDeckSchema,
   DeckUpdateSchema,
 } from "../validation/deckSchemas.js";
-import { UUIDSchema } from "../validation/commonSchemas.js";
 
 const router = Router();
 
 router.get(
   "/decks",
   asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
+    const userId = getUserId(req);
 
     const userDecks = await decksRepository.getDecksByUserId(userId);
 
@@ -27,8 +26,8 @@ router.get(
 router.get(
   "/decks/:deckId",
   asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
-    const deckId = UUIDSchema.parse(req.params.deckId);
+    const userId = getUserId(req);
+    const deckId = parseUUID(req.params.deckId);
 
     const deck = await decksRepository.getDeckById(deckId, userId);
 
@@ -43,15 +42,9 @@ router.get(
 router.post(
   "/decks",
   asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
+    const userId = getUserId(req);
 
     const input = CreateDeckSchema.parse(req.body);
-
-    const normalizedName = input.name.trim();
-
-    if (!normalizedName) {
-      throw new ApiError(400, "Deck name must not be empty");
-    }
 
     await validateDeckParent({
       decksRepository,
@@ -61,7 +54,6 @@ router.post(
 
     const createdDeck = await decksRepository.createDeck({
       ...input,
-      name: normalizedName,
       userId,
     });
 
@@ -72,8 +64,8 @@ router.post(
 router.patch(
   "/decks/:deckId",
   asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
-    const deckId = UUIDSchema.parse(req.params.deckId);
+    const userId = getUserId(req);
+    const deckId = parseUUID(req.params.deckId);
 
     const existingDeck = await decksRepository.getDeckById(deckId, userId);
 
@@ -83,21 +75,7 @@ router.patch(
 
     const input = DeckUpdateSchema.parse(req.body);
 
-    const updateData = {
-      ...input,
-    };
-
-    if (input.name !== undefined) {
-      const normalizedName = input.name.trim();
-
-      if (!normalizedName) {
-        throw new ApiError(400, "Deck name must not be empty");
-      }
-
-      updateData.name = normalizedName;
-    }
-
-    if (Object.prototype.hasOwnProperty.call(input, "parentDeckId")) {
+    if (input.parentDeckId !== undefined) {
       await validateDeckParent({
         decksRepository,
         userId,
@@ -106,15 +84,7 @@ router.patch(
       });
     }
 
-    const updatedDeck = await decksRepository.updateDeck(
-      deckId,
-      userId,
-      updateData,
-    );
-
-    if (!updatedDeck) {
-      throw new ApiError(404, "Deck not found");
-    }
+    const updatedDeck = await decksRepository.updateDeck(deckId, userId, input);
 
     return res.status(200).json(updatedDeck);
   }),
@@ -123,8 +93,8 @@ router.patch(
 router.delete(
   "/decks/:deckId",
   asyncHandler(async (req, res) => {
-    const userId = getDeckUserId(req);
-    const deckId = UUIDSchema.parse(req.params.deckId);
+    const userId = getUserId(req);
+    const deckId = parseUUID(req.params.deckId);
 
     const deleted = await decksRepository.deleteDeck(deckId, userId);
 

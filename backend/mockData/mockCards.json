@@ -2,541 +2,121 @@
   {
     "id": "fd326a60-abdf-4077-a8f0-289679ee1ef3",
     "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
-    "front": "TypeScript question 1?",
-    "back": "This is the answer for TypeScript question 1.",
-    "hint": null,
-    "tags": [
-      "typescript",
-      "mock",
-      "level-1"
-    ],
-    "state": "learning",
-    "due": "2026-02-26T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 2,
-    "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z"
+    "front": "Was ist TypeScript?",
+    "back": "Eine typisierte Erweiterung von JavaScript.",
+    "hint": "Denke an statische Typen.",
+    "tags": ["typescript", "grundlagen"],
+    "createdAt": "2026-01-21T09:00:00.000Z",
+    "updatedAt": "2026-01-21T09:00:00.000Z"
   },
   {
     "id": "32357d2e-479c-4fe4-8258-fb118d83b382",
     "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
-    "front": "TypeScript question 2?",
-    "back": "This is the answer for TypeScript question 2.",
-    "hint": "Hint for TypeScript 2",
-    "tags": [
-      "typescript",
-      "mock",
-      "level-2"
-    ],
-    "state": "review",
-    "due": "2026-02-27T08:58:26.523Z",
-    "rating": "good",
-    "totalReviews": 4,
-    "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z"
-  },
-  {
-    "id": "64a75b76-861b-46bc-a76e-699aac86dfd5",
-    "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
-    "front": "TypeScript question 3?",
-    "back": "This is the answer for TypeScript question 3.",
+    "front": "Was ist ein Interface?",
+    "back": "Ein Interface beschreibt die erwartete Struktur eines Objekts.",
     "hint": null,
-    "tags": [
-      "typescript",
-      "mock",
-      "level-3"
-    ],
-    "state": "suspended",
-    "due": "2026-02-28T08:58:26.523Z",
-    "rating": "easy",
-    "totalReviews": 6,
-    "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z"
-  },
-  {
-    "id": "1e34c1e5-09eb-48d9-aa87-6dd49dbfdee3",
-    "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
-    "front": "TypeScript question 4?",
-    "back": "This is the answer for TypeScript question 4.",
-    "hint": "Hint for TypeScript 4",
-    "tags": [
-      "typescript",
-      "mock",
-      "level-4"
-    ],
-    "state": "new",
-    "due": "2026-03-01T08:58:26.523Z",
-    "rating": null,
-    "totalReviews": 8,
-    "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z"
-  },
-  {
-    "id": "1200de8f-e173-476d-8084-83e752859a17",
-    "deckId": "634eec98-a53b-4ba4-b1b8-af6d4cfa3790",
-    "front": "TypeScript question 5?",
-    "back": "This is the answer for TypeScript question 5.",
-    "hint": null,
-    "tags": [
-      "typescript",
-      "mock",
-      "level-5"
-    ],
-    "state": "learning",
-    "due": "2026-03-02T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 10,
-    "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z"
+    "tags": ["typescript", "interface"],
+    "createdAt": "2026-01-22T09:00:00.000Z",
+    "updatedAt": "2026-01-22T09:00:00.000Z"
   },
   {
     "id": "48f88f94-6660-4a45-a8d5-e36683f8d335",
     "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
-    "front": "React question 1?",
-    "back": "This is the answer for React question 1.",
-    "hint": null,
-    "tags": [
-      "react",
-      "mock",
-      "level-1"
-    ],
-    "state": "learning",
-    "due": "2026-02-26T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 2,
-    "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z"
+    "front": "Was sind Props?",
+    "back": "Props übergeben Daten von einer Komponente an eine andere.",
+    "hint": "Sie werden von außen übergeben.",
+    "tags": ["react", "props"],
+    "createdAt": "2026-01-23T09:00:00.000Z",
+    "updatedAt": "2026-01-23T09:00:00.000Z"
   },
   {
     "id": "1518cdae-26b5-4721-a48a-6aea958f091b",
     "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
-    "front": "React question 2?",
-    "back": "This is the answer for React question 2.",
-    "hint": "Hint for React 2",
-    "tags": [
-      "react",
-      "mock",
-      "level-2"
-    ],
-    "state": "review",
-    "due": "2026-02-27T08:58:26.523Z",
-    "rating": "good",
-    "totalReviews": 4,
-    "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z"
-  },
-  {
-    "id": "1b77d42c-4dae-49ff-9a24-bcba0e5a0b41",
-    "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
-    "front": "React question 3?",
-    "back": "This is the answer for React question 3.",
+    "front": "Wofür wird State verwendet?",
+    "back": "State speichert veränderliche Daten einer Komponente.",
     "hint": null,
-    "tags": [
-      "react",
-      "mock",
-      "level-3"
-    ],
-    "state": "suspended",
-    "due": "2026-02-28T08:58:26.523Z",
-    "rating": "easy",
-    "totalReviews": 6,
-    "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z"
-  },
-  {
-    "id": "92182a7d-472d-48bb-8672-348e5c6b37d3",
-    "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
-    "front": "React question 4?",
-    "back": "This is the answer for React question 4.",
-    "hint": "Hint for React 4",
-    "tags": [
-      "react",
-      "mock",
-      "level-4"
-    ],
-    "state": "new",
-    "due": "2026-03-01T08:58:26.523Z",
-    "rating": null,
-    "totalReviews": 8,
-    "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z"
-  },
-  {
-    "id": "59dd5b87-3d71-41be-89db-81c635ee38fc",
-    "deckId": "8ba30a20-7a6d-4f90-a46e-016627b9adc4",
-    "front": "React question 5?",
-    "back": "This is the answer for React question 5.",
-    "hint": null,
-    "tags": [
-      "react",
-      "mock",
-      "level-5"
-    ],
-    "state": "learning",
-    "due": "2026-03-02T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 10,
-    "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z"
-  },
-  {
-    "id": "86afc1f2-aaff-4a6a-900c-d9e16ff3ba42",
-    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
-    "front": "Algorithms question 1?",
-    "back": "This is the answer for Algorithms question 1.",
-    "hint": null,
-    "tags": [
-      "algorithms",
-      "mock",
-      "level-1"
-    ],
-    "state": "learning",
-    "due": "2026-02-26T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 2,
-    "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z"
-  },
-  {
-    "id": "e55c4e65-540c-43da-8de4-77da503746b2",
-    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
-    "front": "Algorithms question 2?",
-    "back": "This is the answer for Algorithms question 2.",
-    "hint": "Hint for Algorithms 2",
-    "tags": [
-      "algorithms",
-      "mock",
-      "level-2"
-    ],
-    "state": "review",
-    "due": "2026-02-27T08:58:26.523Z",
-    "rating": "good",
-    "totalReviews": 4,
-    "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z"
-  },
-  {
-    "id": "f6ee0737-ab69-4d1c-9684-b946a77e2d21",
-    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
-    "front": "Algorithms question 3?",
-    "back": "This is the answer for Algorithms question 3.",
-    "hint": null,
-    "tags": [
-      "algorithms",
-      "mock",
-      "level-3"
-    ],
-    "state": "suspended",
-    "due": "2026-02-28T08:58:26.523Z",
-    "rating": "easy",
-    "totalReviews": 6,
-    "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z"
-  },
-  {
-    "id": "9f9c998c-f521-4719-b7c0-68b348068218",
-    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
-    "front": "Algorithms question 4?",
-    "back": "This is the answer for Algorithms question 4.",
-    "hint": "Hint for Algorithms 4",
-    "tags": [
-      "algorithms",
-      "mock",
-      "level-4"
-    ],
-    "state": "new",
-    "due": "2026-03-01T08:58:26.523Z",
-    "rating": null,
-    "totalReviews": 8,
-    "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z"
-  },
-  {
-    "id": "9f9d96c1-7154-4dc0-af2d-d03d2d8daba0",
-    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
-    "front": "Algorithms question 5?",
-    "back": "This is the answer for Algorithms question 5.",
-    "hint": null,
-    "tags": [
-      "algorithms",
-      "mock",
-      "level-5"
-    ],
-    "state": "learning",
-    "due": "2026-03-02T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 10,
-    "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z"
+    "tags": ["react", "state"],
+    "createdAt": "2026-01-24T09:00:00.000Z",
+    "updatedAt": "2026-01-24T09:00:00.000Z"
   },
   {
     "id": "59f3914c-3d61-4921-afe4-509e0a8dc04f",
     "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
-    "front": "Web question 1?",
-    "back": "This is the answer for Web question 1.",
+    "front": "Wofür steht HTML?",
+    "back": "HyperText Markup Language.",
     "hint": null,
-    "tags": [
-      "web",
-      "mock",
-      "level-1"
-    ],
-    "state": "learning",
-    "due": "2026-02-26T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 2,
-    "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z"
+    "tags": ["html", "web"],
+    "createdAt": "2026-01-25T09:00:00.000Z",
+    "updatedAt": "2026-01-25T09:00:00.000Z"
   },
   {
     "id": "f7d3cd87-77e2-40d5-9621-27140c00d539",
     "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
-    "front": "Web question 2?",
-    "back": "This is the answer for Web question 2.",
-    "hint": "Hint for Web 2",
-    "tags": [
-      "web",
-      "mock",
-      "level-2"
-    ],
-    "state": "review",
-    "due": "2026-02-27T08:58:26.523Z",
-    "rating": "good",
-    "totalReviews": 4,
-    "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z"
+    "front": "Was ist CSS?",
+    "back": "CSS beschreibt das Aussehen und Layout einer Webseite.",
+    "hint": "Stylesheets",
+    "tags": ["css", "web"],
+    "createdAt": "2026-01-26T09:00:00.000Z",
+    "updatedAt": "2026-01-26T09:00:00.000Z"
   },
   {
-    "id": "0a01b531-9e35-4ecf-a1d5-5ae6594a297b",
-    "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
-    "front": "Web question 3?",
-    "back": "This is the answer for Web question 3.",
-    "hint": null,
-    "tags": [
-      "web",
-      "mock",
-      "level-3"
-    ],
-    "state": "suspended",
-    "due": "2026-02-28T08:58:26.523Z",
-    "rating": "easy",
-    "totalReviews": 6,
-    "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z"
+    "id": "86afc1f2-aaff-4a6a-900c-d9e16ff3ba42",
+    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
+    "front": "Was ist die Laufzeit der binären Suche?",
+    "back": "O(log n).",
+    "hint": "Der Suchbereich wird immer halbiert.",
+    "tags": ["algorithmen", "laufzeit"],
+    "createdAt": "2026-01-27T09:00:00.000Z",
+    "updatedAt": "2026-01-27T09:00:00.000Z"
   },
   {
-    "id": "c14b4e19-61c0-4ba4-97e9-8905a3baddd1",
-    "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
-    "front": "Web question 4?",
-    "back": "This is the answer for Web question 4.",
-    "hint": "Hint for Web 4",
-    "tags": [
-      "web",
-      "mock",
-      "level-4"
-    ],
-    "state": "new",
-    "due": "2026-03-01T08:58:26.523Z",
-    "rating": null,
-    "totalReviews": 8,
-    "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z"
-  },
-  {
-    "id": "abe81643-016b-4ee7-ad9c-2ec29c57c25d",
-    "deckId": "06fcee9a-cc91-4c9f-81ce-dc3470bb1935",
-    "front": "Web question 5?",
-    "back": "This is the answer for Web question 5.",
-    "hint": null,
-    "tags": [
-      "web",
-      "mock",
-      "level-5"
-    ],
-    "state": "learning",
-    "due": "2026-03-02T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 10,
-    "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z"
+    "id": "e55c4e65-540c-43da-8de4-77da503746b2",
+    "deckId": "66e06ea0-69ce-4dc6-8e93-7f638f094cb8",
+    "front": "Was ist ein Stack?",
+    "back": "Eine LIFO-Datenstruktur.",
+    "hint": "Last In, First Out",
+    "tags": ["algorithmen", "datenstruktur"],
+    "createdAt": "2026-01-28T09:00:00.000Z",
+    "updatedAt": "2026-01-28T09:00:00.000Z"
   },
   {
     "id": "b3ce299a-41c2-4d53-80cc-b3524cdb34f2",
     "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
-    "front": "Math question 1?",
-    "back": "This is the answer for Math question 1.",
+    "front": "Was ist eine Primzahl?",
+    "back": "Eine natürliche Zahl größer als 1 mit genau zwei positiven Teilern.",
     "hint": null,
-    "tags": [
-      "math",
-      "mock",
-      "level-1"
-    ],
-    "state": "learning",
-    "due": "2026-02-26T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 2,
-    "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z"
+    "tags": ["mathematik", "zahlen"],
+    "createdAt": "2026-01-29T09:00:00.000Z",
+    "updatedAt": "2026-01-29T09:00:00.000Z"
   },
   {
     "id": "3e311228-37b1-4024-9101-f325b5584100",
     "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
-    "front": "Math question 2?",
-    "back": "This is the answer for Math question 2.",
-    "hint": "Hint for Math 2",
-    "tags": [
-      "math",
-      "mock",
-      "level-2"
-    ],
-    "state": "review",
-    "due": "2026-02-27T08:58:26.523Z",
-    "rating": "good",
-    "totalReviews": 4,
-    "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z"
-  },
-  {
-    "id": "809704de-0ca1-4a05-a834-1ad781afc8b8",
-    "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
-    "front": "Math question 3?",
-    "back": "This is the answer for Math question 3.",
-    "hint": null,
-    "tags": [
-      "math",
-      "mock",
-      "level-3"
-    ],
-    "state": "suspended",
-    "due": "2026-02-28T08:58:26.523Z",
-    "rating": "easy",
-    "totalReviews": 6,
-    "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z"
-  },
-  {
-    "id": "90b4bed9-5164-4d3b-a766-b8ad3868b83f",
-    "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
-    "front": "Math question 4?",
-    "back": "This is the answer for Math question 4.",
-    "hint": "Hint for Math 4",
-    "tags": [
-      "math",
-      "mock",
-      "level-4"
-    ],
-    "state": "new",
-    "due": "2026-03-01T08:58:26.523Z",
-    "rating": null,
-    "totalReviews": 8,
-    "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z"
-  },
-  {
-    "id": "aa604ff7-e7d4-4bde-84a9-664d29061ac5",
-    "deckId": "fb016f7a-f2da-4e96-b4de-c4854320d933",
-    "front": "Math question 5?",
-    "back": "This is the answer for Math question 5.",
-    "hint": null,
-    "tags": [
-      "math",
-      "mock",
-      "level-5"
-    ],
-    "state": "learning",
-    "due": "2026-03-02T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 10,
-    "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z"
+    "front": "Was ist die Ableitung von x hoch 2?",
+    "back": "2x.",
+    "hint": "Potenzregel",
+    "tags": ["mathematik", "analysis"],
+    "createdAt": "2026-01-30T09:00:00.000Z",
+    "updatedAt": "2026-01-30T09:00:00.000Z"
   },
   {
     "id": "2e3bcbc7-e13c-449b-bb18-301573f76f6b",
     "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
-    "front": "DevOps question 1?",
-    "back": "This is the answer for DevOps question 1.",
+    "front": "Was ist ein Docker-Container?",
+    "back": "Eine isolierte Laufzeitumgebung für eine Anwendung.",
     "hint": null,
-    "tags": [
-      "devops",
-      "mock",
-      "level-1"
-    ],
-    "state": "learning",
-    "due": "2026-02-26T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 2,
-    "createdAt": "2026-01-28T08:58:26.523Z",
-    "updatedAt": "2026-01-29T08:58:26.523Z"
+    "tags": ["docker", "devops"],
+    "createdAt": "2026-01-31T09:00:00.000Z",
+    "updatedAt": "2026-01-31T09:00:00.000Z"
   },
   {
     "id": "0e2838a0-2f75-4f89-b5bb-bc3a6a17d451",
     "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
-    "front": "DevOps question 2?",
-    "back": "This is the answer for DevOps question 2.",
-    "hint": "Hint for DevOps 2",
-    "tags": [
-      "devops",
-      "mock",
-      "level-2"
-    ],
-    "state": "review",
-    "due": "2026-02-27T08:58:26.523Z",
-    "rating": "good",
-    "totalReviews": 4,
-    "createdAt": "2026-01-30T08:58:26.523Z",
-    "updatedAt": "2026-02-01T08:58:26.523Z"
-  },
-  {
-    "id": "c4dc2036-c064-4ea5-a731-04de40b388cd",
-    "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
-    "front": "DevOps question 3?",
-    "back": "This is the answer for DevOps question 3.",
-    "hint": null,
-    "tags": [
-      "devops",
-      "mock",
-      "level-3"
-    ],
-    "state": "suspended",
-    "due": "2026-02-28T08:58:26.523Z",
-    "rating": "easy",
-    "totalReviews": 6,
-    "createdAt": "2026-02-01T08:58:26.523Z",
-    "updatedAt": "2026-02-04T08:58:26.523Z"
-  },
-  {
-    "id": "3fb3b6b8-e9cd-49aa-9ef6-07c9a2965dcc",
-    "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
-    "front": "DevOps question 4?",
-    "back": "This is the answer for DevOps question 4.",
-    "hint": "Hint for DevOps 4",
-    "tags": [
-      "devops",
-      "mock",
-      "level-4"
-    ],
-    "state": "new",
-    "due": "2026-03-01T08:58:26.523Z",
-    "rating": null,
-    "totalReviews": 8,
-    "createdAt": "2026-02-03T08:58:26.523Z",
-    "updatedAt": "2026-02-07T08:58:26.523Z"
-  },
-  {
-    "id": "006dca77-0337-4da8-aa90-3cbe90a12096",
-    "deckId": "d8ec6de8-6dcd-4989-bf9e-5ca7cf68971b",
-    "front": "DevOps question 5?",
-    "back": "This is the answer for DevOps question 5.",
-    "hint": null,
-    "tags": [
-      "devops",
-      "mock",
-      "level-5"
-    ],
-    "state": "learning",
-    "due": "2026-03-02T08:58:26.523Z",
-    "rating": "hard",
-    "totalReviews": 10,
-    "createdAt": "2026-02-05T08:58:26.523Z",
-    "updatedAt": "2026-02-10T08:58:26.523Z"
+    "front": "Wofür steht CI?",
+    "back": "Continuous Integration.",
+    "hint": "Automatisches Integrieren von Änderungen",
+    "tags": ["ci", "devops"],
+    "createdAt": "2026-02-01T09:00:00.000Z",
+    "updatedAt": "2026-02-01T09:00:00.000Z"
   }
 ]
