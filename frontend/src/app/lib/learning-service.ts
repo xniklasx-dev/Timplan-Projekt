@@ -8,6 +8,15 @@ export function getCardsForDeck(deck: Deck, allCards: Card[]): Card[] {
   return allCards.filter((card) => deck.cardIds.includes(card.id));
 }
 
+export function isDueToday(card: Card, now: Date = new Date()): boolean {
+  if (card.state === "new") return true;
+
+  const endOfToday = new Date(now);
+  endOfToday.setHours(23, 59, 59, 999);
+
+  return card.due <= endOfToday;
+}
+
 export function getNextCard(cards: Card[], currentIndex: number): Card | null {
   if (currentIndex + 1 >= cards.length) return null;
   return cards[currentIndex + 1];

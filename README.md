@@ -65,7 +65,8 @@ DATA_SOURCE=memory
 ALLOWED_ORIGINS=http://localhost:3000
 ```
 
-#### Environtment with drizzleRepository
+#### Environment with drizzleRepository
+Create `frontend/.env`:
 
 ```env
 NEXT_PUBLIC_USE_MOCK=false
@@ -103,32 +104,4 @@ This command builds both applications and then starts them together.
 - Frontend: http://localhost:3000
 - Backend: http://localhost:3001
 - Swagger API documentation: http://localhost:3001/docs
-```
-
-## Deployment
-
-Deployment is automated with GitHub Actions:
-
-- Changes in `frontend/` trigger the frontend deployment workflow.
-- Changes in `backend/` trigger the backend deployment workflow.
-- Pull requests run type checking, linting, and production builds.
-- GitHub Actions builds the deployment artifacts and publishes them to
-  separate Azure App Services.
-
-## Architecture Overview
-
-```text
-User
-  |
-  v
-Next.js frontend
-  |
-  v
-Express REST API
-  |
-  v
-Drizzle ORM
-  |
-  v
-Supabase PostgreSQL
 ```
