@@ -86,9 +86,12 @@ export default function DeckPage() {
 
       try {
         const loadedDecks = await getDecks(authToken);
+        const visibleDecks = loadedDecks.filter(
+          (deck) => deck.id === deckId || deck.parentDeckId === deckId,
+        );
 
         const loadedDeckData = await Promise.all(
-          loadedDecks.map(async (deck) => {
+          visibleDecks.map(async (deck) => {
             const deckCards = await getDeckCardsWithProgress(
               deck.id,
               authToken,
@@ -105,7 +108,15 @@ export default function DeckPage() {
           return;
         }
 
-        setDecks(loadedDeckData.map((item) => item.deck));
+        const loadedDeckDataById = new Map(
+          loadedDeckData.map((item) => [item.deck.id, item]),
+        );
+
+        setDecks(
+          loadedDecks.map(
+            (deck) => loadedDeckDataById.get(deck.id)?.deck ?? deck,
+          ),
+        );
 
         const currentDeckData = loadedDeckData.find(
           (item) => item.deck.id === deckId,

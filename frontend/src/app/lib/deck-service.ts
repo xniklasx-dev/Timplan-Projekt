@@ -1,9 +1,6 @@
 import { apiBaseUrl, type Card, type Deck } from "./definitions";
 import { getCardsByDeckId } from "./card-service";
-import {
-  CardProgressApiError,
-  getCardProgress,
-} from "./card-progress-service";
+import { getCardProgress } from "./card-progress-service";
 import { isDueToday } from "./learning-service";
 
 export type BackendDeck = {
@@ -129,12 +126,8 @@ export async function getDeckCardsWithProgress(
       try {
         const progress = await getCardProgress(deckId, card.id, token);
         return { ...card, ...progress };
-      } catch (error) {
-        if (error instanceof CardProgressApiError && error.status === 404) {
-          return card;
-        }
-
-        throw error;
+      } catch {
+        return card;
       }
     }),
   );
@@ -182,14 +175,21 @@ export async function getDeck(deckId: string, token: string): Promise<Deck> {
 
 export async function getDecksWithStats(token: string): Promise<Deck[]> {
   const decks = await getDecks(token);
+  const topLevelDecks = decks.filter((deck) => !deck.parentDeckId);
 
-  return Promise.all(
-    decks.map(async (deck) => {
+  const topLevelDecksWithStats = await Promise.all(
+    topLevelDecks.map(async (deck) => {
       const cards = await getDeckCardsWithProgress(deck.id, token);
 
       return applyCardStatsToDeck(deck, cards);
     }),
   );
+
+  const statsByDeckId = new Map(
+    topLevelDecksWithStats.map((deck) => [deck.id, deck]),
+  );
+
+  return decks.map((deck) => statsByDeckId.get(deck.id) ?? deck);
 }
 
 export async function createDeck(
