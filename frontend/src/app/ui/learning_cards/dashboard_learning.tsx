@@ -51,6 +51,13 @@ function percentage(value: number, total: number): string {
   return total === 0 ? "0%" : `${(value / total) * 100}%`;
 }
 
+function hasValidLastStudied(deck: Deck): deck is Deck & { lastStudied: Date } {
+  return (
+    deck.lastStudied instanceof Date &&
+    !isNaN(deck.lastStudied.getTime())
+  );
+}
+
 export default function DashboardLearning() {
   const router = useRouter();
   const { user, isLoading: authIsLoading } = useAuth();
@@ -79,19 +86,22 @@ export default function DashboardLearning() {
 
         const loadedDecks = await getDecks(authToken);
 
-        const recentDecks = loadedDecks
-          .filter((deck): deck is Deck & { lastStudied: Date } => deck.lastStudied instanceof Date && !isNaN(deck.lastStudied.getTime()))
+        const studiedDecks = loadedDecks
+          .filter(hasValidLastStudied)
           .sort((first, second) => second.lastStudied.getTime() - first.lastStudied.getTime())
-          .slice(0, 5);
+        const unstudiedDecks = loadedDecks.filter(
+          (deck) => !hasValidLastStudied(deck),
+        );
+        const dashboardDecks = [...studiedDecks, ...unstudiedDecks].slice(0, 5);
         
-        const cardLists = await Promise.all(recentDecks.map((deck) => getCardsByDeckId(deck.id, authToken)));
+        const cardLists = await Promise.all(dashboardDecks.map((deck) => getCardsByDeckId(deck.id, authToken)));
 
         const cardsWithProgress = await Promise.all(
           cardLists.flat().map((card) => addProgressToCard(card, authToken)),
         );
 
         if (!cancelled) {
-          setDecks(recentDecks);
+          setDecks(dashboardDecks);
           setCards(cardsWithProgress);
         }
       } catch (caughtError) {
@@ -126,9 +136,11 @@ export default function DashboardLearning() {
     return <div>{error}</div>;
   }
 
-  const displayedDecks = decks
-    .filter((deck): deck is Deck & { lastStudied: Date } => deck.lastStudied instanceof Date)
-    .map((deck) => ({deck, deckCards: cards.filter((card) => card.deckId === deck.id), lastStudied: deck.lastStudied!})); 
+  const displayedDecks = decks.map((deck) => ({
+    deck,
+    deckCards: cards.filter((card) => card.deckId === deck.id),
+    lastStudied: hasValidLastStudied(deck) ? deck.lastStudied : undefined,
+  }));
 
   return (
     <div className={styles.outer}>
@@ -175,7 +187,7 @@ export default function DashboardLearning() {
               </div>
 
               <p className={styles.lastLearned}>
-                Last learned: {lastStudied.toLocaleDateString()}
+                Last learned: {lastStudied?.toLocaleDateString() ?? "Never"}
               </p>
               <p className={styles.cardsDueToday}>
                 Cards due today: {dueToday}

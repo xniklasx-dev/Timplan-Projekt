@@ -109,21 +109,6 @@ export default function Learning() {
     };
   }, [authIsLoading, deckId, token]);
 
-  useEffect(() => {
-    if (!token || !selectedDeck || currentCard || resultCards.length === 0 || lastStudiedWasSaved.current) return;
-
-    lastStudiedWasSaved.current = true;
-
-    void updateDeck(deckId, { lastStudied: new Date() }, token).catch((caughtError) => {
-      lastStudiedWasSaved.current = false;
-      setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Last studied could not be saved. Please try again later.",
-      );
-    });
-  }, [currentCard, deckId, resultCards.length, selectedDeck, token]);
-
   const changeIndex = (index: number) => {
     if (index >= 0 && index < sessionCards.length) {
       setCurrentIndex(index);
@@ -161,14 +146,25 @@ export default function Learning() {
       );
       const savedCard: Card = { ...updatedCard, ...savedProgress };
 
+      if (!lastStudiedWasSaved.current) {
+        lastStudiedWasSaved.current = true;
+
+        try {
+          const updatedDeck = await updateDeck(deckId,{lastStudied: new Date()},token,);
+          setSelectedDeck(updatedDeck);} 
+        catch (caughtError) {
+          lastStudiedWasSaved.current = false;
+          throw caughtError;}
+      }
+
       setStats(updatedStats);
 
       if (rating === "again") {
         const updatedCards = [...sessionCards];
         updatedCards[currentIndex] = savedCard;
         updatedCards.push(savedCard);
-        setSessionCards(updatedCards);
-      } else {
+        setSessionCards(updatedCards);} 
+      else {
         const updatedCards = [...sessionCards];
         updatedCards[currentIndex] = savedCard;
         setSessionCards(updatedCards);
@@ -176,16 +172,11 @@ export default function Learning() {
         setLearnedCount((prev) => prev + 1);
       }
 
-      setCurrentIndex((prev) => prev + 1);
-    } catch (caughtError) {
-      setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Card progress could not be saved. Please try again later.",
-      );
-    } finally {
-      setIsSaving(false);
-    }
+      setCurrentIndex((prev) => prev + 1);} 
+      catch (caughtError) {
+        setError(caughtError instanceof Error? caughtError.message: "Learning progress could not be saved. Please try again later.",);} 
+      finally {
+        setIsSaving(false);}
   };
 
   if (authIsLoading || isLoading) {
