@@ -4,13 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/app/lib/auth/AuthContext";
-import {
-  CardProgressApiError,
-  getCardProgress,
-} from "@/app/lib/card-progress-service";
+import { CardProgressApiError,getCardProgress } from "@/app/lib/card-progress-service";
 import { getCardsByDeckId } from "@/app/lib/card-service";
 import { getDecks } from "@/app/lib/deck-service";
 import type { Card, Deck } from "@/app/lib/definitions";
+import { isDueToday } from "@/app/lib/learning-service";
 import styles from "./dashboard_learning.module.css";
 
 type CardCounts = {
@@ -23,14 +21,11 @@ type CardCounts = {
 async function addProgressToCard(card: Card, token: string): Promise<Card> {
   try {
     const progress = await getCardProgress(card.deckId, card.id, token);
-    return { ...card, ...progress };
-  } catch (error) {
+    return { ...card, ...progress };} 
+  catch (error) {
     if (error instanceof CardProgressApiError && error.status === 404) {
-      return card;
-    }
-
-    throw error;
-  }
+      return card;}
+  throw error;}
 }
 
 function countCards(cards: Card[]): CardCounts {
@@ -49,6 +44,10 @@ function countCards(cards: Card[]): CardCounts {
 
 function percentage(value: number, total: number): string {
   return total === 0 ? "0%" : `${(value / total) * 100}%`;
+}
+
+function hasValidLastStudied(deck: Deck): deck is Deck & { lastStudied: Date } {
+  return (deck.lastStudied instanceof Date &&!isNaN(deck.lastStudied.getTime()));
 }
 
 export default function DashboardLearning() {
@@ -78,15 +77,23 @@ export default function DashboardLearning() {
         setError(null);
 
         const loadedDecks = await getDecks(authToken);
-        const cardLists = await Promise.all(
-          loadedDecks.map((deck) => getCardsByDeckId(deck.id, authToken)),
+
+        const studiedDecks = loadedDecks
+          .filter(hasValidLastStudied)
+          .sort((first, second) => second.lastStudied.getTime() - first.lastStudied.getTime())
+        const unstudiedDecks = loadedDecks.filter(
+          (deck) => !hasValidLastStudied(deck),
         );
+        const dashboardDecks = [...studiedDecks, ...unstudiedDecks].slice(0, 5);
+        
+        const cardLists = await Promise.all(dashboardDecks.map((deck) => getCardsByDeckId(deck.id, authToken)));
+
         const cardsWithProgress = await Promise.all(
           cardLists.flat().map((card) => addProgressToCard(card, authToken)),
         );
 
         if (!cancelled) {
-          setDecks(loadedDecks);
+          setDecks(dashboardDecks);
           setCards(cardsWithProgress);
         }
       } catch (caughtError) {
@@ -121,39 +128,20 @@ export default function DashboardLearning() {
     return <div>{error}</div>;
   }
 
-  // Da Nik diese Funktion für lastStudied in decks nicht bereitstellen wollte, habe ich mir nun einen Umweg mit einer dadurch schlechteren Laufzeit von Codex generieren lassen
-  const displayedDecks = decks
-    .flatMap((deck) => {
-      const deckCards = cards.filter((card) => card.deckId === deck.id);
+  const displayedDecks = decks.map((deck) => ({
+    deck,
+    deckCards: cards.filter((card) => card.deckId === deck.id),
+    lastStudied: hasValidLastStudied(deck) ? deck.lastStudied : undefined,
+  })).filter(({ deckCards }) => deckCards.length > 0);
 
-      if (deckCards.length === 0) return [];
-
-      const studiedCards = deckCards.filter((card) => card.totalReviews > 0);
-
-      if (studiedCards.length === 0) return [];
-
-      const lastStudied = new Date(
-        Math.max(...studiedCards.map((card) => card.updatedAt.getTime())),
-      );
-
-      return [{ deck, deckCards, lastStudied }];
-    })
-    .sort(
-      (first, second) =>
-        second.lastStudied.getTime() - first.lastStudied.getTime(),
-    )
-    .slice(0, 5);
-  //KI-Teil Ende
-  
   return (
     <div className={styles.outer}>
       <div className={styles.recentlyStudied}>
         {displayedDecks.map(({ deck, deckCards, lastStudied }) => {
           const cardCounts = countCards(deckCards);
           const totalCards = deckCards.length;
-          const dueToday = deckCards.filter(
-            (card) => card.state === "new" || card.due <= new Date(),
-          ).length;
+          const now = new Date();
+          const dueToday = deckCards.filter((card) => isDueToday(card)).length;
 
           return (
             <div key={deck.id} className={styles.deck}>
@@ -190,22 +178,19 @@ export default function DashboardLearning() {
               </div>
 
               <p className={styles.lastLearned}>
-                Last learned: {lastStudied.toLocaleDateString()}
+                Last learned: {lastStudied?.toLocaleDateString() ?? "Never"}
               </p>
               <p className={styles.cardsDueToday}>
                 Cards due today: {dueToday}
               </p>
-              <button
-                className={
-                  dueToday > 0
-                    ? styles.learn_button_active
-                    : styles.learn_button_inactive
-                }
-                disabled={dueToday === 0}
-                onClick={() => router.push(`/learning/${deck.id}`)}
-              >
-                Learn
-              </button>
+              <div className={styles.learningButtons}>
+                <button disabled={dueToday === 0} onClick={() => router.push(`/learning/${deck.id}?mode=due`)}>
+                  Due cards
+                </button>
+                <button disabled={totalCards === 0} onClick={() => router.push(`/learning/${deck.id}?mode=all`)}>
+                  All cards
+                </button>
+              </div>
             </div>
           );
         })}
