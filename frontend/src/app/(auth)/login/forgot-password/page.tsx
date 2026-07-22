@@ -1,30 +1,48 @@
 "use client";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 import { useClickOutside } from "@/app/hooks/useClickOutside";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
+import Spinner from "@/app/ui/spinner/Spinner";
+import {requestPasswordReset} from "@/app/lib/auth/auth.service";
 
 interface Props {
   onClose: () => void;
 }
 
-export default function ForgotPasswordModal({ onClose }: Props) {
+export default function Page({ onClose }: Props) {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   useClickOutside([modalRef], onClose, true);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+ async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    // Later: Call API to send reset email
-    setSent(true);
+    setLoading(true);
+    setError("");
+
+    try {
+      await requestPasswordReset(email);
+      setSent(true);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className={styles.modalOverlay}>
       <div ref={modalRef} className={styles.modal}>
         <h2 className={styles.modalTitle}>Reset Password</h2>
+        {error && <p className={styles.error}></p>}
         {sent ? (
           <>
             <p className={styles.modalText}>
@@ -46,11 +64,17 @@ export default function ForgotPasswordModal({ onClose }: Props) {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
             />
-            <AccentButton type="submit" fullWidth>
-              Send reset link
+            <AccentButton type="submit" fullWidth disabled={loading}>
+              {loading ? <Spinner /> : "Sent reset link"}
             </AccentButton>
-            <button type="button" className={styles.linkButton} onClick={onClose}>
+            <button
+                type="button"
+                className={styles.linkButton}
+                onClick={onClose}
+                disabled={loading}
+            >
               Cancel
             </button>
           </form>

@@ -104,12 +104,12 @@
   gap: 10px;
 }
 .menuItemLogout {
-  color: var(--color-accent);
+  color: var(--color-text);
   font-weight: 600;
-  background: var(--color-text-muted);
+  background: var(--color-accent);
 }
 .menuItemLogout:hover {
-  background: var(--color-accent);
-  color: var(--color-text);
+  background: var(--color-text);
+  color: var(--color-accent);
   transform: translateY(-1px);
 }

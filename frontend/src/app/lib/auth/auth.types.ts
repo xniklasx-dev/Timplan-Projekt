@@ -20,3 +20,8 @@ export interface User {
     createdAt?: string;
     updatedAt?: string;
 }
+
+export interface ResetPasswordDTO {
+    token: string;
+    newPassword: string;
+}

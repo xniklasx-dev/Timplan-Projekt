@@ -19,11 +19,11 @@ export const UserSchema = z
               example: "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3mS0i8",
           }),
         */
-        displayname: z.string().optional().openapi({
+        displayname: z.string().nullable().optional().openapi({
             example: "Test User",
         }),
 
-        avatarUrl: z.string().url().optional().nullable().openapi({
+        avatarUrl: z.string().url().nullable().optional().nullable().openapi({
             example: "https://example.com/avatar.jpg",
         }),
 
@@ -83,7 +83,7 @@ export const ResetPasswordSchema = z
             example: "reset-token-123",
         }),
 
-        newPassword: z.string().min(12).openapi({
+        newPassword: z.string().min(8).openapi({
             example: "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3mS0i8"
         })
     })

@@ -31,17 +31,17 @@ export const users = pgTable(
   "users",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-
     email: text("email").notNull(),
     username: text("username").notNull(),
     displayname: text("display_name"),
     avatarUrl: text("avatar_url"),
     passwordHash: text("password_hash").notNull(),
+    passwordResetToken: text("password_reset_token"),
+    passwordResetExpires: timestamp("password_reset_expires", { withTimezone: true }),
 
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
-
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

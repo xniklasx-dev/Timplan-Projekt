@@ -65,20 +65,6 @@ export default function AccountMenu(/*{ user }: { user: User | null }*/) {
 
               <div className={styles.menuDivider} />
 
-              {/* Coming soon */}
-              <button
-                className={styles.menuItemButton}
-                type="button"
-                disabled
-              >
-                <span className={styles.menuItemInner}>
-                  {/*<UserPlus size={16} />*/}
-                  Switch Account
-                </span>
-              </button>
-
-              <div className={styles.menuDivider} />
-
               <Link 
                 className={styles.menuItem} 
                 href="/settings"
