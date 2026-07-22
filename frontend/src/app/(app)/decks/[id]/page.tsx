@@ -10,6 +10,7 @@ import {
   applyCardStatsToDeck,
   createDeck,
   deleteDeck as deleteDeckRequest,
+  getDeckCardsWithProgress,
   getDecks,
   updateDeck,
   withChildDeckIds,
@@ -20,10 +21,7 @@ import {
 // FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION //
 /////////////////////////////////////////////////////////////
 
-import {
-  deleteCard as deleteCardRequest,
-  getCardsByDeckId,
-} from "@/app/lib/card-service";
+import { deleteCard as deleteCardRequest } from "@/app/lib/card-service";
 
 ////////////////////
 // END OF AI PART //
@@ -91,7 +89,10 @@ export default function DeckPage() {
 
         const loadedDeckData = await Promise.all(
           loadedDecks.map(async (deck) => {
-            const deckCards = await getCardsByDeckId(deck.id, authToken);
+            const deckCards = await getDeckCardsWithProgress(
+              deck.id,
+              authToken,
+            );
 
             return {
               deck: applyCardStatsToDeck(deck, deckCards),

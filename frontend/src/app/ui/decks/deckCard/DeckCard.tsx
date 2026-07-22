@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Deck } from "@/app/lib/definitions";
 import type { MouseEvent } from "react";
-import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
+import DropdownButton from "@/app/ui/buttons/dropdownButton/DropdownButton";
 import styles from "../decks.module.css";
 
 type DeckCardProps = {
@@ -14,29 +14,15 @@ type DeckCardProps = {
 export default function DeckCard({ deck }: DeckCardProps) {
   const router = useRouter();
 
-  const hasCards = deck.totalCards > 0;
-
   const deckCardStyle = deck.color
     ? {
       borderColor: deck.color,
     }
     : undefined;
 
-  let startButtonTitle = "No cards in this deck yet";
-
-  if (hasCards) {
-    startButtonTitle = "StartStudying";
-  }
-
-  const handleStartLesson = (event: MouseEvent) => {
+  const handleStudyMenuClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-
-    if (!hasCards) {
-      return;
-    }
-
-    router.push("/learning/" + deck.id);
   };
 
   let showDescription = false;
@@ -55,11 +41,30 @@ export default function DeckCard({ deck }: DeckCardProps) {
       className={styles.deckCard}
       style={deckCardStyle}
     >
-      <div className={styles.startButtonWrapper}>
-        <StartLessonButton
-          title={startButtonTitle}
-          disabled={!hasCards}
-          onClick={handleStartLesson}
+      <div
+        className={styles.startButtonWrapper}
+        onClick={handleStudyMenuClick}
+      >
+        <DropdownButton
+          triggerIconSrc="/play_lesson_icon.svg"
+          triggerAriaLabel="Study cards"
+          items={[
+            {
+              label: "Study All Cards",
+              onClick: () => {
+                router.push(`/learning/${deck.id}?mode=all`);
+              },
+              disabled: deck.totalCards === 0,
+            },
+            {
+              label: "Study Due Cards",
+              onClick: () => {
+                router.push(`/learning/${deck.id}?mode=due`);
+              },
+              disabled: deck.dueToday === 0,
+            },
+          ]}
+          align="right"
         />
       </div>
 
