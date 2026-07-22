@@ -87,6 +87,20 @@ export default function DeckHeader({
                 />
               )}
 
+              {onStartLessonAction && (
+                <StartLessonButton
+                  type="button"
+                  onClick={onStartLessonAction}
+                  disabled={startLessonDisabled}
+                  aria-label="Start lesson"
+                  title={
+                    startLessonDisabled
+                      ? "This deck has no cards"
+                      : "Start lesson"
+                  }
+                />
+              )}
+
               {onDeleteDeckAction && (
                 <button
                   type="button"
@@ -107,20 +121,6 @@ export default function DeckHeader({
                     aria-hidden="true"
                   />
                 </button>
-              )}
-
-              {onStartLessonAction && (
-                <StartLessonButton
-                  type="button"
-                  onClick={onStartLessonAction}
-                  disabled={startLessonDisabled}
-                  aria-label="Start lesson"
-                  title={
-                    startLessonDisabled
-                      ? "This deck has no cards"
-                      : "Start lesson"
-                  }
-                />
               )}
             </div>
           )}
