@@ -14,11 +14,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className={styles.shell}>
       <Suspense fallback={null}>
-        <div className={styles.navbar}>
-          <Navbar />
-        </div>
+        <Navbar />
       </Suspense>
-      <main className={styles.main}>{children}</main>
+      <div className={styles.content}>{children}</div>
     </div>
   );
 }

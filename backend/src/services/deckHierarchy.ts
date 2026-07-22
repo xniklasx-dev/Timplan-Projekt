@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
+
 import { ApiError } from "../middleware/errorHandler.js";
 import type { DecksRepository } from "../repositories/decks/decksRepository.js";
 

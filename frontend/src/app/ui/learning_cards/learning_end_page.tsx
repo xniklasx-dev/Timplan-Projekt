@@ -19,9 +19,9 @@ export default function LearningEndPage({ deckCards, selectedDeck }: LearningEnd
   const total = deckCards.length;
   const hasResults = total > 0;
 
-  const easyCards = deckCards.filter(card => card.rating === 3).length;
-  const mediumCards = deckCards.filter(card => card.rating === 2).length;
-  const hardCards = deckCards.filter(card => card.rating === 1).length;
+  const easyCards = deckCards.filter(card => card.rating === "easy").length;
+  const mediumCards = deckCards.filter(card => card.rating === "good").length;
+  const hardCards = deckCards.filter(card => card.rating === "hard").length;
 
   const segments = hasResults ? [
     { value: hardCards, color: "var(--color-hard)" },
@@ -78,7 +78,7 @@ export default function LearningEndPage({ deckCards, selectedDeck }: LearningEnd
           </p>
           <p className={styles.statItem}>
             <span className={`${styles.colorDot} ${styles.mediumDot}`}></span>
-            Medium: {mediumCards}
+            Good: {mediumCards}
           </p>
           <p className={styles.statItem}>
             <span className={`${styles.colorDot} ${styles.hardDot}`}></span>

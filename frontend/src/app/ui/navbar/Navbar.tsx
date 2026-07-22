@@ -1,28 +1,26 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import styles from './navbar.module.css';
-import NavSearch from './search/NavSearch';
-import AccountMenu from './accountMenu/AccountMenu';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+
+import AccountMenu from "./accountMenu/AccountMenu";
+import styles from "./navbar.module.css";
+import NavSearch from "./search/NavSearch";
+
+const links = [
+  { href: "/decks", label: "Decks" },
+  { href: "/learning", label: "Learning" },
+  { href: "/statistic", label: "Stats" },
+];
 
 function isActive(pathname: string, href: string) {
-  if (pathname === href) return true;
-  if (href !== '/' && pathname.startsWith(href + '/')) return true;
-  return false;
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export default function Navbar() {
-  const pathname = usePathname() || '/';
+  const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
-
-  const links = [
-    { href: '/decks', label: 'Decks' },
-    { href: '/learning', label: 'Learning' },
-    { href: '/statistic', label: 'Stats' },
-    { href: '/testing', label: 'Testing' },
-  ];
 
   return (
     <header className={styles.header}>
@@ -31,7 +29,10 @@ export default function Navbar() {
           Timplan
         </Link>
 
-        <nav className={`${styles.nav} ${searchOpen ? styles.navSearchOpen : ''}`}>
+        <nav
+          className={`${styles.nav} ${searchOpen ? styles.navSearchOpen : ""}`}
+          aria-label="Main navigation"
+        >
           <div className={styles.navLinks}>
             {links.map((link) => {
               const active = isActive(pathname, link.href);
@@ -40,7 +41,8 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`${styles.navLink} ${active ? styles.navLinkActive : ''}`}
+                  className={`${styles.navLink} ${active ? styles.navLinkActive : ""}`}
+                  aria-current={active ? "page" : undefined}
                 >
                   {link.label}
                 </Link>
@@ -48,11 +50,14 @@ export default function Navbar() {
             })}
           </div>
 
-          <NavSearch open={searchOpen} onOpen={() => setSearchOpen(true)} onClose={() => setSearchOpen(false)} />
+          <NavSearch
+            open={searchOpen}
+            onOpen={() => setSearchOpen(true)}
+            onClose={() => setSearchOpen(false)}
+          />
         </nav>
 
         <div className={styles.right}>
-          {/* AccountMenu takes User from AuthContext */}
           <AccountMenu />
         </div>
       </div>

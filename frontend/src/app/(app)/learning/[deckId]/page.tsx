@@ -1,75 +1,115 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import styles from "./page.module.css";
-import LearnCard from "../../../ui/learning_cards/learning_cards";
-import LearningEndPage from "@/app/ui/learning_cards/learning_end_page";
 
-import decksData from "@/app/lib/placeholder-decks.json";
-import cardsData from "@/app/lib/placeholder-cards.json";
+import { useAuth } from "@/app/lib/auth/AuthContext";
+import {
+  CardProgressApiError,
+  createCardProgress,
+  getCardProgress,
+  updateCardProgress,
+} from "@/app/lib/card-progress-service";
+import { getCardsByDeckId } from "@/app/lib/card-service";
+import { getDeck } from "@/app/lib/deck-service";
 import dateData from "@/app/lib/placeholder-dateData.json";
+import LearningEndPage from "@/app/ui/learning_cards/learning_end_page";
+import LearnCard from "../../../ui/learning_cards/learning_cards";
+import type { Card, Deck, StatsMap } from "../../../lib/definitions";
+import { rateCard } from "../../../lib/learning-service";
+import styles from "./page.module.css";
 
-import { Deck, Card, StatsMap } from "../../../lib/definitions";
-import { getDeckById, getCardsForDeck, rateCard } from "../../../lib/learning-service";
+async function loadOrCreateProgress(
+  deckId: string,
+  card: Card,
+  token: string,
+): Promise<Card> {
+  try {
+    const progress = await getCardProgress(deckId, card.id, token);
+    return { ...card, ...progress };
+  } catch (error) {
+    if (!(error instanceof CardProgressApiError) || error.status !== 404) {
+      throw error;
+    }
 
-type RawCard = Omit<Card, "due" | "createdAt" | "updatedAt" | "lastReview"> & {
-  due: string;
-  createdAt: string;
-  updatedAt: string;
-  lastReview?: string;
-};
-
-function hydrateCard(raw: RawCard): Card {
-  return {
-    ...raw,
-    due: new Date(raw.due),
-    createdAt: new Date(raw.createdAt),
-    updatedAt: new Date(raw.updatedAt),
-  };
+    const progress = await createCardProgress(
+      deckId,
+      card.id,
+      { state: "new", rating: null, totalReviews: 0 },
+      token,
+    );
+    return { ...card, ...progress };
+  }
 }
-
-type RawDeck = Omit<Deck, "createdAt" | "updatedAt" | "lastStudied"> & {
-  createdAt: string;
-  updatedAt: string;
-  lastStudied?: string;
-};
-
-function hydrateDeck(raw: RawDeck): Deck {
-  return {
-    ...raw,
-    createdAt: new Date(raw.createdAt),
-    updatedAt: new Date(raw.updatedAt),
-    lastStudied: raw.lastStudied
-      ? new Date(raw.lastStudied)
-      : undefined,
-  };
-}
-
-const rawDecks = decksData as RawDeck[];
-const decks: Deck[] = rawDecks.map(hydrateDeck);
-const rawCards = cardsData as RawCard[];
-const cards: Card[] = rawCards.map(hydrateCard);
-
-
 
 export default function Learning() {
   const params = useParams();
   const deckId = String(params.deckId);
+  const { user, isLoading: authIsLoading } = useAuth();
+  const token = user?.token;
 
-  const selectedDeck = getDeckById(decks, deckId);
-  const initialDeckCards: Card[] = selectedDeck
-    ? getCardsForDeck(selectedDeck, cards).filter((card) => card.due <= new Date())
-    : [];
-
-  const [sessionCards, setSessionCards] = useState(initialDeckCards);
+  const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
+  const [sessionCards, setSessionCards] = useState<Card[]>([]);
   const [resultCards, setResultCards] = useState<Card[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [learnedCount, setLearnedCount] = useState(0);
-  const [stats, setStats]= useState<StatsMap>(dateData);
-  const [isFinished, setIsFinished] = useState(false);
-  if (!selectedDeck) {
-    return <div>Deck not found</div>;
-  }
+  const [totalCards, setTotalCards] = useState(0);
+  const [stats, setStats] = useState<StatsMap>(dateData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (authIsLoading) return;
+
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
+    const authToken = token;
+    let cancelled = false;
+
+    async function loadCards() {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const [deck, cards] = await Promise.all([
+          getDeck(deckId, authToken),
+          getCardsByDeckId(deckId, authToken),
+        ]);
+        const cardsWithProgress = await Promise.all(
+          cards.map((card) => loadOrCreateProgress(deckId, card, authToken)),
+        );
+        const dueCards = cardsWithProgress.filter(
+          (card) => card.state === "new" || card.due <= new Date(),
+        );
+
+        if (!cancelled) {
+          setSelectedDeck(deck);
+          setSessionCards(dueCards);
+          setTotalCards(dueCards.length);
+        }
+      } catch (caughtError) {
+        if (!cancelled) {
+          setError(
+            caughtError instanceof Error
+              ? caughtError.message
+              : "Cards could not be loaded. Please try again later.",
+          );
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+
+    void loadCards();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authIsLoading, deckId, token]);
 
   const currentCard = sessionCards[currentIndex];
 
@@ -85,38 +125,75 @@ export default function Learning() {
 
   const handleSkip = () => {
     setLearnedCount((prev) => prev + 1);
-
-    if (currentIndex >= initialDeckCards.length) {
-      setIsFinished(true);
-      return;}
-
     setCurrentIndex((prev) => prev + 1);
-  }
+  };
   
-  const handleRate = (rating: 0 | 1 | 2 | 3) => {
+  const handleRate = async (rating: NonNullable<Card["rating"]>) => {
+    if (!currentCard || !token || isSaving) return;
+
     const { updatedCard, updatedStats } = rateCard(currentCard, rating, stats);
 
-    setStats(updatedStats);
+    try {
+      setIsSaving(true);
+      setError(null);
 
-    if (rating === 0) {
-    const updatedCards = [...sessionCards];
-    updatedCards[currentIndex] = updatedCard;
-    updatedCards.push(updatedCard);
+      const savedProgress = await updateCardProgress(
+        deckId,
+        currentCard.id,
+        {
+          state: updatedCard.state,
+          rating,
+          due: updatedCard.due,
+          totalReviews: updatedCard.totalReviews,
+        },
+        token,
+      );
+      const savedCard: Card = { ...updatedCard, ...savedProgress };
 
-    setSessionCards(updatedCards);
-  } else {
-    const updatedCards = [...sessionCards];
-    updatedCards[currentIndex] = updatedCard;
-    setSessionCards(updatedCards);
+      setStats(updatedStats);
 
-    setResultCards((prev) => [...prev, updatedCard]);
-    setLearnedCount((prev) => prev + 1);
+      if (rating === "again") {
+        const updatedCards = [...sessionCards];
+        updatedCards[currentIndex] = savedCard;
+        updatedCards.push(savedCard);
+        setSessionCards(updatedCards);
+      } else {
+        const updatedCards = [...sessionCards];
+        updatedCards[currentIndex] = savedCard;
+        setSessionCards(updatedCards);
+        setResultCards((prev) => [...prev, savedCard]);
+        setLearnedCount((prev) => prev + 1);
+      }
+
+      setCurrentIndex((prev) => prev + 1);
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Card progress could not be saved. Please try again later.",
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (authIsLoading || isLoading) {
+    return <div>Learning cards are loading...</div>;
   }
 
+  if (!token) {
+    return <div>Please log in first.</div>;
+  }
 
-    setCurrentIndex((prev) => prev + 1);}
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!selectedDeck) {
+    return <div>Deck not found</div>;
+  }
   
-  if (isFinished||!currentCard) {
+  if (!currentCard) {
     return (
       <div className={styles.page}>
         <main className={styles.main}>
@@ -126,8 +203,8 @@ export default function Learning() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>{selectedDeck.name} {learnedCount}/{initialDeckCards.length}</h1>
-        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} onRate={handleRate} onPrev={handlePrev} onSkip={handleSkip} changeIndex={changeIndex} deckLength={initialDeckCards.length} />
+        <h1>{selectedDeck.name} {learnedCount}/{totalCards}</h1>
+        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} isSaving={isSaving} onRate={handleRate} onPrev={handlePrev} onSkip={handleSkip} />
       </main>
     </div>
   );

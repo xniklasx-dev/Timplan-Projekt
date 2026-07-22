@@ -5,103 +5,97 @@ import { useRouter } from "next/navigation";
 import type { Deck } from "@/app/lib/definitions";
 import type { MouseEvent } from "react";
 import StartLessonButton from "@/app/ui/buttons/startLessonButton/StartLessonButton";
-import styles from "@/app/(app)/decks/page.module.css";
+import styles from "../decks.module.css";
 
 type DeckCardProps = {
-    deck: Deck;
-    isGridView: boolean;
-    registerRefAction?: (el: HTMLAnchorElement | null) => void;
+  deck: Deck;
 };
 
-export default function DeckCard({
-    deck,
-    isGridView,
-    registerRefAction,
-}: DeckCardProps) {
-    const router = useRouter();
+export default function DeckCard({ deck }: DeckCardProps) {
+  const router = useRouter();
 
-    const hasCards = deck.cardIds.length > 0;
+  const hasCards = deck.totalCards > 0;
 
-    let cardClassName = styles.deckCard;
+  const deckCardStyle = deck.color
+    ? {
+        borderColor: deck.color,
+      }
+    : undefined;
 
-    if (isGridView) {
-        cardClassName += " " + styles.deckCardGrid;
-    } else {
-        cardClassName += " " + styles.deckCardLine;
+  let startButtonTitle = "No cards in this deck yet";
+
+  if (hasCards) {
+    startButtonTitle = "StartStudying";
+  }
+
+  const handleStartLesson = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!hasCards) {
+      return;
     }
 
-    let startButtonTitle = "No cards in this deck yet";
+    router.push("/learning/" + deck.id);
+  };
 
-    if (hasCards) {
-        startButtonTitle = "StartStudying";
-    }
+  let showDescription = false;
+  if (deck.description) {
+    showDescription = true;
+  }
 
-    const handleStartLesson = (event: MouseEvent) => {
-        event.preventDefault();
-        event.stopPropagation();
+  let showSubdecks = false;
+  if (deck.childDeckIds && deck.childDeckIds.length > 0) {
+    showSubdecks = true;
+  }
 
-        if (!hasCards) {
-            return;
-        }
+  return (
+    <Link
+      href={`/decks/${deck.id}`}
+      className={styles.deckCard}
+      style={deckCardStyle}
+    >
+      <div className={styles.startButtonWrapper}>
+        <StartLessonButton
+          title={startButtonTitle}
+          disabled={!hasCards}
+          onClick={handleStartLesson}
+        />
+      </div>
 
-        router.push("/learning/" + deck.id);
-    }
+      <div className={styles.deckTop}>
+        <h2 className={styles.deckName}>{deck.name}</h2>
 
-    let showDescription = false;
-    if (deck.description) {
-        showDescription = true;
-    }
+        {showDescription && (
+          <p className={styles.deckDescription}>{deck.description}</p>
+        )}
+      </div>
 
-    let showSubdecks = false;
-    if (deck.childDeckIds && deck.childDeckIds.length > 0) {
-        showSubdecks = true;
-    }
+      <div className={styles.deckStats}>
+        <div className={styles.stat}>
+          <span className={styles.statValue}>{deck.totalCards}</span>
+          <span className={styles.statLabel}>Cards</span>
+        </div>
 
-    return (
-        <Link
-            href={`/decks/${deck.id}`}
-            ref={registerRefAction}
-            className={cardClassName}
-        >
-            <div className={styles.startButtonWrapper}>
-                <StartLessonButton
-                    title={startButtonTitle}
-                    disabled={!hasCards}
-                    onClick={handleStartLesson}
-                />
-            </div>
+        <div className={styles.stat}>
+          <span className={styles.statValue}>{deck.dueToday}</span>
+          <span className={styles.statLabel}>Due</span>
+        </div>
 
-            <div className={styles.deckTop}>
-                <h2 className={styles.deckName}>{deck.name}</h2>
+        <div className={styles.stat}>
+          <span className={styles.statValue}>{deck.newCards}</span>
+          <span className={styles.statLabel}>New</span>
+        </div>
 
-                {showDescription && (
-                    <p className={styles.deckDescription}>{deck.description}</p>
-                )}
-            </div>
-
-            <div className={styles.deckStats}>
-                <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.cardIds.length}</span>
-                    <span className={styles.statLabel}>Cards</span>
-                </div>
-
-                <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.dueToday}</span>
-                    <span className={styles.statLabel}>Due</span>
-                </div>
-
-                <div className={styles.stat}>
-                    <span className={styles.statValue}>{deck.newCards}</span>
-                    <span className={styles.statLabel}>New</span>
-                </div>
-
-                {showSubdecks && (
-                    <div className={styles.stat}>
-                        <span className={styles.statValue}>{deck.childDeckIds?.length}</span>
-                        <span className={styles.statLabel}>Subdecks</span>
-                    </div>
-                )}
-            </div>
-        </Link>
-    );
+        {showSubdecks && (
+          <div className={styles.stat}>
+            <span className={styles.statValue}>
+              {deck.childDeckIds?.length}
+            </span>
+            <span className={styles.statLabel}>Subdecks</span>
+          </div>
+        )}
+      </div>
+    </Link>
+  );
 }

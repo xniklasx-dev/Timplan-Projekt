@@ -2,10 +2,10 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  background: linear-gradient(to bottom, var(--color-background) 72%, transparent);
 }
 
 .inner {
-  height: 100%;
   padding: 18px 28px;
 
   display: grid;
@@ -80,8 +80,7 @@
   background: var(--color-surface);
   box-shadow:
     0 12px 28px rgba(0, 0, 0, 0.35),
-    0 0 18px color-mix(in srgb, var(--color-accent) 92%, transparent),
-    0 10px 30px color-mix(in srgb, var(--color-accent) 75%, transparent);
+    0 0 18px color-mix(in srgb, var(--color-accent) 52%, transparent);
 }
 
 .navLinks {
@@ -183,5 +182,39 @@
 
   .navLink {
     padding-inline: 12px;
+  }
+}
+
+@media (max-width: 680px) {
+  .inner {
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .nav {
+    grid-column: 1;
+    justify-self: stretch;
+    width: auto;
+    padding: 6px 46px 6px 8px;
+  }
+
+  .navLinks {
+    justify-content: flex-start;
+    gap: 2px;
+  }
+
+  .navLink {
+    flex: 1;
+    padding: 8px 5px;
+    font-size: 12px;
+  }
+
+  .right {
+    grid-column: 2;
   }
 }

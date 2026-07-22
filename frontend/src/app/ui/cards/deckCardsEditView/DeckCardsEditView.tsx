@@ -1,3 +1,6 @@
+////////////////////////////////////////////////////////
+// THIS FILE WAS CREATED USING AI, NOT FOR EVALUATION //
+////////////////////////////////////////////////////////
 "use client";
 
 import { useRef, useState } from "react";
@@ -22,7 +25,6 @@ function normalizeCard(card: Card): Card {
   return {
     ...card,
     hint: card.hint ?? "",
-    tags: normalizeTags(card.tags),
   };
 }
 
@@ -64,7 +66,7 @@ function cardKey(card: Card): string {
     card.front.trim(),
     card.back.trim(),
     (card.hint ?? "").trim(),
-    normalizeTags(card.tags).join(","),
+    card.tags.join(","),
   ].join("|");
 }
 
@@ -163,7 +165,7 @@ export default function DeckCardsEditView({ deck, initialCards, token }: DeckCar
     return true;
   }
 
-  async function saveCards() {
+  async function handleSave() {
     if (!hasUnsavedChanges || isSaving || !validateCards()) return;
 
     if (!token) {
@@ -213,10 +215,7 @@ export default function DeckCardsEditView({ deck, initialCards, token }: DeckCar
   }
 
   function scrollToNewCard() {
-    newCardRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+    newCardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   return (
@@ -242,7 +241,9 @@ export default function DeckCardsEditView({ deck, initialCards, token }: DeckCar
             </span>
             <span className={styles.statPill}>{cardsWithHint} with hint</span>
             <span className={styles.statPill}>{cardsWithTags} with tags</span>
-            {deletedCardIds.length > 0 && <span className={styles.statPill}>{deletedCardIds.length} removed</span>}
+            {deletedCardIds.length > 0 && (
+              <span className={`${styles.statPill} ${styles.statPillRemoved}`}>{deletedCardIds.length} removed</span>
+            )}
           </div>
         </div>
 
@@ -259,14 +260,14 @@ export default function DeckCardsEditView({ deck, initialCards, token }: DeckCar
             type="button"
             className={`${styles.primaryButton} ${hasUnsavedChanges ? styles.primaryButtonActive : ""}`}
             disabled={!hasUnsavedChanges || isSaving}
-            onClick={saveCards}
+            onClick={handleSave}
           >
             {isSaving ? "Saving..." : "Save changes"}
           </button>
         </div>
       </div>
 
-      {error && <p className={styles.errorText}>{error}</p>}
+      {error && <p className={styles.errorText} role="alert">{error}</p>}
 
       <div className={styles.list}>
         {cards.map((card, index) => {
