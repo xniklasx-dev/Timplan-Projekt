@@ -18,6 +18,7 @@ type DeckGridProps = {
   cards?: Card[];
   isGridView: boolean;
   onEditCardAction?: (cardId: string) => void;
+  onDeleteCardAction?: (cardId: string) => void; // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
   addItem?: AddItemConfig;
 };
 
@@ -26,6 +27,7 @@ export default function DeckGrid({
   cards = [],
   isGridView,
   onEditCardAction,
+  onDeleteCardAction, // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
   addItem,
 }: DeckGridProps) {
   if (decks.length === 0 && cards.length === 0 && !addItem) {
@@ -52,7 +54,8 @@ export default function DeckGrid({
         <SingleCard
           key={`card-${card.id}`}
           card={card}
-          onEditAction={onEditCardAction ?? (() => {})}
+          onEditAction={onEditCardAction ?? (() => { })}
+          onDeleteAction={onDeleteCardAction ?? (() => { })} // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
         />
       ))}
     </section>

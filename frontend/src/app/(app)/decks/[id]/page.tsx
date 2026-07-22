@@ -16,7 +16,18 @@ import {
   type DeckWriteData,
 } from "@/app/lib/deck-service";
 
-import { getCardsByDeckId } from "@/app/lib/card-service";
+/////////////////////////////////////////////////////////////
+// FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION //
+/////////////////////////////////////////////////////////////
+
+import {
+  deleteCard as deleteCardRequest,
+  getCardsByDeckId,
+} from "@/app/lib/card-service";
+
+////////////////////
+// END OF AI PART //
+////////////////////
 
 import styles from "../page.module.css";
 
@@ -49,6 +60,7 @@ export default function DeckPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [cardDeleteError, setCardDeleteError] = useState<string | null>(null);
 
   const [isGridView, setIsGridView] = useState(false);
 
@@ -202,6 +214,35 @@ export default function DeckPage() {
     setActiveEditorCardId(null);
   }
 
+  /////////////////////////////////////////////////////////////
+  // FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION //
+  /////////////////////////////////////////////////////////////
+
+  async function deleteCard(cardId: string) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this card?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setCardDeleteError(null);
+
+    try {
+      await deleteCardRequest(currentDeckId, cardId, authToken);
+      setCards((currentCards) =>
+        currentCards.filter((card) => card.id !== cardId),
+      );
+    } catch (error) {
+      setCardDeleteError(getErrorMessage(error, "Failed to delete card"));
+    }
+  }
+
+  ////////////////////
+  // END OF AI PART //
+  ////////////////////
+
   function openDeckEditor() {
     setDeckEditorMode("edit");
   }
@@ -228,8 +269,8 @@ export default function DeckPage() {
       const updatedDecks = isNewDeck
         ? [...currentDecks, persistedDeck]
         : currentDecks.map((deck) =>
-            deck.id === persistedDeck.id ? persistedDeck : deck,
-          );
+          deck.id === persistedDeck.id ? persistedDeck : deck,
+        );
 
       return withChildDeckIds(updatedDecks);
     });
@@ -267,7 +308,7 @@ export default function DeckPage() {
         subtitle={currentDeck.description}
         isGridView={isGridView}
         onToggleViewAction={toggleView}
-        onAddDeckAction={openAddDeckEditor}
+        onAddCardAction={openNewCardEditor}
         editButtons={[
           {
             label: "Edit Cards",
@@ -290,15 +331,19 @@ export default function DeckPage() {
       />
 
       {deleteError && <p role="alert">{deleteError}</p>}
+      {cardDeleteError && <p role="alert">{cardDeleteError}</p>}  {/* THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION */}
 
       <DeckGrid
         decks={childDecks}
         cards={cards}
         isGridView={isGridView}
         onEditCardAction={openExistingCardEditor}
+        onDeleteCardAction={(cardId) => {
+          void deleteCard(cardId);
+        }} // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
         addItem={{
-          label: "Add card",
-          onClickAction: openNewCardEditor,
+          label: "Add deck",
+          onClickAction: openAddDeckEditor,
         }}
       />
 
