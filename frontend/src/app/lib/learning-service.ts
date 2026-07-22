@@ -72,9 +72,9 @@ function calculateNextDueDate(rating: NonNullable<Card["rating"]>): Date {
   const now = new Date();
   const daysMap = {
     again: 0,
-    hard: 1,
-    good: 3,
-    easy: 7,
+    hard: 0,
+    good: 1,
+    easy: 2,
   };
 
   const days = daysMap[rating];

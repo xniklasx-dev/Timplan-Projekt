@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/app/lib/auth/AuthContext";
 import {CardProgressApiError,createCardProgress,getCardProgress,updateCardProgress} from "@/app/lib/card-progress-service";
@@ -42,6 +43,7 @@ async function loadOrCreateProgress(
 }
 
 export default function LearningSession({ deckId, mode }: LearningSessionProps) {
+  const router = useRouter();
   const { user, isLoading: authIsLoading } = useAuth();
   const token = user?.token;
 
@@ -154,7 +156,30 @@ export default function LearningSession({ deckId, mode }: LearningSessionProps) 
     setLearnedCount((previous) => previous + 1);
     setCurrentIndex((previous) => previous + 1);
   };
-  
+
+  // ki generiert
+  const handleRestart = () => {
+    const restartedCards = Array.from(
+      new Map(
+        sessionCards.map((card) => [card.id, card] as const),
+      ).values(),
+    );
+
+    setSessionCards(restartedCards);
+    setResultCards([]);
+    setActionHistory([]);
+    setCurrentIndex(0);
+    setLearnedCount(0);
+    setTotalCards(restartedCards.length);
+    setSaveError(null);
+    lastStudiedWasSaved.current = false;
+  };
+
+  const handleBackToDashboard = () => {
+    router.push("/learning");
+  };
+  // ende ki generiert
+
   const handleRate = async (rating: NonNullable<Card["rating"]>) => {
     if (!currentCard || !token || isSaving) return;
 
@@ -235,7 +260,12 @@ export default function LearningSession({ deckId, mode }: LearningSessionProps) 
       <div className={styles.page}>
         <main className={styles.main}>
           {saveError && <p role="alert">{saveError}</p>}
-          <LearningEndPage deckCards={resultCards} selectedDeck={selectedDeck} />
+          <LearningEndPage
+            deckCards={resultCards}
+            selectedDeck={selectedDeck}
+            canRestart={sessionCards.length > 0}
+            onRestart={handleRestart}
+          />
         </main>
       </div>);}
   return (
@@ -243,7 +273,7 @@ export default function LearningSession({ deckId, mode }: LearningSessionProps) 
       <main className={styles.main}>
         <h1>{selectedDeck.name} {learnedCount}/{totalCards}</h1>
         {saveError && <p role="alert">{saveError}</p>}
-        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} isSaving={isSaving} onRate={handleRate} onPrev={handlePrev} onSkip={handleSkip} />
+        <LearnCard key={currentCard.id + "-" + currentIndex} card={currentCard} currentIndex={currentIndex} isSaving={isSaving} onBack={handleBackToDashboard} onRate={handleRate} onPrev={handlePrev} onSkip={handleSkip} />
       </main>
     </div>
   );
