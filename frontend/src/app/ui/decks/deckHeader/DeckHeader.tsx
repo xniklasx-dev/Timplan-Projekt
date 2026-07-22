@@ -22,7 +22,7 @@ type DeckHeaderProps = {
 
   onToggleViewAction: (event: ChangeEvent<HTMLInputElement>) => void; // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
 
-  onAddDeckAction?: () => void;
+  onAddCardAction?: () => void;
 
   editButtons?: DropdownItem[];
 
@@ -38,14 +38,14 @@ export default function DeckHeader({
   subtitle = "",
   isGridView,
   onToggleViewAction, // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
-  onAddDeckAction,
+  onAddCardAction,
   editButtons = [],
   onDeleteDeckAction,
   onStartLessonAction,
   startLessonDisabled = false,
 }: DeckHeaderProps) {
   const showDeckActions =
-    onAddDeckAction !== undefined ||
+    onAddCardAction !== undefined ||
     editButtons.length > 0 ||
     onDeleteDeckAction !== undefined ||
     onStartLessonAction !== undefined;
@@ -58,15 +58,15 @@ export default function DeckHeader({
         <div className={styles.headerControls}>
           {showDeckActions && (
             <div className={styles.deckHeaderActions}>
-              {onAddDeckAction && (
+              {onAddCardAction && (
                 <button
                   type="button"
                   className={[buttonStyles.base, buttonStyles.iconButton].join(
                     " ",
                   )}
-                  onClick={onAddDeckAction}
-                  aria-label="Add subdeck"
-                  title="Add subdeck"
+                  onClick={onAddCardAction}
+                  aria-label="Add card"
+                  title="Add card"
                 >
                   <span
                     className={[

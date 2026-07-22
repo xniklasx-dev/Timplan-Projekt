@@ -267,7 +267,7 @@ export default function DeckPage() {
         subtitle={currentDeck.description}
         isGridView={isGridView}
         onToggleViewAction={toggleView}
-        onAddDeckAction={openAddDeckEditor}
+        onAddCardAction={openNewCardEditor}
         editButtons={[
           {
             label: "Edit Cards",
@@ -297,8 +297,8 @@ export default function DeckPage() {
         isGridView={isGridView}
         onEditCardAction={openExistingCardEditor}
         addItem={{
-          label: "Add card",
-          onClickAction: openNewCardEditor,
+          label: "Add deck",
+          onClickAction: openAddDeckEditor,
         }}
       />
 
