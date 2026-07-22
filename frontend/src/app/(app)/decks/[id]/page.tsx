@@ -270,8 +270,17 @@ export default function DeckPage() {
       const updatedDecks = isNewDeck
         ? [...currentDecks, persistedDeck]
         : currentDecks.map((deck) =>
-          deck.id === persistedDeck.id ? persistedDeck : deck,
-        );
+            deck.id === persistedDeck.id
+              ? {
+                  ...persistedDeck,
+                  cardIds: deck.cardIds,
+                  childDeckIds: deck.childDeckIds,
+                  totalCards: deck.totalCards,
+                  newCards: deck.newCards,
+                  dueToday: deck.dueToday,
+                }
+              : deck,
+          );
 
       return withChildDeckIds(updatedDecks);
     });
