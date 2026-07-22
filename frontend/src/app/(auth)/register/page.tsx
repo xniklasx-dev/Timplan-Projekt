@@ -36,6 +36,10 @@ export default function RegisterPage() {
     setError("");
     setMessage("");
 
+    if (username.length > 10) {
+      setError("Username must be at least 3 and at most 10 characters long.");
+      return;
+    }
     if (password.length < 8) {
       setError("Password must be at least 8 characters long.");
       return;
@@ -114,9 +118,7 @@ export default function RegisterPage() {
         Already have an account?{" "} 
         <Link href="/login">Sign in</Link>
       </p>
-    
 
-      {message && <p className={styles.message}>{message}</p>}
     </>
   );
 }
