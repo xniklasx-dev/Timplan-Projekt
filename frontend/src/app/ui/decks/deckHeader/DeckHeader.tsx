@@ -92,11 +92,11 @@ export default function DeckHeader({
                   type="button"
                   onClick={onStartLessonAction}
                   disabled={startLessonDisabled}
-                  aria-label="Start lesson"
+                  aria-label="Study All Cards"
                   title={
                     startLessonDisabled
                       ? "This deck has no cards"
-                      : "Start lesson"
+                      : "Study All Cards"
                   }
                 />
               )}

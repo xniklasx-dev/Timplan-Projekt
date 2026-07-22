@@ -335,7 +335,7 @@ export default function DeckPage() {
           void deleteCurrentDeck();
         }}
         onStartLessonAction={() => {
-          router.push(`/learning/${currentDeckId}`);
+          router.push(`/learning/${currentDeckId}?mode=all`);
         }}
         startLessonDisabled={cards.length === 0}
       />
