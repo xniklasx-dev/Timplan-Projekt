@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -8,7 +8,7 @@ import { login } from "@/app/lib/auth/auth.service";
 import { useAuth } from "@/app/lib/auth/AuthContext";
 import Spinner from "@/app/ui/spinner/Spinner";
 import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
-import ForgotPasswordModal from "./ForgotPasswordModal";
+import Page from "./forgot-password/page";
 
 export default function LoginPage() {
   console.log("USE_MOCK:", process.env.NEXT_PUBLIC_USE_MOCK);
@@ -22,7 +22,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string>("");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -97,7 +97,7 @@ export default function LoginPage() {
       </p>
     
       {showForgotPassword && (
-        <ForgotPasswordModal onClose={() => setShowForgotPassword(false)} />
+        <Page onClose={() => setShowForgotPassword(false)} />
       )}
     </>
   );

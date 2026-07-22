@@ -8,9 +8,18 @@ export interface UsersRepository {
 
   getUserByUsername(username: string): Promise<User | null>;
 
-  createUser(user: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<User>;
+  getUserByResetToken(token: string): Promise<User | null>;
 
-  updateUser(id: string, updates: UpdateProfileData): Promise<User>;
+  createUser(user: Omit<User, "id" | "createdAt" | "updatedAt"> & {
+      passwordHash: string;
+      passwordResetToken: string | null;
+      passwordResetExpires: Date | null
+  }): Promise<User>;
+
+  updateUser(id: string, updates: UpdateProfileData & {
+      passwordResetToken?: string | null;
+      passwordResetExpires?: Date | null
+  }): Promise<User>;
 
   updatePassword(id: string, passwordHash: string): Promise<void>
 

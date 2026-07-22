@@ -1,43 +1,9 @@
-import { LoginDTO, RegisterDTO, User } from "./auth.types";
-import { mockUsers, MockUser } from "@/app/mocks/users.mock";
+import {LoginDTO, RegisterDTO, ResetPasswordDTO, User} from "./auth.types";
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
-
-function findMockUserByToken(token: string): MockUser {
-    const user = mockUsers.find(u => u.token === token || token.includes(u.id));
-    if (!user) {
-        if (mockUsers.length > 0) return mockUsers[0];
-        throw new Error("Unauthorized (Mock Token invalid)");
-    }
-    return user;
-}
 
 // auth/register
 export async function register(data: RegisterDTO): Promise<User> {
-    if (USE_MOCK) {
-        const newUser: MockUser = {
-            id: crypto.randomUUID(),
-            ...data,
-            token: "mock-token-" + Date.now(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-        };
-
-        mockUsers.push(newUser);
-
-        return {
-            id: newUser.id,
-            username: newUser.username,
-            displayname: newUser.displayname,
-            avatarUrl: newUser.avatarUrl,
-            email: newUser.email,
-            token: newUser.token,
-            createdAt: newUser.createdAt,
-            updatedAt: newUser.updatedAt
-        };
-    }
-
     const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,31 +20,6 @@ export async function register(data: RegisterDTO): Promise<User> {
 
 // auth/login
 export async function login(data: LoginDTO): Promise<User> {
-    if (USE_MOCK) {
-        console.log("Search for: ", data.emailOrUsername, data.password);
-        console.log("Mock users: ", mockUsers.map(u => ({username: u.username, email: u.email, password: u.password})));
-        const user = mockUsers.find(
-            (u) => (u.email === data.emailOrUsername ||
-                    u.username === data.emailOrUsername) &&
-                u.password === data.password
-        );
-
-        console.log("Found user: ", user);
-
-        if (!user) throw new Error("Invalid email or password");
-
-        return {
-            id: user.id,
-            username: user.username,
-            displayname: user.displayname,
-            avatarUrl: user.avatarUrl,
-            email: user.email,
-            token: user.token ?? "mock-token-fallback",
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt
-        };
-    }
-
     const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,17 +35,41 @@ export async function login(data: LoginDTO): Promise<User> {
     return { ...user, token };
 }
 
+// auth/requestPasswordReset
+export async function requestPasswordReset(email: string): Promise<{ message: string }> {
+    const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({email}),
+    })
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error ?? "Password reset request failed");
+    }
+
+    return res.json();
+}
+
+// auth/reset-password
+export async function resetPassword(data: ResetPasswordDTO): Promise<{ message: string }> {
+    const res = await fetch(`${API_BASE}/auth/reset-password`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    })
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error ?? "Password reset failed");
+    }
+    return res.json();
+}
 
 // auth/updateProfile
 export async function updateProfile(data: Partial<User>, token: string): Promise<User> {
-    if (USE_MOCK) {
-        const user = findMockUserByToken(token);
-        if (data.username) user.username = data.username;
-        if (data.displayname) user.displayname = data.displayname;
-        if (data.email) user.email = data.email;
-        user.updatedAt = new Date().toISOString();
-        return { ...user };
-    }
     const res = await fetch(`${API_BASE}/auth/me`, {
         method: "PATCH",
         headers: {
@@ -123,15 +88,6 @@ export async function updateProfile(data: Partial<User>, token: string): Promise
 
 // auth/updatePassword
 export async function updatePassword(data: { currentPassword: string; newPassword: string }, token: string): Promise<void> {
-    if (USE_MOCK) {
-        const user = findMockUserByToken(token);
-        if (user.password !== data.currentPassword) {
-            throw new Error("Invalid current password");
-        }
-        user.password = data.newPassword;
-        user.updatedAt = new Date().toISOString();
-        return;
-    }
     const res = await fetch(`${API_BASE}/auth/me/password`, {
         method: "PATCH",
         headers: {
@@ -151,12 +107,6 @@ export async function updatePassword(data: { currentPassword: string; newPasswor
 
 // auth/updateAvatar
 export async function updateAvatar(avatarUrl: string, token: string): Promise<User> {
-    if (USE_MOCK) {
-        const user = findMockUserByToken(token);
-        user.avatarUrl = avatarUrl;
-        user.updatedAt = new Date().toISOString();
-        return { ...user };
-    }
     const res = await fetch(`${API_BASE}/auth/me/avatar`, {
         method: "POST",
         headers: {
@@ -175,7 +125,6 @@ export async function updateAvatar(avatarUrl: string, token: string): Promise<Us
 
 // auth/logout
 export async function logout(): Promise<void> {
-    if (USE_MOCK)  return;
     await fetch(`${API_BASE}/auth/logout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -184,7 +133,6 @@ export async function logout(): Promise<void> {
 
 // auth/deleteAvatar
 export async function deleteAvatar(token: string): Promise<void> {
-    if (USE_MOCK) return ;
     const res = await fetch(`${API_BASE}/auth/me/avatar`, {
         method: "DELETE",
         headers: {
@@ -200,7 +148,6 @@ export async function deleteAvatar(token: string): Promise<void> {
 
 // auth/deleteAccount
 export async function deleteAccount(token: string): Promise<void> {
-    if (USE_MOCK) return;
     const res = await fetch(`${API_BASE}/auth/me`, {
         method: "DELETE",
         headers: {

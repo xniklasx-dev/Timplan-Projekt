@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -11,7 +11,7 @@ import AccentButton from "@/app/ui/buttons/accentButton/AccentButton";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { user, login } = useAuth();
+  const { user } = useAuth();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -30,35 +30,41 @@ export default function RegisterPage() {
   if (user) return null;
   
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");
     setMessage("");
 
-    try {
-      const user = await register({ username, email, password });
-      login(user);
+    if (username.length > 10) {
+      setError("Username must be at least 3 and at most 10 characters long.");
+      return;
+    }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
 
+    setLoading(true);
+
+    try {
+      await register({ username, email, password });
       setUsername("");
       setEmail("");
       setPassword("");
-
-      setMessage(
-        "Registration successful! A confirmation email has been sent."
-      );
-
+      setMessage("Registration successful! Please log in.");
       setTimeout(() => router.push("/login"), 2000);
-      
+
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
-        setMessage(err.message);
       } else {
-        setError("Registration failed");
+        setError("Registration failed. Please try again.");
       }
     } finally {
-      setLoading(false);
+      if (password.length < 8) {
+        setLoading(false)
+      }
     }
   }
 
@@ -87,7 +93,7 @@ export default function RegisterPage() {
         <input
           className={styles.input}
           type="password"
-          placeholder="Password"
+          placeholder="Password (min. 8 characters)"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -112,9 +118,7 @@ export default function RegisterPage() {
         Already have an account?{" "} 
         <Link href="/login">Sign in</Link>
       </p>
-    
 
-      {message && <p className={styles.message}>{message}</p>}
     </>
   );
 }

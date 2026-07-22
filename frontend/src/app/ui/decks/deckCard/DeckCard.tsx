@@ -18,8 +18,8 @@ export default function DeckCard({ deck }: DeckCardProps) {
 
   const deckCardStyle = deck.color
     ? {
-        borderColor: deck.color,
-      }
+      borderColor: deck.color,
+    }
     : undefined;
 
   let startButtonTitle = "No cards in this deck yet";
@@ -63,7 +63,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
         />
       </div>
 
-      <div className={styles.deckTop}>
+      <div className={[styles.deckTop, styles.deckCardContent].join(" ")}> {/* THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION */}
         <h2 className={styles.deckName}>{deck.name}</h2>
 
         {showDescription && (
