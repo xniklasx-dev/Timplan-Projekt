@@ -10,6 +10,7 @@ import {
   applyCardStatsToDeck,
   createDeck,
   deleteDeck as deleteDeckRequest,
+  getDeckCardsWithProgress,
   getDecks,
   updateDeck,
   withChildDeckIds,
@@ -20,10 +21,7 @@ import {
 // FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION //
 /////////////////////////////////////////////////////////////
 
-import {
-  deleteCard as deleteCardRequest,
-  getCardsByDeckId,
-} from "@/app/lib/card-service";
+import { deleteCard as deleteCardRequest } from "@/app/lib/card-service";
 
 ////////////////////
 // END OF AI PART //
@@ -88,10 +86,16 @@ export default function DeckPage() {
 
       try {
         const loadedDecks = await getDecks(authToken);
+        const visibleDecks = loadedDecks.filter(
+          (deck) => deck.id === deckId || deck.parentDeckId === deckId,
+        );
 
         const loadedDeckData = await Promise.all(
-          loadedDecks.map(async (deck) => {
-            const deckCards = await getCardsByDeckId(deck.id, authToken);
+          visibleDecks.map(async (deck) => {
+            const deckCards = await getDeckCardsWithProgress(
+              deck.id,
+              authToken,
+            );
 
             return {
               deck: applyCardStatsToDeck(deck, deckCards),
@@ -104,7 +108,15 @@ export default function DeckPage() {
           return;
         }
 
-        setDecks(loadedDeckData.map((item) => item.deck));
+        const loadedDeckDataById = new Map(
+          loadedDeckData.map((item) => [item.deck.id, item]),
+        );
+
+        setDecks(
+          loadedDecks.map(
+            (deck) => loadedDeckDataById.get(deck.id)?.deck ?? deck,
+          ),
+        );
 
         const currentDeckData = loadedDeckData.find(
           (item) => item.deck.id === deckId,
@@ -269,8 +281,17 @@ export default function DeckPage() {
       const updatedDecks = isNewDeck
         ? [...currentDecks, persistedDeck]
         : currentDecks.map((deck) =>
-          deck.id === persistedDeck.id ? persistedDeck : deck,
-        );
+            deck.id === persistedDeck.id
+              ? {
+                  ...persistedDeck,
+                  cardIds: deck.cardIds,
+                  childDeckIds: deck.childDeckIds,
+                  totalCards: deck.totalCards,
+                  newCards: deck.newCards,
+                  dueToday: deck.dueToday,
+                }
+              : deck,
+          );
 
       return withChildDeckIds(updatedDecks);
     });
@@ -325,7 +346,7 @@ export default function DeckPage() {
           void deleteCurrentDeck();
         }}
         onStartLessonAction={() => {
-          router.push(`/learning/${currentDeckId}`);
+          router.push(`/learning/${currentDeckId}?mode=all`);
         }}
         startLessonDisabled={cards.length === 0}
       />

@@ -81,13 +81,43 @@ export class DrizzleDecksRepository implements DecksRepository {
   }
 
   async deleteDeck(deckId: string, userId: string): Promise<boolean> {
-    const deletedDecks = await db
-      .delete(decks)
-      .where(deckBelongsToUser(deckId, userId))
-      .returning({
-        id: decks.id,
-      });
+    /////////////////////////////////////////////////////////////
+    // FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION //
+    /////////////////////////////////////////////////////////////
 
-    return deletedDecks.length > 0;
+    return db.transaction(async (transaction) => {
+      const [deckToDelete] = await transaction
+        .select({
+          parentDeckId: decks.parentDeckId,
+        })
+        .from(decks)
+        .where(deckBelongsToUser(deckId, userId))
+        .limit(1);
+
+      if (!deckToDelete) {
+        return false;
+      }
+
+      await transaction
+        .update(decks)
+        .set({
+          parentDeckId: deckToDelete.parentDeckId,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(decks.parentDeckId, deckId), eq(decks.userId, userId)));
+
+      ////////////////////
+      // END OF AI PART //
+      ////////////////////
+
+      const deletedDecks = await transaction
+        .delete(decks)
+        .where(deckBelongsToUser(deckId, userId))
+        .returning({
+          id: decks.id,
+        });
+
+      return deletedDecks.length > 0;
+    });
   }
 }

@@ -123,6 +123,8 @@ export class MemoryDecksRepository implements DecksRepository {
 
     await this.cardsRepository.batchDeleteCard(deckId);
 
+    const now = new Date();
+
     for (const childDeck of this.decks.values()) {
       if (childDeck.parentDeckId !== deckId) {
         continue;
@@ -130,7 +132,8 @@ export class MemoryDecksRepository implements DecksRepository {
 
       this.decks.set(childDeck.id, {
         ...childDeck,
-        parentDeckId: null,
+        parentDeckId: existingDeck.parentDeckId,
+        updatedAt: now,
       });
     }
 
