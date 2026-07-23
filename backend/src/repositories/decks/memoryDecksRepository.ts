@@ -38,9 +38,11 @@ export class MemoryDecksRepository implements DecksRepository {
   async getDecksByUserId(userId: string): Promise<Deck[]> {
     return Array.from(this.decks.values())
       .filter((deck) => deck.userId === userId)
-      .sort(
-        (firstDeck, secondDeck) =>
-          firstDeck.createdAt.getTime() - secondDeck.createdAt.getTime(),
+      .sort((firstDeck, secondDeck) =>
+        firstDeck.name.localeCompare(secondDeck.name, "de", {
+          sensitivity: "base",
+          numeric: true,
+        }),
       )
       .map(cloneDeck);
   }
