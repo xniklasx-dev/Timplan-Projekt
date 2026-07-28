@@ -30,7 +30,7 @@ export class DrizzleDecksRepository implements DecksRepository {
       .select()
       .from(decks)
       .where(eq(decks.userId, userId))
-      .orderBy(asc(decks.createdAt));
+      .orderBy(asc(decks.name));
   }
 
   async getDeckById(deckId: string, userId: string): Promise<Deck | null> {
