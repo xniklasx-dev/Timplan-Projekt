@@ -9,7 +9,7 @@ import { useAuth } from "@/app/lib/auth/AuthContext";
 import {
   applyCardStatsToDeck,
   createDeck,
-  deleteDeck as deleteDeckRequest,
+  deleteDeck,
   getDeckCardsWithProgress,
   getDecks,
   updateDeck,
@@ -313,7 +313,7 @@ export default function DeckPage() {
     setDeleteError(null);
 
     try {
-      await deleteDeckRequest(currentDeckId, authToken);
+      await deleteDeck(currentDeckId, authToken);
       router.push("/decks");
     } catch (error) {
       setDeleteError(getErrorMessage(error, "Failed to delete deck"));
