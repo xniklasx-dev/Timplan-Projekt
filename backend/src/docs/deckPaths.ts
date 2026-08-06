@@ -48,6 +48,10 @@ export function registerDeckPaths(registry: OpenAPIRegistry): void {
         description: "Invalid deck id.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
+      401: {
+        description: "Authentication required.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
       404: {
         description: "Deck not found.",
         content: { "application/json": { schema: ErrorResponseSchema } },
@@ -73,6 +77,10 @@ export function registerDeckPaths(registry: OpenAPIRegistry): void {
         description: "Invalid request body.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
+      401: {
+        description: "Authentication required.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
     },
   });
 
@@ -93,6 +101,10 @@ export function registerDeckPaths(registry: OpenAPIRegistry): void {
       },
       400: {
         description: "Invalid request body or deck id.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+      401: {
+        description: "Authentication required.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
       404: {
@@ -117,6 +129,10 @@ export function registerDeckPaths(registry: OpenAPIRegistry): void {
       },
       400: {
         description: "Invalid deck id.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
+      401: {
+        description: "Authentication required.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
       404: {

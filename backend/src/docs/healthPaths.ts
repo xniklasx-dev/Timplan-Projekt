@@ -4,6 +4,8 @@
 import type { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
+import { DateTimeSchema } from "../validation/commonSchemas.js";
+
 export function registerHealthPaths(registry: OpenAPIRegistry): void {
   registry.registerPath({
     method: "get",
@@ -17,7 +19,7 @@ export function registerHealthPaths(registry: OpenAPIRegistry): void {
           "application/json": {
             schema: z.object({
               status: z.string(),
-              timestamp: z.string(),
+              timestamp: DateTimeSchema,
             }),
           },
         },

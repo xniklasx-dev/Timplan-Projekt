@@ -1,7 +1,9 @@
-import type { Card, Deck, User } from "../db/schema.js";
+import type { Card, CardProgress, Deck, User } from "../db/schema.js";
 import mockCardsJson from "../../mockData/mockCards.json" with { type: "json" };
+import mockCardProgressJson from "../../mockData/mockCardProgress.json" with { type: "json" };
 import mockDecksJson from "../../mockData/mockDecks.json" with { type: "json" };
 import mockUsersJson from "../../mockData/mockUsers.json" with { type: "json" };
+import type { MemoryCardProgressRepository } from "./cardProgress/memoryCardProgressRepository.js";
 import type { MemoryCardsRepository } from "./cards/memoryCardsRepository.js";
 import type { MemoryDecksRepository } from "./decks/memoryDecksRepository.js";
 import type { MemoryUsersRepository } from "./users/memoryUsersRepository.js";
@@ -9,11 +11,21 @@ import type { MemoryUsersRepository } from "./users/memoryUsersRepository.js";
 type MemoryRepositories = {
   //add your memory repository here
   cardsRepository: MemoryCardsRepository;
+  cardProgressRepository: MemoryCardProgressRepository;
   decksRepository: MemoryDecksRepository;
   usersRepository: MemoryUsersRepository;
 };
 
 type MockCard = Omit<Card, "createdAt" | "updatedAt"> & {
+  createdAt: string;
+  updatedAt: string;
+};
+
+type MockCardProgress = Omit<
+  CardProgress,
+  "due" | "createdAt" | "updatedAt"
+> & {
+  due: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -39,6 +51,11 @@ export function loadMockData(repositories: MemoryRepositories): void {
 
   const cards = (mockCardsJson as MockCard[]).map(toCard);
   repositories.cardsRepository.loadCards(cards);
+
+  const cardProgress = (mockCardProgressJson as MockCardProgress[]).map(
+    toCardProgress,
+  );
+  repositories.cardProgressRepository.loadCardProgress(cardProgress);
 }
 
 function toCard(mockCard: MockCard): Card {
@@ -46,6 +63,15 @@ function toCard(mockCard: MockCard): Card {
     ...mockCard,
     createdAt: new Date(mockCard.createdAt),
     updatedAt: new Date(mockCard.updatedAt),
+  };
+}
+
+function toCardProgress(mockProgress: MockCardProgress): CardProgress {
+  return {
+    ...mockProgress,
+    due: new Date(mockProgress.due),
+    createdAt: new Date(mockProgress.createdAt),
+    updatedAt: new Date(mockProgress.updatedAt),
   };
 }
 

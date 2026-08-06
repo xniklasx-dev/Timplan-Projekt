@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////////////
 import { z } from "zod";
 
+import { UUIDSchema } from "../validation/commonSchemas.js";
+
 export const AuthHeader = z.object({
   Authorization: z.string().openapi({
     param: {
@@ -15,7 +17,7 @@ export const AuthHeader = z.object({
 });
 
 export const DeckIdParam = z.object({
-  deckId: z.string().openapi({
+  deckId: UUIDSchema.openapi({
     param: {
       name: "deckId",
       in: "path",
@@ -26,7 +28,7 @@ export const DeckIdParam = z.object({
 });
 
 export const CardIdParam = z.object({
-  cardId: z.string().openapi({
+  cardId: UUIDSchema.openapi({
     param: {
       name: "cardId",
       in: "path",
@@ -37,9 +39,24 @@ export const CardIdParam = z.object({
 });
 
 export const ErrorResponseSchema = z.object({
+  status: z.string().openapi({
+    example: "error",
+  }),
   message: z.string().openapi({
     example: "Resource not found",
   }),
+  code: z.string().optional().openapi({
+    example: "VALIDATION_ERROR",
+  }),
+  errors: z
+    .array(
+      z.object({
+        field: z.string().optional().openapi({ example: "deckId" }),
+        code: z.string().openapi({ example: "invalid_format" }),
+        message: z.string().openapi({ example: "Invalid UUID" }),
+      }),
+    )
+    .optional(),
 });
 
 export const MessageResponseSchema = z.object({

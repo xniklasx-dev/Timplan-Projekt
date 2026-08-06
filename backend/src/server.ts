@@ -8,10 +8,16 @@ function start() {
     const port = env.port;
     const localUrl = `http://localhost:${port}`;
 
-    console.log("");
-    console.log("Server ready");
-    console.log(`- Local:         ${localUrl}`);
-    console.log("");
+    if (env.nodeEnv === "production") {
+      console.log("");
+      console.log("Server ready");
+    }
+    else {
+      console.log("");
+      console.log("Server ready");
+      console.log(`- Local:         ${localUrl}`);
+    }
+    
   });
 }
 

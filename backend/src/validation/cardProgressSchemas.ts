@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { cardRatingEnum, cardStateEnum } from "../db/schema.js";
-import {DateTimeSchema,NullableStringSchema,OptionalTagsSchema,TagsSchema,UUIDSchema,} from "./commonSchemas.js";
+import { DateTimeSchema, UUIDSchema } from "./commonSchemas.js";
 
 const CardStateSchema = z.enum(cardStateEnum.enumValues);
 const CardRatingSchema = z.enum(cardRatingEnum.enumValues);
@@ -9,7 +9,7 @@ export const CardProgressSchema = z.object({
   cardId: UUIDSchema.openapi({
     example: "5980c97c-e245-400a-b4c1-52b07feac04f",}),
 
-  state: CardStateSchema.default("new").openapi({
+  state: CardStateSchema.openapi({
     example: "new",}),
 
   rating: CardRatingSchema.nullable().openapi({
@@ -18,7 +18,7 @@ export const CardProgressSchema = z.object({
   due: DateTimeSchema.openapi({
     example: "2026-05-06T18:53:54.378Z",}),
 
-  totalReviews: z.number().int().nonnegative().default(0).openapi({
+  totalReviews: z.number().int().nonnegative().openapi({
     example: 10,}),
 
   createdAt: DateTimeSchema.openapi({
