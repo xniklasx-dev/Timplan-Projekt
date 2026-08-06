@@ -39,6 +39,10 @@ export function registerSearchPaths(registry: OpenAPIRegistry): void {
           },
         },
       },
+      401: {
+        description: "Authentication required.",
+        content: { "application/json": { schema: ErrorResponseSchema } },
+      },
     },
   });
 }

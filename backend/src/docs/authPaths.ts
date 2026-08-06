@@ -9,6 +9,7 @@ import {
   ForgotPasswordSchema,
   LoginSchema,
   RegisterSchema,
+  ResetPasswordSchema,
   UpdateProfileSchema,
   UserSchema,
 } from "../validation/userSchemas.js";
@@ -31,6 +32,7 @@ export function registerAuthPaths(registry: OpenAPIRegistry): void {
     responses: {
       200: { description: "Current user profile.", content: { "application/json": { schema: UserSchema } } },
       401: { description: "Authentication required, header missing or invalid.", content: { "application/json": { schema: ErrorResponseSchema } } },
+      404: { description: "User not found.", content: { "application/json": { schema: ErrorResponseSchema } } },
     },
   });
 
@@ -43,7 +45,7 @@ export function registerAuthPaths(registry: OpenAPIRegistry): void {
     responses: {
       201: { description: "User registered.", content: { "application/json": { schema: UserSchema } } },
       400: { description: "Invalid request body.", content: { "application/json": { schema: ErrorResponseSchema } } },
-      409: { description: "Email already in use.", content: { "application/json": { schema: ErrorResponseSchema } } },
+      409: { description: "Email or username already in use.", content: { "application/json": { schema: ErrorResponseSchema } } },
     },
   });
 
@@ -74,6 +76,18 @@ export function registerAuthPaths(registry: OpenAPIRegistry): void {
 
   registry.registerPath({
     method: "post",
+    path: "/auth/reset-password",
+    tags: ["auth"],
+    description: "Set a new password using a valid password-reset token.",
+    request: { body: { content: { "application/json": { schema: ResetPasswordSchema } } } },
+    responses: {
+      200: { description: "Password reset.", content: { "application/json": { schema: MessageResponseSchema } } },
+      400: { description: "Invalid request body or expired reset token.", content: { "application/json": { schema: ErrorResponseSchema } } },
+    },
+  });
+
+  registry.registerPath({
+    method: "post",
     path: "/auth/logout",
     tags: ["auth"],
     description: "Logout a user.",
@@ -97,6 +111,7 @@ export function registerAuthPaths(registry: OpenAPIRegistry): void {
       200: { description: "User profile updated.", content: { "application/json": { schema: UserSchema } } },
       400: { description: "Invalid request body.", content: { "application/json": { schema: ErrorResponseSchema } } },
       401: { description: "Authentication required, header missing or invalid.", content: { "application/json": { schema: ErrorResponseSchema } } },
+      404: { description: "User not found.", content: { "application/json": { schema: ErrorResponseSchema } } },
     },
   });
 
@@ -118,6 +133,7 @@ export function registerAuthPaths(registry: OpenAPIRegistry): void {
     responses: {
       200: { description: "Avatar updated.", content: { "application/json": { schema: UserSchema } } },
       401: { description: "Authentication required.", content: { "application/json": { schema: ErrorResponseSchema } } },
+      404: { description: "User not found.", content: { "application/json": { schema: ErrorResponseSchema } } },
     },
   });
 
@@ -134,6 +150,7 @@ export function registerAuthPaths(registry: OpenAPIRegistry): void {
       200: { description: "Password updated.", content: { "application/json": { schema: MessageResponseSchema } } },
       400: { description: "Invalid request body.", content: { "application/json": { schema: ErrorResponseSchema } } },
       401: { description: "Authentication required or current password is invalid.", content: { "application/json": { schema: ErrorResponseSchema } } },
+      404: { description: "User not found.", content: { "application/json": { schema: ErrorResponseSchema } } },
     },
   });
 
@@ -158,6 +175,7 @@ export function registerAuthPaths(registry: OpenAPIRegistry): void {
     responses: {
       204: { description: "User deleted." },
       401: { description: "Authentication required, header missing or invalid.", content: { "application/json": { schema: ErrorResponseSchema } } },
+      404: { description: "User not found.", content: { "application/json": { schema: ErrorResponseSchema } } },
     },
   });
 }

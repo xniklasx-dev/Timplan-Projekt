@@ -36,6 +36,7 @@ function createRepositories(): Repositories {
     loadMockData({
       //pass your memory repository to the mock loader here
       cardsRepository,
+      cardProgressRepository,
       decksRepository,
       usersRepository,
     });

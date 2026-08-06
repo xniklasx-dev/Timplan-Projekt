@@ -10,7 +10,11 @@ import {
   CreateCardSchema,
   UpsertCardSchema,
 } from "../validation/cardSchemas.js";
-import { CardProgressSchema } from "../validation/cardProgressSchemas.js";
+import {
+  CardProgressSchema,
+  CardProgressUpdateSchema,
+  CreateCardProgressSchema,
+} from "../validation/cardProgressSchemas.js";
 import {
   CreateDateDataSchema,
   DateDataSchema,
@@ -30,6 +34,7 @@ import {
   UpdateProfileSchema,
 } from "../validation/userSchemas.js";
 import { registerAuthPaths } from "./authPaths.js";
+import { registerCardProgressPaths } from "./cardProgressPaths.js";
 import { registerCardPaths } from "./cardPaths.js";
 import { registerDeckPaths } from "./deckPaths.js";
 import { registerHealthPaths } from "./healthPaths.js";
@@ -39,6 +44,8 @@ export const registry = new OpenAPIRegistry();
 
 registry.register("Card", CardSchema);
 registry.register("CardProgress", CardProgressSchema);
+registry.register("CreateCardProgress", CreateCardProgressSchema);
+registry.register("CardProgressUpdate", CardProgressUpdateSchema);
 registry.register("CreateCard", CreateCardSchema);
 registry.register("CardUpdate", CardUpdateSchema);
 registry.register("UpsertCard", UpsertCardSchema);
@@ -62,6 +69,7 @@ registry.register("DateDataUpdate", DateDataUpdateSchema);
 
 registerHealthPaths(registry);
 registerCardPaths(registry);
+registerCardProgressPaths(registry);
 registerDeckPaths(registry);
 registerSearchPaths(registry);
 registerAuthPaths(registry);
