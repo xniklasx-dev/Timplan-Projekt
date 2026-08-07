@@ -50,6 +50,32 @@
   right: 15px;
 }
 
+/*
+ * FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION
+ */
+
+.cardActionWrapper {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  gap: 8px;
+}
+
+.cardContent {
+  padding-right: 112px;
+  overflow-wrap: anywhere;
+}
+
+.deckCardContent {
+  padding-right: 56px;
+  overflow-wrap: anywhere;
+}
+
+/*
+ * END OF AI PART
+ */
+
 /* DeckNavigator */
 
 /*

@@ -9,14 +9,23 @@ import { useAuth } from "@/app/lib/auth/AuthContext";
 import {
   applyCardStatsToDeck,
   createDeck,
-  deleteDeck as deleteDeckRequest,
+  deleteDeck,
+  getDeckCardsWithProgress,
   getDecks,
   updateDeck,
   withChildDeckIds,
   type DeckWriteData,
 } from "@/app/lib/deck-service";
 
-import { getCardsByDeckId } from "@/app/lib/card-service";
+/////////////////////////////////////////////////////////////
+// FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION //
+/////////////////////////////////////////////////////////////
+
+import { deleteCard as deleteCardRequest } from "@/app/lib/card-service";
+
+////////////////////
+// END OF AI PART //
+////////////////////
 
 import styles from "../page.module.css";
 
@@ -49,6 +58,7 @@ export default function DeckPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [cardDeleteError, setCardDeleteError] = useState<string | null>(null);
 
   const [isGridView, setIsGridView] = useState(false);
 
@@ -76,10 +86,16 @@ export default function DeckPage() {
 
       try {
         const loadedDecks = await getDecks(authToken);
+        const visibleDecks = loadedDecks.filter(
+          (deck) => deck.id === deckId || deck.parentDeckId === deckId,
+        );
 
         const loadedDeckData = await Promise.all(
-          loadedDecks.map(async (deck) => {
-            const deckCards = await getCardsByDeckId(deck.id, authToken);
+          visibleDecks.map(async (deck) => {
+            const deckCards = await getDeckCardsWithProgress(
+              deck.id,
+              authToken,
+            );
 
             return {
               deck: applyCardStatsToDeck(deck, deckCards),
@@ -92,7 +108,15 @@ export default function DeckPage() {
           return;
         }
 
-        setDecks(loadedDeckData.map((item) => item.deck));
+        const loadedDeckDataById = new Map(
+          loadedDeckData.map((item) => [item.deck.id, item]),
+        );
+
+        setDecks(
+          loadedDecks.map(
+            (deck) => loadedDeckDataById.get(deck.id)?.deck ?? deck,
+          ),
+        );
 
         const currentDeckData = loadedDeckData.find(
           (item) => item.deck.id === deckId,
@@ -202,6 +226,35 @@ export default function DeckPage() {
     setActiveEditorCardId(null);
   }
 
+  /////////////////////////////////////////////////////////////
+  // FOLLOWING PART WAS CREATED USING AI, NOT FOR EVALUATION //
+  /////////////////////////////////////////////////////////////
+
+  async function deleteCard(cardId: string) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this card?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setCardDeleteError(null);
+
+    try {
+      await deleteCardRequest(currentDeckId, cardId, authToken);
+      setCards((currentCards) =>
+        currentCards.filter((card) => card.id !== cardId),
+      );
+    } catch (error) {
+      setCardDeleteError(getErrorMessage(error, "Failed to delete card"));
+    }
+  }
+
+  ////////////////////
+  // END OF AI PART //
+  ////////////////////
+
   function openDeckEditor() {
     setDeckEditorMode("edit");
   }
@@ -228,7 +281,16 @@ export default function DeckPage() {
       const updatedDecks = isNewDeck
         ? [...currentDecks, persistedDeck]
         : currentDecks.map((deck) =>
-            deck.id === persistedDeck.id ? persistedDeck : deck,
+            deck.id === persistedDeck.id
+              ? {
+                  ...persistedDeck,
+                  cardIds: deck.cardIds,
+                  childDeckIds: deck.childDeckIds,
+                  totalCards: deck.totalCards,
+                  newCards: deck.newCards,
+                  dueToday: deck.dueToday,
+                }
+              : deck,
           );
 
       return withChildDeckIds(updatedDecks);
@@ -251,7 +313,7 @@ export default function DeckPage() {
     setDeleteError(null);
 
     try {
-      await deleteDeckRequest(currentDeckId, authToken);
+      await deleteDeck(currentDeckId, authToken);
       router.push("/decks");
     } catch (error) {
       setDeleteError(getErrorMessage(error, "Failed to delete deck"));
@@ -267,7 +329,7 @@ export default function DeckPage() {
         subtitle={currentDeck.description}
         isGridView={isGridView}
         onToggleViewAction={toggleView}
-        onAddDeckAction={openAddDeckEditor}
+        onAddCardAction={openNewCardEditor}
         editButtons={[
           {
             label: "Edit Cards",
@@ -284,21 +346,25 @@ export default function DeckPage() {
           void deleteCurrentDeck();
         }}
         onStartLessonAction={() => {
-          router.push(`/learning/${currentDeckId}`);
+          router.push(`/learning/${currentDeckId}?mode=all`);
         }}
         startLessonDisabled={cards.length === 0}
       />
 
       {deleteError && <p role="alert">{deleteError}</p>}
+      {cardDeleteError && <p role="alert">{cardDeleteError}</p>}  {/* THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION */}
 
       <DeckGrid
         decks={childDecks}
         cards={cards}
         isGridView={isGridView}
         onEditCardAction={openExistingCardEditor}
+        onDeleteCardAction={(cardId) => {
+          void deleteCard(cardId);
+        }} // THIS LINE WAS CREATED USING AI, NOT FOR EVALUATION
         addItem={{
-          label: "Add card",
-          onClickAction: openNewCardEditor,
+          label: "Add deck",
+          onClickAction: openAddDeckEditor,
         }}
       />
 

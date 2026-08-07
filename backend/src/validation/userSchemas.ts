@@ -19,11 +19,11 @@ export const UserSchema = z
               example: "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3mS0i8",
           }),
         */
-        displayname: z.string().nullable().optional().openapi({
+        displayname: z.string().nullable().openapi({
             example: "Test User",
         }),
 
-        avatarUrl: z.string().url().nullable().optional().nullable().openapi({
+        avatarUrl: z.string().url().nullable().openapi({
             example: "https://example.com/avatar.jpg",
         }),
 
@@ -53,7 +53,7 @@ export const RegisterSchema = z
         })
     })
     .strict()
-    .openapi("CreateUser");
+    .openapi("RegisterUser");
 
 export const LoginSchema = z
     .object({
@@ -101,7 +101,7 @@ export const UpdateProfileSchema = UserSchema.pick({
     .refine((data) => Object.keys(data).length > 0, {
         message: "At least one field must be provided",
     })
-    .openapi("UpdateUser");
+    .openapi("UpdateProfile");
 
 export const ChangePasswordSchema = z.object({
     currentPassword: z.string().min(8),

@@ -3,7 +3,7 @@ import { useState } from "react";
 import styles from "./learning_cards.module.css";
 import { Card } from "../../lib/definitions";
 
-export default function LearnCard({ card, currentIndex, isSaving, onRate, onPrev, onSkip }: { card: Card; currentIndex: number; isSaving: boolean; onRate: (rating: NonNullable<Card["rating"]>) => void | Promise<void>; onPrev: () => void; onSkip: () => void }) {
+export default function LearnCard({ card, currentIndex, isSaving, onBack, onRate, onPrev, onSkip }: { card: Card; currentIndex: number; isSaving: boolean; onBack: () => void; onRate: (rating: NonNullable<Card["rating"]>) => void | Promise<void>; onPrev: () => void; onSkip: () => void }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [isHintRevealed, setIsHintRevealed] = useState(false);
 
@@ -25,6 +25,9 @@ export default function LearnCard({ card, currentIndex, isSaving, onRate, onPrev
 
     return (
         <div className={styles.outer}>
+            <button type="button" className={styles.backButton} onClick={onBack}>
+                &lt; Back to Dashboard
+            </button>
             {card.hint && !isRevealed&&(
                 <div className={styles.hint}
                     onClick={() => setIsHintRevealed(prev => !prev)}>

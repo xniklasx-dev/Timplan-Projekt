@@ -8,6 +8,15 @@ export function getCardsForDeck(deck: Deck, allCards: Card[]): Card[] {
   return allCards.filter((card) => deck.cardIds.includes(card.id));
 }
 
+export function isDueToday(card: Card, now: Date = new Date()): boolean {
+  if (card.state === "new") return true;
+
+  const endOfToday = new Date(now);
+  endOfToday.setHours(23, 59, 59, 999);
+
+  return card.due <= endOfToday;
+}
+
 export function getNextCard(cards: Card[], currentIndex: number): Card | null {
   if (currentIndex + 1 >= cards.length) return null;
   return cards[currentIndex + 1];
@@ -63,9 +72,9 @@ function calculateNextDueDate(rating: NonNullable<Card["rating"]>): Date {
   const now = new Date();
   const daysMap = {
     again: 0,
-    hard: 1,
-    good: 3,
-    easy: 7,
+    hard: 0,
+    good: 1,
+    easy: 2,
   };
 
   const days = daysMap[rating];

@@ -19,6 +19,11 @@ import {
   MessageResponseSchema,
 } from "./pathSchemas.js";
 
+const UnauthorizedResponse = {
+  description: "Authentication required.",
+  content: { "application/json": { schema: ErrorResponseSchema } },
+};
+
 export function registerCardPaths(registry: OpenAPIRegistry): void {
   registry.registerPath({
     method: "get",
@@ -38,6 +43,7 @@ export function registerCardPaths(registry: OpenAPIRegistry): void {
         description: "Invalid deck id.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
+      401: UnauthorizedResponse,
       403: {
         description: "The user does not own the deck.",
         content: { "application/json": { schema: ErrorResponseSchema } },
@@ -63,6 +69,7 @@ export function registerCardPaths(registry: OpenAPIRegistry): void {
         description: "Invalid deck or card id.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
+      401: UnauthorizedResponse,
       403: {
         description: "The user does not own the card.",
         content: { "application/json": { schema: ErrorResponseSchema } },
@@ -93,6 +100,7 @@ export function registerCardPaths(registry: OpenAPIRegistry): void {
         description: "Invalid request body or deck id.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
+      401: UnauthorizedResponse,
       403: {
         description: "The user does not own the deck.",
         content: { "application/json": { schema: ErrorResponseSchema } },
@@ -119,6 +127,7 @@ export function registerCardPaths(registry: OpenAPIRegistry): void {
         description: "Invalid request body, deck id, or card id.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
+      401: UnauthorizedResponse,
       403: {
         description: "The user does not own the card.",
         content: { "application/json": { schema: ErrorResponseSchema } },
@@ -149,6 +158,7 @@ export function registerCardPaths(registry: OpenAPIRegistry): void {
         description: "Invalid request body, deck id, or card id.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
+      401: UnauthorizedResponse,
       403: {
         description: "The user does not own the deck or one of the cards.",
         content: { "application/json": { schema: ErrorResponseSchema } },
@@ -179,6 +189,7 @@ export function registerCardPaths(registry: OpenAPIRegistry): void {
         description: "Invalid request body or deck id.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
+      401: UnauthorizedResponse,
       403: {
         description: "The user does not own the deck.",
         content: { "application/json": { schema: ErrorResponseSchema } },
@@ -204,6 +215,7 @@ export function registerCardPaths(registry: OpenAPIRegistry): void {
         description: "Invalid deck or card id.",
         content: { "application/json": { schema: ErrorResponseSchema } },
       },
+      401: UnauthorizedResponse,
       403: {
         description: "The user does not own the card.",
         content: { "application/json": { schema: ErrorResponseSchema } },

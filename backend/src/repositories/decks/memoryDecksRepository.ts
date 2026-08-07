@@ -38,9 +38,11 @@ export class MemoryDecksRepository implements DecksRepository {
   async getDecksByUserId(userId: string): Promise<Deck[]> {
     return Array.from(this.decks.values())
       .filter((deck) => deck.userId === userId)
-      .sort(
-        (firstDeck, secondDeck) =>
-          firstDeck.createdAt.getTime() - secondDeck.createdAt.getTime(),
+      .sort((firstDeck, secondDeck) =>
+        firstDeck.name.localeCompare(secondDeck.name, "de", {
+          sensitivity: "base",
+          numeric: true,
+        }),
       )
       .map(cloneDeck);
   }
@@ -123,6 +125,8 @@ export class MemoryDecksRepository implements DecksRepository {
 
     await this.cardsRepository.batchDeleteCard(deckId);
 
+    const now = new Date();
+
     for (const childDeck of this.decks.values()) {
       if (childDeck.parentDeckId !== deckId) {
         continue;
@@ -130,7 +134,8 @@ export class MemoryDecksRepository implements DecksRepository {
 
       this.decks.set(childDeck.id, {
         ...childDeck,
-        parentDeckId: null,
+        parentDeckId: existingDeck.parentDeckId,
+        updatedAt: now,
       });
     }
 

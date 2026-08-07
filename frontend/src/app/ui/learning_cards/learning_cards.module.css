@@ -27,6 +27,26 @@
     right: 3%;
 }
 
+/* ki generiert */
+.backButton {
+    position: absolute;
+    top: 5%;
+    left: 3%;
+    padding: 5px 10px;
+    background-color: var(--color-surface);
+    color: var(--color-text-muted);
+    border: 2px solid var(--color-glow);
+    border-radius: 5px;
+    font: 18px var(--font-sans);
+    cursor: pointer;
+}
+
+.backButton:hover {
+    background-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+}
+/* ende ki generiert */
+
 .hintButton{
     padding: 5px 10px;
 

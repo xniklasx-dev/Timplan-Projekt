@@ -6,9 +6,16 @@ import styles from "./learning_end_page.module.css";
 type LearningEndPageProps = {
   deckCards: Card[];
   selectedDeck: Deck;
+  canRestart: boolean;
+  onRestart: () => void;
 };
 
-export default function LearningEndPage({ deckCards, selectedDeck }: LearningEndPageProps) {
+export default function LearningEndPage({
+  deckCards,
+  selectedDeck,
+  canRestart,
+  onRestart,
+}: LearningEndPageProps) {
     const router = useRouter();
   const size = 240;
   const strokeWidth = 30;
@@ -86,9 +93,23 @@ export default function LearningEndPage({ deckCards, selectedDeck }: LearningEnd
           </p>
         </div>
       </div>
-      <button className={styles.backDashboard} onClick={() => router.push("/learning/")}>
-        Back to Dashboard
-      </button>
+      <div className={styles.actions}>
+        <button
+          type="button"
+          className={styles.restartButton}
+          disabled={!canRestart}
+          onClick={onRestart}
+        >
+          Restart Deck
+        </button>
+        <button
+          type="button"
+          className={styles.backDashboard}
+          onClick={() => router.push("/learning")}
+        >
+          Back to Dashboard
+        </button>
+      </div>
     </div>
   );
 }

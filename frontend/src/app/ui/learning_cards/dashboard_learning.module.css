@@ -97,29 +97,35 @@
   justify-content: left;
 }
 
-.learn_button_active {
+.learningButtons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.learningButtons button {
   background-color: var(--color-accent);
   color: var(--color-text);
   border: 3px solid var(--color-border);
   background-clip: padding-box;
     
   border-radius: 10px;
-  font-size: 20px;
+  font-size: 15px;
   padding: 5px 10px;
 }
-.learn_button_active:hover {
+.learningButtons button:hover {
   background-color: var(--color-accent-hover);
   transform: translateY(-1px);
   box-shadow: 0 2px 25px var(--color-accent-hover);
 }
 
-.learn_button_inactive {
+.learningButtons button:disabled {
   background-color: var(--color-surface);
   color: var(--color-text-disabled);
   border: 3px solid var(--color-border);
   background-clip: padding-box;
     
   border-radius: 10px;
-  font-size: 20px;
+  font-size: 15px;
   padding: 5px 10px;
 }

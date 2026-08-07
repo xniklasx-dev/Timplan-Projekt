@@ -1,5 +1,7 @@
 import { apiBaseUrl, type Card, type Deck } from "./definitions";
 import { getCardsByDeckId } from "./card-service";
+import { getCardProgress } from "./card-progress-service";
+import { isDueToday } from "./learning-service";
 
 export type BackendDeck = {
   id: string;
@@ -100,9 +102,6 @@ async function readDeckResponse(response: Response): Promise<Deck> {
 }
 
 export function applyCardStatsToDeck(deck: Deck, cards: Card[]): Deck {
-  const endOfToday = new Date();
-  endOfToday.setHours(23, 59, 59, 999);
-
   return {
     ...deck,
 
@@ -112,13 +111,26 @@ export function applyCardStatsToDeck(deck: Deck, cards: Card[]): Deck {
 
     newCards: cards.filter((card) => card.state === "new").length,
 
-    dueToday: cards.filter(
-      (card) =>
-        card.state !== "new" &&
-        card.state !== "suspended" &&
-        card.due <= endOfToday,
-    ).length,
+    dueToday: cards.filter((card) => isDueToday(card)).length,
   };
+}
+
+export async function getDeckCardsWithProgress(
+  deckId: string,
+  token: string,
+): Promise<Card[]> {
+  const cards = await getCardsByDeckId(deckId, token);
+
+  return Promise.all(
+    cards.map(async (card) => {
+      try {
+        const progress = await getCardProgress(deckId, card.id, token);
+        return { ...card, ...progress };
+      } catch {
+        return card;
+      }
+    }),
+  );
 }
 
 export function withChildDeckIds(decks: Deck[]): Deck[] {
@@ -163,14 +175,21 @@ export async function getDeck(deckId: string, token: string): Promise<Deck> {
 
 export async function getDecksWithStats(token: string): Promise<Deck[]> {
   const decks = await getDecks(token);
+  const topLevelDecks = decks.filter((deck) => !deck.parentDeckId);
 
-  return Promise.all(
-    decks.map(async (deck) => {
-      const cards = await getCardsByDeckId(deck.id, token);
+  const topLevelDecksWithStats = await Promise.all(
+    topLevelDecks.map(async (deck) => {
+      const cards = await getDeckCardsWithProgress(deck.id, token);
 
       return applyCardStatsToDeck(deck, cards);
     }),
   );
+
+  const statsByDeckId = new Map(
+    topLevelDecksWithStats.map((deck) => [deck.id, deck]),
+  );
+
+  return decks.map((deck) => statsByDeckId.get(deck.id) ?? deck);
 }
 
 export async function createDeck(

@@ -90,7 +90,15 @@
     background: var(--color-hard);
 }
 
-.backDashboard{
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+/* ki generiert */
+.backDashboard,
+.restartButton {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -102,9 +110,19 @@
     
     border-radius: 10px;
     font-size: 20px;
+    cursor: pointer;
 }
-.backDashboard:hover {
+.backDashboard:hover,
+.restartButton:hover:not(:disabled) {
     border: 5px solid var(--color-accent-hover);
     transform:  translateY(-1px);
     box-shadow: 0 3px 25px var(--color-accent-hover);
 }
+
+.restartButton:disabled {
+    color: var(--color-text-disabled);
+    border-color: var(--color-border);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+/* ende ki generiert */

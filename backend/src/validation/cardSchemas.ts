@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////
 
 import { z } from "zod";
-import { cardRatingEnum, cardStateEnum } from "../db/schema.js";
 import {
   DateTimeSchema,
   NullableStringSchema,
@@ -11,9 +10,6 @@ import {
   TagsSchema,
   UUIDSchema,
 } from "./commonSchemas.js";
-
-const CardStateSchema = z.enum(cardStateEnum.enumValues);
-const CardRatingSchema = z.enum(cardRatingEnum.enumValues);
 
 export const CardSchema = z
   .object({
@@ -37,7 +33,7 @@ export const CardSchema = z
       example: "Think about types",
     }),
 
-    tags: TagsSchema.default([]).openapi({
+    tags: TagsSchema.openapi({
       example: ["typescript", "basics"],
     }),
 
