@@ -40,7 +40,7 @@ export const UserSchema = z
 
 export const RegisterSchema = z
     .object({
-        username: z.string().min(2).max(10).openapi({
+        username: z.string().min(3).max(10).openapi({
             example: "testuser",
         }),
 

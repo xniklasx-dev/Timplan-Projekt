@@ -1,7 +1,6 @@
 import { Resend } from "resend";
 
 // TODO: fix later because of Resend API_KEY
-
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;

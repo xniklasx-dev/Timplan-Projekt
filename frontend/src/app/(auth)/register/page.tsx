@@ -32,11 +32,10 @@ export default function RegisterPage() {
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
     setError("");
     setMessage("");
 
-    if (username.length > 10) {
+    if (username.length < 3 || username.length > 10) {
       setError("Username must be at least 3 and at most 10 characters long.");
       return;
     }
@@ -44,7 +43,6 @@ export default function RegisterPage() {
       setError("Password must be at least 8 characters long.");
       return;
     }
-
     setLoading(true);
 
     try {
