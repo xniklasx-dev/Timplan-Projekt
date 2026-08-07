@@ -9,6 +9,7 @@ import {
   RegisterSchema, ResetPasswordSchema,
   UpdateProfileSchema
 } from "../validation/userSchemas.js";
+import { AvatarUploadSchema } from "../validation/avatarValidationSchema.js";
 import { ApiError } from "../middleware/errorHandler.js";
 import { asyncHandler } from "../middleware/asyncHandler.js"
 import { env } from "../config/env.js";
@@ -172,7 +173,7 @@ router.post("/auth/me/avatar", asyncHandler(async (req, res) => {
     throw new ApiError(401, "Authorization header is missing");
   }
 
-  const {avatarUrl} = req.body;
+  const { avatarUrl } = AvatarUploadSchema.parse(req.body);
   const decoded = tokenVerifier(authHeader);
   const user = await usersRepository.updateUser(decoded.userId, {avatarUrl});
   if (!user) {
